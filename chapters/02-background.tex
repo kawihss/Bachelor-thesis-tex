@@ -1,20 +1,129 @@
 
 %!TEX root=../main.tex
-\chapter{Background}
+\chapter{Background} %7-10 pages, will be  hard  to do lesss
 \label{chap:background}
 
 \section{Trajectory prediction in maritime/AIS}%core SOTA
 \section{Motion Models} \todo{fill once I implemented them}
     \subsection{CV}
-    \subsection{CA}
+    %\subsection{CA}
     \subsection{CTRV}
-    \subsection{IMM?}
-\section{Sequence Models}
-    \subsection{RNN}%should be explored
-    \subsection{LSTM}
-    \subsubsection{bi-LSTM, exLSTM...}
-    \subsection{Transformer}
-    \subsection{...}
-\section{AutoML}
-    \todo{siehe overview onenote}
+    %\subsection{IMM?} ich denke nicht, darauf  soll der fokusnicht liegen
+\section{Sequence-to-Sequence Models}   
+    %https://arxiv.org/html/2406.02770v1#bib.bib14
 
+  \todo{graphics in universal style. They do not help me a lot personally, so I did not include them yet}
+
+    In the domain of Deep Learning, \ac{S2S}  Models serve as a framework for tasks where input and output are dependent sequences. While \ac{S2S} is rooted in language processing tasks like translation \cite{sutskever2014sequencesequencelearningneural}, it can be %dieses zitat vlt raus
+    applied to any kind of sequential data, ranging from numerical time series and sensor data to genomes and handwriting \cite{gentleschmidt2019recurrentneuralnetworksrnns}. 
+    Most \ac{S2S} models follow an \textbf{Encoder-Decoder} architecture. 
+    \begin{itemize}
+        \item \textbf{Encoder}: Processes the input sequence and compresses the information into a fixed-size context vector (hidden state).
+        \item \textbf{Decoder}: Uses this vector to generate the output sequence (e.g., the predicted GPS positions for the next 10 time steps).
+    \end{itemize}
+    Encoder and Decoder can for example be built with the following two building blocks:%bessere überleitung todo
+
+    \subsection{RNN}
+    Building on the first popular model to use recurrence, the Hopfield Network introduced by \cite{hopfieldrnn}, the foundational concept for sequence-based learning is the \ac{RNN}. 
+    The primary distinction between \acp{RNN} and conventional Feedforward Neural Networks, such as \acp{MLP}, is the direction of information flow. While Feedforward Networks are acyclic, \acp{RNN} use cycles to feed information back into the hidden state, the \textit{memory}. This architecture allows the model to incorporate historical context from previous inputs $X_{0:t-1}$ when processing the current input $X_t$, rather than treating each input in isolation \cite{gentleschmidt2019recurrentneuralnetworksrnns} and to make decisions based on the patterns it recognizes \cite{AIBook}. The recurrence can be expressed as:
+
+    \begin{equation}
+        H_t = \phi_h (X_t W_{xh} + H_{t-1} W_{hh} + b_h) % liefert eigentlich keinen mehrwert
+    \end{equation}
+    where $W$ represents weight matrices and $\phi$ an activation function. Despite their theoretical capability to handle sequences, \acp{RNN} suffer from the \textit{vanishing gradient problem}, as well as the \textit{exploding gradient problem}, as has been established by \cite{279181bengio}. As the sequence length increases, the gradients used to update weights during backpropagation decrease exponentially, preventing the model from learning long-term dependencies.
+    %wenn gefragt, für eine kurze definition der PRobleme, \cite{AIBook}
+    
+    \subsection{LSTM}
+     To address the limitations of standard \acp{RNN} in capturing long-term dependencies, \cite{hochreiterLSTM} introduced the \ac{LSTM} architecture. The core innovation of the \ac{LSTM} is the introduction of a cell state $C_t$, which allows information to persist across many time steps. The flow of information in and out of these cells is regulated by three \textbf{gates}: The
+    \begin{itemize}
+        \item \textbf{Forget Gate $F_t$}:  Determines which information from the previous cell state $C_{t-1}$ is no longer needed and should be discarded.
+        \item \textbf{Input Gate $I_t$}: Decides which new information from the current input $X_t$ and previous hidden state $H_{t-1}$ is relevant to be stored in the cell state.
+        \item \textbf{Output Gate $O_t$}: Controls which parts of the current cell state $C_t$ are used to compute the new hidden state $H_t$.
+    \end{itemize}
+    
+     Following the formalization by \cite{gentleschmidt2019recurrentneuralnetworksrnns}, the internal update process is defined by the following set of equations:
+     \begin{align}
+         F_t &= \sigma(X_t W_{xf} + H_{t-1} W_{hf} + b_f) \\%forget
+         I_t &= \sigma(X_t W_{xi} + H_{t-1} W_{hi} + b_i) \\%input
+         \tilde{C}_t &= \tanh(X_t W_{xc} + H_{t-1} W_{hc} + b_c) \\%input candidate
+         C_t &= F_t \odot C_{t-1} + I_t \odot \tilde{C}t \\ % update by multiplying old with forget and adding new
+         O_t &= \sigma(X_t W{xo} + H_{t-1} W_{ho} + b_o) \\ %output: which part of memory is relevant?
+         H_t &= O_t \odot \tanh(C_t)
+     \end{align}
+     
+     In these equations, $\tilde{C}_t$ represents a candidate cell state, $\sigma$ is the sigmoid activation function $\sigma(x) = \frac{1}{1 + e^{-x}}$, and $\odot$ denotes the element-wise (Hadamard) product. By using an this update for the cell state $C_t$, the \ac{LSTM} prevents the gradient from vanishing as quickly as in standard \acp{RNN}, allowing the network to learn relationships across significantly larger time gaps.
+
+     As indicated by the multi-dimensional input vector $X_t$ and the associated weight matrices, the \ac{LSTM} architecture is mathematically equipped for multivariate sequence modeling. The model has the capacity to represent nonlinear cross-channel correlations, because the internal gating mechanisms integrate information from all input features simultaneously to model their interdependencies within a shared hidden representation, making it suitable for our usecase. 
+     %achtung (für methodik:) LSTM erwarten gleichbleibende frequenz, informationsverlust durch interpolieren
+    
+
+    \subsubsection{Bi-LSTM}
+    Many variants and extensions of the \ac{LSTM} have been proposed to enhance its representative power. A notable architectural advancement is the \ac{Bi-LSTM}. While \cite{sutskever2014sequencesequencelearningneural} demonstrated that simply reversing the input sequence in a unidirectional \ac{S2S} model can significantly improve performance, the \ac{Bi-LSTM} formalizes this concept in its architecture.
+    
+    A \ac{Bi-LSTM} consists of two parallel hidden layers: a \textit{forward \ac{LSTM}} that processes the sequence in chronological order and a \textit{backward \ac{LSTM}} that processes it in reverse. Their respective hidden state outputs are then concatenated, added, averaged or multiplied  to form the final output. 
+    Recent studies, such as \cite{articlebilstmsus} claim this makes the \ac{Bi-LSTM} more suitable for vessel trajectory prediction. 
+   
+    However, the application of \acp{Bi-LSTM} in autonomous systems and \ac{MTT} requires us to consider causality. Because the backward pass requires knowledge of the entire sequence up to the final time step, \acp{Bi-LSTM} are non-causal. Consequently, they cannot be used within the decoder of our \ac{S2S} Model. Nevertheless, they can be applied within the encoder stage. This allows the model to generate a richer input vector, which is then processed by a unidirectional decoder to predict future motion. %blabla als  hyperparameter in optimierer.. evtl auch schon hier den teil in methologie schreiben, mit tim klörne
+
+      % 7 zusammenfassung: xlstm besser skalierbar, größerer speicher. aber für unsere 10 timesteps overkill. außerdem größerer feature space, schwerer (Schnell) manuell zu tunen, was unsere vorteile wettmachen würde + mangelnde vergeichbarkeit weil neu, . also nur kurz erklären
+    %xlstm liefert die grundlage für ein lstm basiertes foundation modell durch erweiterung mit ..., aber dieses exisistiert leider noch nicht. wenn ich den platz habe würde ich gerne
+
+    \subsubsection{x-LSTM}
+
+    Recently, \cite{beck2024xlstmextendedlongshortterm} introduced the \ac{x-LSTM} architecture to address bottlenecks of \ac{LSTM}. The primary goals of this architecture are to improve hardware scalability and to provide a larger memory capacity. To achieve this, two new \ac{LSTM} Layers are introduced:
+    
+    \begin{itemize}
+        \item \textbf{\ac{s-LSTM}}: introduces exponential gating, which allows the model to revise and update its memory more dynamically.
+        \item \textbf{\ac{m-LSTM}}: replaces the traditional vector cell state and its element-wise updates with a matrix memory updated via matrix multiplication. This structural shift eliminates the sequential dependency of the hidden state, enabling fully parallelized sequence processing during training.
+    \end{itemize}
+    Using these layers, an \ac{x-LSTM} can maintain the linear time complexity $\mathcal{O}(N)$ of conventional \acp{RNN} during inference, in contrast to the quadratic complexity of Transformers. \cite{beck2024xlstmextendedlongshortterm, attentioniayn} %for respective Time omplexity 
+    
+    However, the application of \ac{x-LSTM} in this work introduces practical challenges. For our specific use case of predicting short 10-step trajectories, the expanded memory capacity offers limited benefits while introducing computational overhead. Further, the architecture requires additional hyperparameters, such as the choice between \ac{s-LSTM} and \ac{m-LSTM} layers, as well as matrix dimensions. %number of heads.. aber die will ich hier nicht einführen
+    This expands the search space for the Hyperparameter optimization, making the tuning process computationally more expensive and harder to balance against simpler models. Finally, as a recently proposed architecture, utilizing \ac{x-LSTM} would limit the comparability of our results with existing \ac{LSTM}-based maritime tracking approaches. 
+  
+\subsection{Attention and Transformers}
+%ziemlcih kurz davor dass es sota ist, aber für uns ist hier alles gesagt, oder?
+   \ac{S2S} architectures based on \acp{RNN} or \acp{LSTM} face a structural limitation: The encoder must compress the entire input sequence into a single, fixed-size context vector, causing loss of some information.
+
+    To resolve this, \cite{bahdanau2016neuralmachinetranslationjointly} introduced the Attention Mechanism. Instead of relying on the final hidden state, Attention allows the decoder to access all intermediate hidden states of the encoder. At each decoding step, the mechanism calculates an alignment score, enabling the model to dynamically assign higher weights to the timestamps most relevant to the current prediction.
+
+    Building upon this, \cite{attentioniayn} proposed the Transformer architecture, which completely discards recurrent layers (such as \ac{RNN} or \ac{LSTM})in favor of Self-Attention. Self-attention computes the relational importance of all data points within a sequence simultaneously. This allows us to capture global dependencies.
+
+    %noch bischen umformulieren. filler weg un abschwächen evtl
+    However, applying Transformers to short physical time series, such as our \ac{AIS} trajectories, presents new challenges. Unlike \acp{LSTM}, Transformers lack an inductive bias for sequential order and must rely on artificial positional encoding. Recent critiques in time series research \cite{zeng2022transformerseffectivetimeseries}  suggest that for short, physically continuous sequences where simple local dependencies dominate, Transformers can be unnecessarily complex, computationally expensive, and prone to overfitting compared to recurrent or linear models. 
+    Nonetheless, their capacity to scale efficiently has popularized  Transformers as an architecture in large-scale predictive modeling. %needs citation
+\subsection{Foundation Models}
+    Because Transformers can scale so effectively, they enabled the creation of Foundation Models. These are massive neural networks pre-trained on vast, diverse datasets, across multiple domains such as weather, finance, and sensor data, to learn universal sequence patterns before being applied to a specific task. Despite being trained on very general data, they can be fine-tuned or adapted to specific tasks with relatively small amounts of task-specific data.\cite{Liang_2024foundation}.
+
+    A prominent example in time series forecasting is \textbf{Chronos} \cite{ansari2024chronoslearninglanguagetime}, which tokenizes time series values and processes them using a language-model architecture. For our vessel trajectory prediction, Foundation Models offer two distinct application paradigms:
+    \begin{itemize}
+        \item \textbf{Zero-Shot Forecasting:} The pre-trained model generates predictions for \ac{AIS} trajectories without ever having been trained on maritime data. Chronos in particular was developed to  have comparable and occasionally superior zero-shot performance on new datasets, relative to methods that were trained specifically on them \cite{ansari2024chronoslearninglanguagetime}
+        \item \textbf{Fine-Tuning (Warm Starting):} The model is further trained on our specific domain data. By initializing the training process with pre-trained weights (a "warm start") rather than random initialization, the model requires significantly less domain data and computational time to adapt to the specific kinematics of inland vessels.
+    \end{itemize}
+
+    While Transformer based foundation models represent the current state-of-the-art in generalized forecasting, their computational overhead contrasts with the physical transparency of domain-specific \ac{LSTM} models. Notably, the recently introduced \textbf{xLSTM} architecture \cite{beck2024xlstmextendedlongshortterm} addresses the Transformer's lack of sequential bias while maintaining extreme scalability. %O(N) in lstm anzahl layer vs O(n^2) für Transformer
+Consequently, xLSTM provides the theoretical basis for future \ac{RNN}-based Foundation Models. However, since no pre-trained xLSTM Foundation Model currently exists for time series forecasting, this work will evaluate the Transformer-based Chronos model. 
+    
+    As detailed in Chapter \ref{chap:methology}, we will benchmark our custom-trained \ac{LSTM} \todo{bi? + attention?}model against Chronos to investigate whether generalized, pre-trained knowledge outweighs physically grounded, domain-specific recurrence.
+    %%%%%%%%%%%%%%%%%%%%5
+    
+        %subsection cnn bzw dnn? werde ich eh nicht implementieren, also erstmal nicht...
+
+ \section{AutoML}
+    \todo{siehe overview onenote}
+    intro sätze, was ist automl, was ist das ziel. kategorien NENNEN und prägnant erklären, auswahl in methology
+    \subsection{The search space}
+    \subsubsection{Hyperparameter Optimization}
+    \subsubsection{Model Selection}
+    \subsubsection{CASH Problem}
+        briefly explain, exp growth of search space, without metadata for warm start not computationaly feasable for this thesis
+    \subsubsection{NAS Problem}
+        out of scope, explain only  if time  and  space permit
+        in practise we only apply NAS  once the type of layer  isclear, otherwise search space  way too large
+    \subsection{Search strategies and Pruning}
+    \subsection{Performance evaluation}
+
+muss ich related work machen? wenn ja:
+\cite{articlebilstmsus} für generell + weirden feature vector + data cleaaing
+https://ieeexplore.ieee.org/abstract/document/9391059 auch für sliding window und bilst + sattention + feature vector
+https://www.sciencedirect.com/science/article/pii/S002980182501710X generell

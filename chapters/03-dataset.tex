@@ -4,12 +4,13 @@
 
 \section{Data Sources}
 
-This work uses publicly available \ac{AIS} data from two geographic domains to ensure diversity in traffic patterns, waterway types, and vessel behaviours. The German datasets cover measurement stations at Kiel and Bremerhaven, recorded by \ac{AIS} receivers operated by the Bundesamt für Seeschifffahrt und Hydrographie (BSH) as part of their ship emissions monitoring programme. These data are organised by measurement station and month, downloadable per day, and publicly accessible via GovData. The U.S. dataset is sourced from the NOAA Marine Cadastre Nationwide \ac{AIS} dataset, distributed as daily CSV files covering all U.S. coastal and inland waters, and accessible via the Marine Cadastre vessel traffic portal. Records are filtered geographically to the Upper Mississippi River area within the relevant bounding box. \todo{polygon}
+This work uses publicly available \ac{AIS} data from two geographic domains to ensure diversity in traffic patterns, waterway types, and vessel behaviours. The datasets cover measurement stations at Kiel,  Bremerhaven and Wedel, recorded by \ac{AIS} receivers operated by the Bundesamt für Seeschifffahrt und Hydrographie (BSH) as part of their ship emissions monitoring programme. These data are organised by measurement station and month, downloadable per day, and publicly accessible via GovData. For each Measuring station, we used data of a full year to avoid any seasonal effects. %The U.S. dataset is sourced from the NOAA Marine Cadastre Nationwide \ac{AIS} dataset, distributed as daily CSV files covering all U.S. coastal and inland waters, and accessible via the Marine Cadastre vessel traffic portal. Records are filtered geographically to the Upper Mississippi River area within the relevant bounding box. \todo{polygon + foto weltkarte}
 \subsection{Raw Data Format}
 
-The German \ac{AIS} data are stored as semicolon-delimited log files with fields including navigation status, heading, speed (in knots with unit suffix, e.g., \texttt{6.5kt}), latitude/longitude (with hemisphere suffix, e.g., \texttt{54.419327N}), course over ground (COG), true heading, and a compact UTC timestamp (YYMMDD HHMMSS). The NOAA Marine Cadastre \ac{AIS} data follow a standardised CSV format as defined by the NOAA data dictionary, with columns \texttt{MMSI}, \texttt{BaseDateTime}, \texttt{LAT}, \texttt{LON}, \texttt{SOG}, \texttt{COG}, \texttt{Heading}, and optional vessel metadata including \texttt{VesselName}, \texttt{IMO}, \texttt{VesselType}, \texttt{Length}, \texttt{Width}, \texttt{Draft}, and \texttt{Cargo} \cite{noaa2025aisdict}.\todo{weird citation format, can I switch to [NOAA25]??}
+The \ac{AIS} data is stored as semicolon-delimited log files with fields including navigation status, heading, speed (in knots with unit suffix, e.g., \texttt{6.5kt}), latitude/longitude (with hemisphere suffix, e.g., \texttt{54.419327N}), \ac{COG}, true heading, and a UTC timestamp (YYMMDD HHMMSS). %The NOAA Marine Cadastre \ac{AIS} data follow a standardised CSV format as defined by the NOAA data dictionary, with columns \texttt{MMSI}, \texttt{BaseDateTime}, \texttt{LAT}, \texttt{LON}, \texttt{SOG}, \texttt{COG}, \texttt{Heading}, and optional vessel metadata including \texttt{VesselName}, \texttt{IMO}, \texttt{VesselType}, \texttt{Length}, \texttt{Width}, \texttt{Draft}, and \texttt{Cargo} \cite{noaa2025aisdict}.\todo{weird citation format, can I switch to [NOAA25]?? siehe slack so viel wir möglich in diesem stil, ich denke bei echten authoren mache ich das aber bei so organisationen in brackets}
 
-Both datasets add unique identifiers to vessels, allowing individual tracking. 
+%Both datasets add unique identifiers to vessels, allowing individual tracking. 
+The dataset provides a unique identifier (MMSI) to each vessel, allowing individual tracking.
 
 \section{Data Preprocessing}
 This section follows the structure of my implementation and refers to the files     \texttt{01\_extract.py},  \texttt{02\_clean.py}, \texttt{03\_sample.py}, \texttt{04\_track\_segmentation.py}, and \texttt{05\_normalize.py}
@@ -19,15 +20,15 @@ The raw \ac{AIS} data undergo a five-step pipeline  to produce model-ready traje
 
 \subsection{Extracting}
 
-Both sources are parsed into a csv with the following core fields:
-
+%Both sources are parsed into a csv with the following core fields:
+The files are parsed into a csv with the following core fields:
 \begin{table}[ht]%output in 01_raw
 \centering
 \begin{tabular}{lll}
 \toprule
 Field & Type & Description \\
 \midrule
-\texttt{dataset} & string & Source identifier (e.g., \texttt{kiel}, \texttt{marinecadastre}) \\
+\texttt{dataset} & string & Source identifier (e.g., \texttt{kiel}, \texttt{bremerhaven}) \\
 \texttt{t\_utc} & datetime & UTC timestamp \\
 \texttt{vessel\_id} & int & (hash of) MMSI number \\
 \texttt{lat, long} & float & coordinates \\ %this means we can only publish the normalized data or we have to add some shift, but that is not my concern now
@@ -42,18 +43,24 @@ Field & Type & Description \\
 \label{tab:unified-format}
 \end{table}
 
-Additionally, dataset-specific optional fields are retained where available: \texttt{nav\_status} and \texttt{true\_heading} for the German datasets; \texttt{vessel\_name}, \texttt{imo}, \texttt{call\_sign}, \texttt{vessel\_type}, \texttt{length}, \texttt{width}, \texttt{draft}, and \texttt{cargo} for the Marine Cadastre data. 
+%Additionally, dataset-specific optional fields are retained where available: 
+
+%\texttt{nav\_status} and \texttt{true\_heading} for the German datasets; \texttt{vessel\_name}, \texttt{imo}, \texttt{call\_sign}, \texttt{vessel\_type}, \texttt{length}, \texttt{width}, \texttt{draft}, and \texttt{cargo} for the Marine Cadastre data. TODO remove marinecadastre from code
 
 
 As per ~\cite{itu-r-m1371-1-2001}, raw \ac{AIS} log files contain multiple message types beyond vessel position reports, including static and voyage-related data (Type 5), static data reports (Type 24), base station reports (Type 4), and aids-to-navigation reports (Type 21). Navigation aids (buoys etc., MMSI starting with 99) and aircrafts are filtered out. Only message types carrying dynamic position information are retained: Type 1 (Class A, scheduled), Type 2 (Class A, assigned), Type 3 (Class A, response), Type 18 (Class B), and Type 27 (long-range). These provide SOG, COG, heading, and coordinates. All other types are discarded prior to parsing. The trimmed data constitute approximately 15\% of the raw German datasets.
 
-We fix known encoding errors, by means such as adding constant value of 102.4 to all negative SOGs and converting a heading of 511 to NaN.
+Additionaly, we fix known encoding errors, by means such as adding constant value of 102.4 to all negative SOGs and converting a heading of 511 to NaN.
 
 \subsection{Cleaning and Filtering}
+% more advanced filtering:https://arxiv.org/pdf/2001.01592
 
-\subsubsection{Kinematic Outlier Detection:} To identify erroneous coordinates and "GPS jumps," the distance between consecutive points is calculated. If a point’s displacement exceeds what is physically achievable based on its reported Speed Over Ground (SOG) and the time elapsed since the previous timestamp, the point is discarded. During this cleaning phase, no interpolation is performed to fill the resulting gaps; this prevents the introduction of synthetic data before the formal resampling stage. Additionally, a hard threshold is applied to filter out unrealistic velocity readings, with records of any vessel reporting an SOG greater than 30 knots being excluded.
+\subsubsection{Kinematic Outlier Detection:} To identify wrong coordinates and "GPS jumps," the distance between consecutive points is calculated. If a point’s displacement exceeds what is physically achievable based on its reported \ac{SOG} and the time elapsed since the previous timestamp, the point is discarded. During this cleaning phase, no interpolation is performed to fill the resulting gaps. This prevents the introduction of synthetic data before the formal resampling stage. This kinematic approach to filtering out implausible GPS positions shows similarity to the more advanced positional preprocessing introduced by \cite{Zhao_Shi_Yang_2018}. They calculate a predicted speed based on GPS and see if it matches the \ac{SOG} message. Additionally they put a time threshold of 10 minutes between messages, at which tracks are divided. This time threshold is handled differently in our approach, as is specified in \ref{subsubsec:windowandstride}. \cite{Zhao_Shi_Yang_2018} continue to reassociate the resulting tracks, but for our purposes, the filter is sufficient.
 
-The data is further refined by applying geographic boundaries specific to each target region. These bounding boxes serve two purposes: they act as a secondary filter for large coordinate errors and allow for the subsetting of the Marine Cadastre dataset, originally provided for a much larger area, to the specific study region of the Upper Mississippi River. The defined boundaries for each dataset are detailed in Table \ref{tab:geo-bounds}:
+
+Additionally, a hard threshold is applied to filter out unrealistic velocity readings, with records of any vessel reporting an SOG greater than 30 knots being excluded.
+
+The data is further refined by applying geographic boundaries specific to each target region. These bounding boxes serve two purposes: they act as a secondary filter for large coordinate errors and allow us to extract and study the region of the Upper Mississippi River within the Marine Cadastre dataset, originally provided for a much larger area. The defined boundaries for each dataset are detailed in Table \ref{tab:geo-bounds}:
 
 \begin{table}[ht]
 \centering
@@ -61,9 +68,9 @@ The data is further refined by applying geographic boundaries specific to each t
 \toprule
 Dataset & Bounding Box \\
 \midrule
-Bremerhaven & lat $50^\circ$--$60^\circ$N, lon $5^\circ$--$10^\circ$E \\
-Kiel & lat $50^\circ$--$62^\circ$N, lon $8^\circ$--$12^\circ$E \\
-Marine Cadastre & lat $28.8^\circ$--$35.2^\circ$N, lon $91.0^\circ$--$88.8^\circ$W \todo{polygon} \\
+Bremerhaven & lat $53.5^\circ$--$54.0^\circ$N, lon $8.0^\circ$--$8.8^\circ$E \\
+Kiel & lat $53.5^\circ$--$54.5^\circ$N, lon $9.2^\circ$--$11.5^\circ$E \\
+Wedel & lat $53.0^\circ$--$54.0^\circ$N, lon $9.0^\circ$--$10.5^\circ$E \ \\
 \bottomrule
 \end{tabular}
 \caption{Initial geographic filters (02\_clean.py).}
@@ -75,11 +82,37 @@ Marine Cadastre & lat $28.8^\circ$--$35.2^\circ$N, lon $91.0^\circ$--$88.8^\circ
 
 Geographic coordinates are projected to UTM with the UTM zone determined automatically from the median longitude of each dataset. This Cartesian representation (metres Easting/Northing) enables accurate linear operations for resampling and normalization and allow Euclidean distance computations in loss functions. Duplicates occur when multiple stations receive the same signal: approximately two-thirds of duplicates  (same timestamp and vessel ID) are exact matches and discarded; one-third retain the row with least zero entries as first and the oldest as second criteria.
 
-Vessel IDs have been anonymised using a one-way SHA-256 hashing function on the MMSI.
+\subsubsection{Geographic Context Assignment}
+    To enable training of context-aware models, each AIS message is assigned a geographic context \texttt{harbour}, \texttt{river}, \texttt{channel} or \texttt{lock}, based on it's coordinates. To assign those labels, we extract water bodies and maritime infrastructure from \cite{OpenStreetMap}  via the OSMnx library, and vessel coordinates are matched to these \ac{OSM} polygons using a spatial join.
+
+    
+    Because explicit harbour tags in OSM are often incomplete or unreliable, we employ a heuristic fallback approach for the classification. We explicitly identify polygons tagged as locks, channels, and rivers. Any remaining valid water bodies within our bounding boxes, that are not assigned to any of the other types in \ref{fig:OSM_overview_Kiel} are defaulted to the \texttt{harbour} context. This assumption is viable because the open sea is typically absent from these specific OSM water layer features. The unlabeled residual water effectively represents port basins, bays, and general maneuvering areas. In cases where overlapping polygons exist, a priority mapping of \texttt{lock} > \texttt{channel} > \texttt{river} > \texttt{harbour} is applied to resolve conflicts (e.g., a lock is prioritized over a general river).
+    
+    Points falling entirely outside the retrieved water polygons are labeled as unknown and excluded from the training data. Given the heuristic nature of this fallback assignment, the resulting spatial contexts are verified through manual visual inspection to ensure geographic validity. A visualization of the label definitions in Kiel can be seen in Figure \ref{fig:OSM_overview_Kiel}, and the spatially assigned data applied to the Kiel dataset is illustrated in Figure \ref{fig:OSM_assigned}.
+    
+    \begin{figure}%vlt in den anhang
+        \centering
+        \includegraphics[width=0.9\linewidth, trim= 1cm 4cm 1cm 4.5cm, clip]{figures/OSM_overview_Kiel.png}
+        \caption{Labels provided by \cite{OpenStreetMap} in the Kiel harbour area}
+        \label{fig:OSM_overview_Kiel}
+    \end{figure}
+    
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.75\linewidth]{figures/OSM AIS Assigned Kiel.png}
+        \caption{AIS data assigned to labels provided by \cite{OpenStreetMap} in the Kiel harbour area}
+        \label{fig:OSM_assigned}
+    \end{figure}
+
+
+\subsubsection{Anonymization}
+
+Vessel IDs are anonymized via SHA-256 hashing of the MMSI. Positional privacy is preserved by expressing UTM coordinates relative to the dataset's median position, removing any absolute geographic reference. The published Dataset will therefore be available from the cleaning step onwards.
+
 \subsection{Sampling}
 \subsubsection{AIS Reporting Requirements}
 
-The reporting frequency of \ac{AIS} transponders is non-uniform, as transmission intervals are dynamically adjusted based on vessel class, speed, and maneuvering status according to \cite{itu-r-m1371-1-2001}. Class A transponders, mandatory for large commercial vessels (typically $>300$,GT international or $>500$,GT domestic), transmit significantly more often than the Class B transponders used by smaller or recreational craft. These variable intervals, summarized in Table \ref{tab:ais-frequencies}, necessitate a standardized resampling approach to ensure temporal consistency across datasets.
+The reporting frequency of \ac{AIS} transponders is non-uniform, as transmission intervals are dynamically adjusted based on vessel class, speed, and maneuvering status according to \cite{itu-r-m1371-1-2001}. Class A transponders, mandatory for large commercial vessels (typically $>300$GT international or $>500$GT domestic), transmit significantly more often than the Class B transponders used by smaller or recreational craft. These variable intervals, summarized in Table \ref{tab:ais-frequencies}, necessitate a standardized resampling approach to ensure temporal consistency across datasets.
 
 \begin{table}[ht]
 \centering
@@ -112,43 +145,57 @@ $>$ 23 knots & & 5 s \\
 \end{table}
 %wenn lücke zu lang, zb wegen filter oder wegen schlechten daten, leaving area ... dann split up
 \subsubsection{Sampling and Interpolating}
-To facilitate time-series analysis, the raw \ac{AIS} data is resampled to a uniform temporal grid. Because the NOAA Marine Cadastre data is provided at a reduced temporal resolution of 60s \cite{noaa2025aisdict}, we differentiate our processing pipeline by dataset source: the German \ac{AIS} data is interpolated to a 10s interval, whereas the Marine Cadastre data is standardized to a 60s interval.
 
-The interpolation methodology varies by feature type. We apply linear interpolation for most telemetry features; however, geographic coordinates are interpolated using third-order splines. This ensures trajectory smoothness and more accurately reflects realistic vessel motion compared to piecewise linear paths.
-After resampling, we compute the distance of each point to the closest original point for later use as a feature that indicates quality of our datapoint.
+To facilitate time-series analysis, the raw \ac{AIS} data is resampled to a uniform temporal grid. %Because the NOAA Marine Cadastre data is provided at a reduced temporal resolution of 60s \cite{noaa2025aisdict}, we differentiate our processing pipeline by dataset source: the German \ac{AIS} data is interpolated to a 10s interval, whereas the Marine Cadastre data is standardized to a 60s interval.
+We sample all data to 30s intervals. This frequency was chosen to capture our target speed range of 2 to 14 knots, ensuring that vessels equipped with either Class A or Class B transponders remain viable for model training.
 
-To quantify the reliability of these interpolated values, we compute a temporal offset feature, denoted as $\Delta t$. This feature represents the absolute time difference between each resampled point and its nearest original observation:
+The interpolation methodology varies by feature type. We apply linear interpolation for most telemetry features. Geographic coordinates are interpolated using third-order splines. This ensures trajectory smoothness and more accurately reflects realistic vessel motion compared to piecewise linear paths.
+
+While continuous telemetry features and coordinates are interpolated, categorical attributes such as the assigned geographic context cannot be handled mathematically. Instead, a forward-fill strategy is applied: Any new, interpolated point inherits the geographic context of the last valid AIS observation.
+
+To quantify the reliability of interpolated values, we compute a temporal offset feature, denoted as $\Delta t$. This feature represents the absolute time difference between each resampled point and its nearest original observation:
 \begin{equation}
 \Delta t = |t_{resampled} - t_{original, nearest}|
 \end{equation}
-By including $\Delta t$ as a feature in subsequent modeling steps, the system can account for interpolation uncertainty; a higher $\Delta t$ indicates a larger temporal gap in the raw data, signaling lower confidence in the precision of the interpolated state at that specific timestamp.
+By including $\Delta t$ as a feature in subsequent modeling steps, the system can account for interpolation uncertainty- A higher $\Delta t$ indicates a larger temporal gap in the raw data, signaling lower confidence in the precision of the interpolated state at that specific timestamp. \me{Ablation study would be interesting as this was my own idea}
 
 \subsection{Trajectory Segmentation}
+\me{Please verify my way of thinking here avoids overlap of Train and Val Sets}
 This stage of the pipeline transforms cleaned vessel streams into samples suitable for trajectory prediction. By employing a sliding window approach, we maximize the utility of the available data while ensuring the physical and temporal consistency of each sample.
 
+\todo! hier cite \cite{zaman2024deep}, die machen es ganz anders. nur 7 schiffe, dafür über 3 mnoate. gesamplet auf 1h. begründen wieso wir kurzen horizon haben und dafür meine splits sinvvoll sind
+
 \subsubsection{Windowing and Stride logic}
-Trajectories are partitioned into samples using a sliding window consisting of a 10-minute context window and a 2-minute prediction horizon. To ensure diversity in the dataset while managing computational redundancy, a 2-minute stride is applied between consecutive samples.To maintain the integrity of the motion dynamics, a "Time Gap Guard" is implemented: if a window spans a data blackout where the elapsed time exceeds the theoretical duration ($T_{ctx} + T_{pred}$) by more than 50\%, the segment is discarded. This ensures that the model only learns from continuous, high-fidelity motion sequences rather than fragmented data.
+\label{subsubsec:windowandstride}
+Trajectories are partitioned into samples using a sliding window consisting of a 5-minute context  window and a 5-minute  prediction horizon. To ensure diversity in the dataset while managing computational redundancy, a 1-minute stride is applied between consecutive samples.To maintain the integrity of the motion dynamics, a "Time Gap Guard" is implemented: if a window spans a data blackout where the elapsed time exceeds the theoretical duration ($T_{ctx} + T_{pred}$) by more than 50\%, the segment is discarded. This ensures that the model only learns from continuous motion sequences rather than fragmented data.
+
+\todo{cite this for 2 minute prediction with 12s context (+ other modes) and explain why we pick .. with ..: \cite{autonomousTH}}
+
+\subsubsection{Context-Aware Splitting and Label Smoothing}
+Generating completely pure context samples is challenging due to GPS noise. When a vessel travels parallel to a polygon border (e.g., a river bordering a harbour), spatial jitter can cause the context label to alternate. A naive segmentation approach that splits the trajectory at every context change would fragment continuous paths into unusable micro-segments. To mitigate this problem, a rolling majority vote over a 3-minute window (6 samples at 30s frequency) is applied. This smooths out the label jitter. The trajectory is only split into sub-tracks when a stable, persistent transition into a new geographic context occurs
 
 \subsubsection{Kinematic Filtering}
 To focus the model on active vessel dynamics rather than stationary behavior, a two-tier speed filter is applied to every generated track. A track is excluded if it meets either of the following criteria:
 
-\textbf{Anchoring Detection}: The maximum Speed Over Ground (SOG) within the segment does not exceed 1.0 knot.
+\textbf{Anchoring Detection}: The maximum Speed Over Ground (SOG) within the segment does not exceed 0.5 knots.
 
-\textbf{Low-Speed Persistence}: More than 30\% of the data points within the segment report an SOG below 2.0 knots.
+\textbf{Low-Speed Persistence}: More than 50\% of the data points within the segment report an SOG below 1.0 knots. 
+\todo{This will filter out locks??}
 
 While these filters remove a significant portion of the raw data, they are essential for isolating maneuvering patterns and preventing the model from being biased toward stationary or moored vessels.
 
 
 \subsubsection{Train-Validation-Test Splitting}
-
+\todo{data stratification 1st define a metric 2nd align}
 To ensure robust evaluation and prevent data leakage, the dataset is partitioned at the vessel level rather than the track level. If the data were split randomly by track ID, the sliding window stride would cause the model to see overlapping temporal segments of the same vessel across the training and test sets.
 
-Instead, unique vessel IDs are shuffled and assigned to training (60\%), validation (20\%), and testing (20\%) subsets. This ensures that the model is evaluated on its ability to generalize to entirely unseen vessels, as detailed in the methodology chapter (Section \ref{todo:methodology}).
+Instead, unique vessel IDs are shuffled and assigned to training (60\%), validation (20\%), and testing (20\%) subsets. This ensures that the model is evaluated on its ability to generalize to entirely unseen vessels, as detailed in the methodology chapter (Section \ref{chap:methology}).
 
+Finally, the valid trajectory segments are saved separated by both their evaluation split (train/val/test) and their geographic context (e.g., river, lock, harbour). This explicit separation eliminates the unknown samples and enables targeted training and evaluation of motion models for specific waterway types.
 
 \subsection{Feature Engineering and Normalization}
-The final stage of the preprocessing pipeline involves the generation of derived motion features and the statistical standardization of the input vector. These steps are critical for ensuring numerical stability and proper gradient propagation during the model training phase.
-
+The final stage of the preprocessing pipeline involves the generation of derived motion features and the statistical standardization of the input vector. These steps are critical for... % ensuring numerical stability and proper gradient propagation during the model training phase.
+\todo{nach methology neu schreiben, features sind noch nicht entschieden}
 \subsubsection{Feature Transformation}
 To improve the learning of motion patterns, the raw \ac{AIS} attributes are transformed as follows:
 \begin{itemize}
@@ -167,7 +214,7 @@ We apply Z-score normalization to the feature set, transforming each variable to
 On a typical day, the Kiel and Bremerhaven datasets contain between 200 and 500 unique vessels. In contrast, the raw NOAA Marine Cadastre dataset captures approximately 15,000 vessels daily across all U.S. coastal and inland waters. Following the application of the spatial filter for the Upper Mississippi River bounding box, this volume is reduced to a highly focused subset of \todo{[insert filtered vessel count]} active inland vessels. 
 Preprocessing the Kiel dataset yields approximately 1,400 trajectories per day. In total, the final model was trained across \todo{[insert total number]} datasets.
 
-To contextualize the raw data quality prior to resampling, Figure \ref{fig:points-per-window} illustrates the distribution of \ac{AIS} messages received per vessel across various time windows (1, 5, 10, and 20 minutes) for a sample day. Figure \ref{fig:interval-hist} complements this by showing the distribution of inter-message intervals across the respective datasets, highlighting the natural reporting variability that necessitates the interpolation steps described previously. Finally, Figure \ref{fig:sample-trajectory} provides a spatial visualization of the preprocessed trajectories within the Kiel dataset, generated using \texttt{visualize.py}.
+To contextualize the raw data quality prior to resampling, Figure \ref{fig:points-per-window} illustrates the distribution of \ac{AIS} messages received per vessel across various time windows (1, 5, 10, and 20 minutes) for a sample day. Figure \ref{fig:interval-hist} complements this by showing the distribution of inter-message intervals across the respective datasets, highlighting the natural reporting variability that makes the interpolation steps described previously necessary. Finally, Figure \ref{fig:sample-trajectory} provides a spatial visualization of the preprocessed trajectories within the Kiel dataset, generated using \texttt{visualize.py}.\todo{neues Bild wenn für Context und Prediction Horizon entschieden}
 
 
 
@@ -195,13 +242,13 @@ To contextualize the raw data quality prior to resampling, Figure \ref{fig:point
 \end{figure}
 
 \section{Limitations}
-Despite the high fidelity of the processed datasets, several inherent limitations of the AIS system and the specific data sources must be acknowledged:
+Despite the high fidelity of the processed datasets, some inherent limitations of the AIS system and the specific data sources must be acknowledged:
 \subsubsection{Regulatory Reporting Bias}
-The data primarily reflects the movement patterns of large commercial vessels mandated to carry Class A transponders under the International Convention for the Safety of Life at Sea (SOLAS) \cite{solas2014}. This includes cargo vessels exceeding 300,GT on international voyages and all tankers. Consequently, smaller recreational craft and fishing vessels utilizing Class B transponders are significantly underrepresented. Because Class B devices transmit at lower power and with less frequent update rates (as detailed in Section \ref{tab:ais-frequencies}), the resulting models may exhibit a bias toward the predictable, high-inertia dynamics of large commercial ships.
+The data primarily reflects the movement patterns of large commercial vessels mandated to carry Class A transponders under the International Convention for the Safety of Life at Sea (SOLAS) \todo{abr}\cite{solas2014}. This includes cargo vessels exceeding 300GT on international voyages and all tankers. Consequently, smaller recreational craft and fishing vessels utilizing Class B transponders are significantly underrepresented. Because Class B devices transmit at lower power and with less frequent update rates (as detailed in Table \ref{tab:ais-frequencies}), the resulting models may exhibit a bias toward the predictable, high-inertia dynamics of large commercial ships.
 
 
 \subsubsection{Temporal Resolution and Information Loss}
-The decision to use the NOAA Marine Cadastre dataset introduces a specific temporal constraint. While raw \ac{AIS} signals can be received at intervals as short as 2 seconds for fast-moving or maneuvering vessels, the NOAA archives are decimated to a fixed 60-second resolution to manage data volume \cite{noaa2025aisdict}. This reduction in sampling frequency creates a discrepancy between the German datasets (interpolated to 10,s) and the U.S. data. In high-speed scenarios or tight maneuvers, a 60-second interval may fail to capture the peak curvature of a trajectory, potentially leading to smoothing artifacts in the spline interpolation.
+The decision to use the NOAA Marine Cadastre dataset introduces a specific temporal constraint. While raw \ac{AIS} signals can be received at intervals as short as 2 seconds for fast-moving or maneuvering vessels, the NOAA archives are decimated to a fixed 60-second resolution to manage data volume \cite{noaa2025aisdict}. This reduction in sampling frequency creates a discrepancy between the German datasets (interpolated to 10s) and the U.S. data. In high-speed scenarios or tight maneuvers, a 60-second interval may fail to capture the peak curvature of a trajectory, potentially leading to smoothing artifacts in the spline interpolation. \todo{outdated}
 
 \todo{more? sensor noise? cheap sensors? note done if noticed in other literature}
 \todo{Context labeling?}

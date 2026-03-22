@@ -7,17 +7,52 @@
 \label{chap:introduction}
 
 \section{Motivation}
-%This is the "sell" section. You convince the reader that vessel tracking is important, that classical models have limitations, and that deep learning is a promising direction. Broad context, real-world stakes. No technical depth yet.
-%"Inland waterway traffic is growing. Accurate vessel trajectory prediction is critical for collision avoidance and traffic management. Current systems rely on kinematic models that assume simplified motion..."
+
+Maritime transport accounts for more than two-thirds of freight transport performance in the EU \cite{Eurostat2024ModalSplit}. This makes waterway infrastructure a critical backbone of European logistics. At the same time, geopolitical disruptions have repeatedly demonstrated that unexpected chokepoints can arise with little warning, placing sudden and extreme demands on alternative transport corridors. The significance of maritime transport and the requirement for safe, reliable operation is therefore consistently high, independent of short-term traffic trends. %I added this becasue of current politicalsituation and i feel ti is morerelevant than trends
+
+Beyond economic pressure, human factors are a major contributor to maritime accidents \cite{BSU2024}, motivating the development of systems that reduce reliance on manual operation. Autonomous and cooperative surface vessels represent a promising response to both challenges and aim to reduce operational costs while removing a major source of navigational error.
+
+The GALILEOnautic 2+ project \cite{TimEis2025} pursues this direction by developing a networked, cooperative traffic system for autonomous inland vessels, targeting safe maneuvering in safety-critical environments such as ports and narrow waterways. For autonomous surface vessels operating in close proximity to surrounding traffic, reliable perception and prediction of other vessels' motion is a fundamental requirement. A key technical component enabling this is \ac{MTT}, the continuous association of sensor detections over time to maintain consistent trajectory estimates for all surrounding vessels \cite{TimEis2025}.
+The performance of \ac{MTT} is fundamentally dependent on the underlying motion model, which provides the 'prediction' step in the tracking cycle. This model is responsible for propagating the vessel's state forward in time between sensor updates. As a consequence, the ability of a tracking system to maintain lock on a target in dense traffic is highly sensitive to the accuracy of this prediction. This motivates the exploration of data-driven approaches to capture the complex dynamics that traditional models often fail to describe.
+
+While onboard sensors such as radar, LiDAR, and cameras provide local observations, \ac{AIS} offers large-scale motion data with time-stamped position, velocity, and vessel identity across entire waterway networks \cite{noaa2025aisdict}. This makes \ac{AIS} a valuable source of real vessel trajectories for data-driven learning of motion behavior. Classical kinematic motion models, such as constant velocity or constant acceleration, have long served as the prediction component within tracking filters. However, they assume simplified, idealized dynamics and struggle to represent nonlinear maneuvers, sudden course changes, or context-dependent vessel behavior. Deep learning-based motion models trained on \ac{AIS} data offer a promising alternative, with the potential to capture more realistic dynamics and improve prediction quality in the constrained, high-traffic environments targeted by GALILEOnautic 2+.
+
+
+However, transitioning from physically-grounded kinematic baselines to deep learning architectures introduces a  methodological challenge: the dependence of model performance on a high-dimensional design space. As established by \cite{AutoMLHoos}, achieving high performance in machine learning requires navigating complex design choices, including model architecture and hyperparameter configurations. 
+
+In the context of vessel motion modeling, a fair comparison between established kinematic models and deep learning models is only possible if the latter are carefully optimized. Manual "trial-and-error" tuning risks a biased evaluation, where a deep learning model might underperform simply due to a suboptimal configuration rather than an inherent lack of predictive capability. To address this, this thesis utilizes \ac{AutoML} to systematically manage \ac{HPO}. By automating the search for optimal learning rates, network dimensions, and regularization parameters, \ac{AutoML} ensures that the data-driven models are evaluated at their full potential. This approach provides a "level playing field" for benchmarking deep learning against classical motion models, and ensures that any observed performance gains are a result of the model’s ability to capture complex vessel dynamics rather than arbitrary parameter choices. \me{rewrite this after doing the methology section}
+
+
+
 
 \section{Problem Statement}
+\me{More or less just a placeholder, to be adjusted as I progress and read more literature}
 %Narrow and precise. You define the concrete technical problem: given a sequence of AIS observations, predict future vessel positions. You state what is unknown or unsolved — not why it matters (that was 1.1), but what the gap is.
 
 %"It is unclear whether deep learning motion models can outperform classical kinematic models for inland vessel trajectory prediction, and how sensitive their performance is to hyperparameter choices."
+Trajectory prediction in maritime multi-target tracking is traditionally addressed by classical kinematic motion models, such as \ac{CV}, \ac{CA}, and \ac{CTRV}, which approximate vessel dynamics through simplified physical equations. While computationally efficient, these models can struggle to represent the nonlinear, context-dependent maneuvers characteristic of inland waterway traffic. Deep learning-based motion models trained on \ac{AIS} observations of position, velocity, and heading offer an alternative by learning motion patterns directly from data. Prior work has demonstrated their potential in maritime trajectory prediction  \cite{zaman2024deep}, but systematic evaluation as drop-in motion model components within tracking frameworks and their performance in the specific inland waterway domain remains limited. %aber macheich das?
+\todo{hier konkret werden. given context window of .., predict motion for ....  This is a time series forecasting problem   } 
+
+\todo{nochmal in mein proposal schauen und Teile übernehmen}
 
 
 \section{Research Questions}
 %What specific questions will you answer?
 %Numbered, concrete, answerable questions that your experiments will directly address. Each result chapter should answer at least one.
+ Predictive Performance:
+Can deep learning motion models (to be defined: LSTM, Transformer..) outperform classical kinematic baselines (CV, CA, CTRV, IMM) as motion model components within a multi-target tracking framework for inland vessel trajectories derived from \ac{AIS} data?
+Which of these Deep learning Models is the most suitable?
+
+ AutoML Applicability:
+Which AutoML formulation  model selection, hyperparameter optimization, CASH, or NAS  is most appropriate and computationally efficient for tuning deep learning motion models in the inland waterway domain?
+
+...?
 \section{Contributions}
 %deliverables. anonymized dataset, vergelich von motin models
+1. Dataset
+2. Pipeline zum generieren des datasets mit automatischer zuweisung von labels anhand osm daten
+2. Vergleich von (mehreren) Deep Learning Modellen zu kinematischen Modellen
+3. Nutzung von AutoML in diesem Kontext und auswählen des scope von AutoMl
+
+\section{Structure of the Thesis}
+fill later

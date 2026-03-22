@@ -3,10 +3,15 @@
 \label{chap:results}
 
 %rough draft only
-\section{Baseline vs Learned Models}
+\section{Baseline vs Learned Models}%vs foundation models
 %\section{per context analysis}
 %\section{ablation studies}
 %\section{Error Analyzis, failure cases}
 
 
+ship trajectory predictions for different prediction horizons compare:
 
+MAE and MSE of 
+ADE, FDE, and NL-ADE? \cite{zaman2024deep}
+
+bsolute Trajectory Error. To evaluate how well a model per-forms in predicting trajectories we use the Absolute TrajectoryError (ATE) which are commonly used in SLAM systems [ 39 ]. TheATE is the Root Mean Squared Error (RMSE) of a trajectory. This iscomputed by averaging the squared (euclidean) distance betweenthe predicted and the ground truth coordinates at every timestampin the future trajectory and taking the root. We prefer the use ofRMSE over Mean Average Error (MAE) used in other methods asthe RMSE proportionally gives larger errors to outliers, in this caselarge distances. Because the safety of both the own ship and targetship can be compromised by these large errors we prefer a metricwhich reflects this \cite{autonomousTH} \todo{das ist kopiert nicht so übernehmen nur zur übersicht}
