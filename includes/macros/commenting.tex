@@ -7,6 +7,9 @@
 % Define colors for authors
 \definecolor{janecolor}{rgb}{0.2,0.6,0.6}
 \definecolor{johncolor}{rgb}{0,0.7,0}
+\definecolor{wscolor}{rgb}{0, 0, 0.6} % Darker Blue
+\definecolor{wscolor2}{rgb}{0.545, 0, 0} % darker red
+\definecolor{sugcolor}{rgb}{0, 0.5, 0.1} % idk
 
 % Define colors for general macros
 \definecolor{todocolor}{rgb}{0.9,0.1,0.1}
@@ -21,19 +24,27 @@
   
 % Define individual comments for authors
 \newcommand{\me}[1]{\nbc{Dustin}{#1}{janecolor}}
-\newcommand{\john}[1]{\nbc{John}{#1}{johncolor}}
+\newcommand{\tim}[1]{\nbc{tim}{#1}{johncolor}}
+\newcommand{\ws}[1]{\nbc{WS}{#1}{wscolor}}
+\newcommand{\wsx}[1]{\nbc{WS}{#1}{wscolor2}}
+\newcommand{\sug}[1]{\nbc{edit}{#1}{sugcolor}}
 
 % Define general helper macros
 \newcommand{\todo}[1]{\nbc{TODO}{#1}{todocolor}}
 \newcommand{\changed}[1]{\nbc{CHANGED}{#1}{changedcolor}}
 \newcommand{\added}[1]{\nbc{ADDED}{#1}{addedcolor}}
 
+
 \newcommand{\redacted}[1]{\emph{[anonymized for review]}}
 %\renewcommand{\redacted}[1]{#1}
 
 % Use this to temporarily hide reviewing comments, todos, etc.:
-%  \renewcommand{\jane}[1]{}
-%  \renewcommand{\john}[1]{}
+  \renewcommand{\me}[1]{}
+  \renewcommand{\ws}[1]{}
+  \renewcommand{\wsx}[1]{}
+
+  %\renewcommand{\sug}[1]{}
+  %\renewcommand{\tim}[1]{}
 
 % Use this to make "changed" items appear normal:
 %\renewcommand{\changed}[1]{#1}

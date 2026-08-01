@@ -1,58 +1,178 @@
 %!TEX root=../main.tex
 \chapter{Introduction}
-\me{ werde das jetzt nur sketchen und Dann im Verlauf der Arbeit konkretisieren}
+\acresetall %reset abbrevations
 
 %Try to avoid technical depth and save it for chapter 02 for what is needed to understand or 04 for my own implementation
-
 \label{chap:introduction}
+%This chapter introduces the motivation, problem statement, research questions, and contributions of the thesis
+%\me{since i removed sections, I also removed the leading sentence}
 
-\section{Motivation}
+\ws{Note: to make reading easier, it is better to have every sentence on an new line in LaTex. This does not create a line break in the document but makes reading much easier.}
+%\section{Motivation}
+%\todo{what is the context/motivation of your work}
+Maritime transport accounts for more than two-thirds of freight transport performance in the EU \parencite{Eurostat2024ModalSplit}. This makes waterway infrastructure a critical backbone of European logistics. At the same time, geopolitical disruptions have repeatedly demonstrated that unexpected chokepoints can arise with little warning, placing sudden and extreme demands on alternative transport corridors. The significance of maritime transport and the requirement for safe, reliable operation is therefore consistently high, independent of short-term traffic trends. %I added this becasue of current politicalsituation and i feel ti is morerelevant than trends
 
-Maritime transport accounts for more than two-thirds of freight transport performance in the EU \cite{Eurostat2024ModalSplit}. This makes waterway infrastructure a critical backbone of European logistics. At the same time, geopolitical disruptions have repeatedly demonstrated that unexpected chokepoints can arise with little warning, placing sudden and extreme demands on alternative transport corridors. The significance of maritime transport and the requirement for safe, reliable operation is therefore consistently high, independent of short-term traffic trends. %I added this becasue of current politicalsituation and i feel ti is morerelevant than trends
+Beyond economic pressure, human factors are a major contributor to maritime accidents \parencite{BSU2024, DEVOS2021107558}, motivating the development of systems that reduce reliance on manual operation. Autonomous and cooperative surface vessels %represent a promising response to both challenges and aim to reduce operational costs while removing a major source of navigational error.
+are widely discussed as a promising way to mitigate human‑error‑driven risks and reduce exposure of crew \parencite{DEVOS2021107558}.
+\ws{This belongs to the related work. Details like this do not belong in the introduction}
+The research in this thesis is driven by the practical requirements of envisioned cooperative traffic systems. We specifically target application scenarios like those outlined by the GALILEOnautic 2+ project at the Institute of Automatic Control (IRT) at RWTH Aachen University 
+\ws{at RWTH Aachen University?} 
+\parencite{TimEis2025}.
+The practical realisation of such networked, cooperative traffic systems for autonomous inland vessels relies heavily on safe manoeuvring in safety-critical environments like ports and narrow waterways.
+ \ws{Until here} \me{I have adjusted the phrasing here. Since my thesis is intended to support the application scenarios of projects like GALILEOnautic, I wanted to introduce it as the primary practical motivation for the research rather than as related work.}
+For autonomous surface vessels operating in close proximity to surrounding traffic, reliable perception and vessel motion prediction is a fundamental requirement. A key technical component enabling this is \ac{MTT}, the continuous association of sensor detections over time to maintain consistent trajectory estimates for all surrounding vessels \parencite{TimEis2025}.
+The performance of \ac{MTT} is fundamentally dependent on the underlying motion model, which provides the %\enquote*{prediction} 
+%`prediction' 
+\ws{use `prediction'. Wrong quotes here} \me{use enquote - fixed in full thesis} 
+\ws{This still produces wrong quotes. Use ` for the opening quote and ' for the closing one} \me{renders the same for me. replaced anyways.}
+\emph{prediction} %Tim recommended cursive
+step in the tracking cycle.
+This model is responsible for propagating the vessel \ws{Cannot use 's with inanimate objects} \me{fixed}
+state forward in time between sensor updates.
+As a consequence, the ability of a tracking system to maintain lock on a target in dense traffic is highly sensitive to the accuracy of this prediction. This motivates the exploration of data-driven approaches to capture the complex dynamics that traditional models often fail to describe.
 
-Beyond economic pressure, human factors are a major contributor to maritime accidents \cite{BSU2024}, motivating the development of systems that reduce reliance on manual operation. Autonomous and cooperative surface vessels represent a promising response to both challenges and aim to reduce operational costs while removing a major source of navigational error.
+While onboard sensors such as radar, LiDAR, and cameras provide local observations, the \ac{AIS} offers large-scale motion data with time-stamped position, velocity, and vessel identity across entire waterway networks \parencite{noaa2025aisdict}. This makes \ac{AIS} a valuable source of real vessel trajectories for data-driven learning of motion behaviour. Kinematic motion models, such as \ac{CV} or \ac{CTRV}, have long served as the prediction component within tracking filters. % However, they assume simplified, idealised \ws{Please use British English in the thesis} \me{fixed all I could find} 
+%dynamics. % and struggle to represent nonlinear manoeuvres, sudden course changes, or context-dependent vessel behaviour.
+However, they rely on hand-crafted dynamics and cannot adapt beyond their underlying assumptions, making them unable to accurately capture sudden course changes or context-dependent vessel behaviour.
 
-The GALILEOnautic 2+ project \cite{TimEis2025} pursues this direction by developing a networked, cooperative traffic system for autonomous inland vessels, targeting safe maneuvering in safety-critical environments such as ports and narrow waterways. For autonomous surface vessels operating in close proximity to surrounding traffic, reliable perception and prediction of other vessels' motion is a fundamental requirement. A key technical component enabling this is \ac{MTT}, the continuous association of sensor detections over time to maintain consistent trajectory estimates for all surrounding vessels \cite{TimEis2025}.
-The performance of \ac{MTT} is fundamentally dependent on the underlying motion model, which provides the 'prediction' step in the tracking cycle. This model is responsible for propagating the vessel's state forward in time between sensor updates. As a consequence, the ability of a tracking system to maintain lock on a target in dense traffic is highly sensitive to the accuracy of this prediction. This motivates the exploration of data-driven approaches to capture the complex dynamics that traditional models often fail to describe.
+Deep learning-based motion models trained on \ac{AIS} data have the potential to capture more realistic dynamics and improve prediction quality in constrained, high-traffic environments \parencite{donandt2022shortterm}. Reliable prediction in these safety-critical environments is a key challenge for the motion estimation systems that autonomous surface vessels depend on \parencite{TimEis2025}, %which currently still rely on kinematic models and filters,
+motivating deeper investigation into these models. % into deep learning architectures/models.
+\ws{This claim needs citation} \me{split up into 2 claims}
+However, transitioning from physically grounded \ws{I think the hyphen here is not correct} 
+kinematic models to deep learning architectures 
+introduces a methodological challenge: the dependence of model performance on a high-dimensional design space.
+%As shown 
+\ws{Not the best verb to use here. Better: demonstrated, shown, } 
+Achieving high performance in machine learning requires navigating complex design choices, including model architecture and hyperparameter configurations \parencite{AutoMLHoos}. 
+\ws{In the previous sentence, no need to write as shown by .. Instead, you can wrote the claim and cire the paper as parencite.}
+To ensure a fair comparison between different model types and architectures, all models must be evaluated at their full potential. To address this, we explore  \ac{AutoML} to systematically manage \ac{HPO}, and ensure that any observed performance differences reflect the models' inherent ability rather than arbitrary parameter choices.
 
-While onboard sensors such as radar, LiDAR, and cameras provide local observations, \ac{AIS} offers large-scale motion data with time-stamped position, velocity, and vessel identity across entire waterway networks \cite{noaa2025aisdict}. This makes \ac{AIS} a valuable source of real vessel trajectories for data-driven learning of motion behavior. Classical kinematic motion models, such as constant velocity or constant acceleration, have long served as the prediction component within tracking filters. However, they assume simplified, idealized dynamics and struggle to represent nonlinear maneuvers, sudden course changes, or context-dependent vessel behavior. Deep learning-based motion models trained on \ac{AIS} data offer a promising alternative, with the potential to capture more realistic dynamics and improve prediction quality in the constrained, high-traffic environments targeted by GALILEOnautic 2+.
+\ws{The next paragraph belongs to the experiments section / chapter. Such details do not belong in the introduction} \me{fair point. I kept a trimmed version, to still have a motivation for our hpo. starts at "To ensure a.."}
+
+\begin{comment}
+    In the context of vessel motion modelling, a fair comparison between established kinematic %models \ws{redundnat `models'. You can write is as kinematic and deep learning models}
+    and deep learning models is only possible if the latter are carefully optimised. 
+    Manual \enquote{trial-and-error} tuning risks a biased evaluation, where a deep learning model might underperform simply due to a suboptimal configuration rather than an inherent lack of predictive capability.
+    To address this, this thesis utilises \ac{AutoML} to systematically manage \ac{HPO}. By automating the search for optimal learning rates, network dimensions, and regularisation parameters, \ac{AutoML} ensures that the data-driven models are evaluated at their full potential and that any observed performance gains are a result of the ability of the model to capture complex vessel dynamics rather than arbitrary parameter choices. 
+    
+    
+    %This approach provides a "level playing field" for benchmarking deep learning against classical motion models, and ensures that any observed performance gains are a result of the model’s ability to capture complex vessel dynamics rather than arbitrary parameter choices. 
+\end{comment}
 
 
-However, transitioning from physically-grounded kinematic baselines to deep learning architectures introduces a  methodological challenge: the dependence of model performance on a high-dimensional design space. As established by \cite{AutoMLHoos}, achieving high performance in machine learning requires navigating complex design choices, including model architecture and hyperparameter configurations. 
-
-In the context of vessel motion modeling, a fair comparison between established kinematic models and deep learning models is only possible if the latter are carefully optimized. Manual "trial-and-error" tuning risks a biased evaluation, where a deep learning model might underperform simply due to a suboptimal configuration rather than an inherent lack of predictive capability. To address this, this thesis utilizes \ac{AutoML} to systematically manage \ac{HPO}. By automating the search for optimal learning rates, network dimensions, and regularization parameters, \ac{AutoML} ensures that the data-driven models are evaluated at their full potential. This approach provides a "level playing field" for benchmarking deep learning against classical motion models, and ensures that any observed performance gains are a result of the model’s ability to capture complex vessel dynamics rather than arbitrary parameter choices. \me{rewrite this after doing the methology section}
 
 
 
+%\section{Problem Statement}
 
-\section{Problem Statement}
-\me{More or less just a placeholder, to be adjusted as I progress and read more literature}
-%Narrow and precise. You define the concrete technical problem: given a sequence of AIS observations, predict future vessel positions. You state what is unknown or unsolved — not why it matters (that was 1.1), but what the gap is.
+\ws{I am not a fan of splitting the introduction into subsections unless it is a hard requirement by the university. At RWTH Aachen, it is not. This disturbs the reading flow. Try to rewrite the introduction without subsections. Rather, use transitions. For good examples, look at the introduction sections in Journal Papers. Choose a good one and see how the flow of the introduction works.} \me{Tim waht is your approach? I prefer this clear structure}
 
-%"It is unclear whether deep learning motion models can outperform classical kinematic models for inland vessel trajectory prediction, and how sensitive their performance is to hyperparameter choices."
-Trajectory prediction in maritime multi-target tracking is traditionally addressed by classical kinematic motion models, such as \ac{CV}, \ac{CA}, and \ac{CTRV}, which approximate vessel dynamics through simplified physical equations. While computationally efficient, these models can struggle to represent the nonlinear, context-dependent maneuvers characteristic of inland waterway traffic. Deep learning-based motion models trained on \ac{AIS} observations of position, velocity, and heading offer an alternative by learning motion patterns directly from data. Prior work has demonstrated their potential in maritime trajectory prediction  \cite{zaman2024deep}, but systematic evaluation as drop-in motion model components within tracking frameworks and their performance in the specific inland waterway domain remains limited. %aber macheich das?
-\todo{hier konkret werden. given context window of .., predict motion for ....  This is a time series forecasting problem   } 
-
-\todo{nochmal in mein proposal schauen und Teile übernehmen}
+%\todo{IRT guidelines: what is missing in the literature -- superhard to distinguish from related work. Should this be just a summary of the gaps i found in related work?}
 
 
-\section{Research Questions}
-%What specific questions will you answer?
-%Numbered, concrete, answerable questions that your experiments will directly address. Each result chapter should answer at least one.
- Predictive Performance:
-Can deep learning motion models (to be defined: LSTM, Transformer..) outperform classical kinematic baselines (CV, CA, CTRV, IMM) as motion model components within a multi-target tracking framework for inland vessel trajectories derived from \ac{AIS} data?
-Which of these Deep learning Models is the most suitable?
+%Trajectory prediction for inland vessels based on \ac{AIS} data provides the motion-model component of the prediction step within \ac{MTT} for autonomous traffic systems on inland waterways. 
+\ws{The previous paragraph is too short. The text can be split better} \me{commented out after merging, because this is already explained before in the "motivation"}
+The necessity for such a rigorous evaluation framework stems directly from the core limitations of existing tracking systems. %tranistion
+Classical kinematic models such as \acf{CV} and \acf{CTRV}, often implemented in stochastic filtering frameworks, offer simple and efficient baselines.
+\ws{However,}
+However, their simplified dynamics make it difficult to represent the nonlinear manoeuvres that often occur in populated inland waterways. %Recent work has shown that deep learning models trained on \ac{AIS} trajectories can capture more complex motion patterns, but these approaches are typically studied in isolation and only partially address the specific requirements of inland vessel motion modelling.
+%\cite{donandt2022shortterm}
+Recent work has shown that deep learning models trained on \ac{AIS} trajectories can capture complex motion patterns more accurately, than simple kinematic baselines \parencite{donandt2022shortterm, Zhang22}. % Figure 5 and p.1799 
+\ws{Citation}
+%However, these approaches are usually evaluated within their own experimental setups. \me{weak}
+Despite these advances, 
+\ws{Transition word + without line break}
+only a few studies focus specifically on inland waterways, so coverage of inland vessel motion modelling remains limited. Several studies explicitly mention \acf{HPO} as open work and do not evaluate each architecture at its full potential. %There are only few comparisons \me{i found none and it was never applied for tirex specifically for example} in which all of these model types are trained on the same preprocessed dataset and tuned using a common optimisation methodology, which makes it difficult to draw controlled conclusions about their relative performance on inland \ac{AIS} data. In addition, most model evaluations rely on small datasets using a selected subset of vessels, which limits insights into how different motion models behave when applied at scale.
 
- AutoML Applicability:
-Which AutoML formulation  model selection, hyperparameter optimization, CASH, or NAS  is most appropriate and computationally efficient for tuning deep learning motion models in the inland waterway domain?
 
-...?
-\section{Contributions}
-%deliverables. anonymized dataset, vergelich von motin models
-1. Dataset
-2. Pipeline zum generieren des datasets mit automatischer zuweisung von labels anhand osm daten
-2. Vergleich von (mehreren) Deep Learning Modellen zu kinematischen Modellen
-3. Nutzung von AutoML in diesem Kontext und auswählen des scope von AutoMl
+While individual works do compare specific deep learning architectures to selected kinematic baselines, to the best of our knowledge, there are no studies that jointly evaluatee kinematic models, stochastic filters and both task-specific and pretrained deep sequence models on inland \ac{AIS} data within a single, shared preprocessing and optimisation framework.
 
-\section{Structure of the Thesis}
-fill later
+%While individual works do compare specific deep learning architectures to selected kinematic baselines, we are not aware of any 
+\ws{To the best of our knowledge, there are no studies that ..} 
+%study that jointly evaluates kinematic models, stochastic filters and both task-specific and pretrained deep sequence models on inland \ac{AIS} data within a single, shared preprocessing and optimisation framework.
+In particular, foundation models have, to our knowledge, not yet been applied to inland vessel trajectory prediction.
+This lack of a unified evaluation setup makes it difficult to draw controlled
+conclusions about the relative performance of different motion-model families on inland \ac{AIS}\ data.
+
+% \me{very specific, but i dont want to overclaim}
+
+At the same time, %most \me{again, all that i found} 
+existing approaches treat \ac{AIS} trajectories as generic time series and make no use of domain knowledge about the waterway type, even though vessel dynamics could differ substantially across these domains.
+\ws{This sentence read like a questions but it is not. Start with: it has not been investigated}
+It has not yet been systematically investigated how this domain information can be incorporated into motion models, and to what extent domain-aware modelling improves predictive performance on inland \ac{AIS} data.%%\me{for Tim: ist das wording hier zu stark? diese domain labels gibt es noch nicht, aber es gibt ja multimodale Ansätze odere andere contextinformation, z.b. strömungseinflüsse.., damit setzt du dich ja auch auseinander, oder?}
+
+
+\begin{comment}
+    This thesis addresses these gaps by developing a common \ac{AIS} preprocessing and labelling pipeline in addition to \ws{``in addition to'' and remove the comma} 
+    applying a systematic \ac{AutoML}-based hyperparameter optimisation procedure to a range of kinematic baselines, stochastic filters and deep learning models, \ws{as well as insted of `and'} 
+    as well as investigating how domain labels for different waterway types can be incorporated into motion models and evaluated on a large-scale inland \ac{AIS} dataset containing trajectories of thousands of vessels.
+    \me{redundant mit contributions und RQ}\ws{Indeed. To much information. It is enough to have introdcution text then write something like: The main contributions are as follows .. then start enumeration}
+\end{comment}
+\begin{comment} now in 04b    
+    \section{Research Questions}
+    %\todo{what is your new contribution}
+    %What specific questions will you answer?
+    %Numbered, concrete, answerable questions that your experiments will directly address. Each result chapter should answer at least one.
+    \begin{enumerate}
+      \item \textbf{RQ1:}
+      How do different deep learning models (both task-specific and pretrained) compare against kinematic baselines and stochastic filters in short-term trajectory prediction of inland vessels, when all models are tuned using a systematic, automated hyperparameter optimisation procedure on preprocessed AIS data?
+    
+      \item \textbf{RQ2:} 
+      How can information about the vessel’s location (the domain, i.e., lock, harbour, river, channel) be incorporated into motion models, and how does domain-aware modelling affect predictive performance? \sug{bringt diese Information einen Vorteil? wie implementiere ich -> 2 fragen}
+    
+      \item \textbf{RQ3:}
+      How well do these tuned models generalise when trained and evaluated on a large-scale AIS dataset containing trajectories of thousands of inland vessels? \sug{eigentlcih wird performance schon in frage 1 gemessen. alternative: einfluss der datensetgröße auf performance. braucht neue tests}
+    \end{enumerate}
+\end{comment}
+
+%This thesis addresses
+We address these gaps through a unified experimental framework combining systematic data curation, \acs{AutoML} based evaluation, and a comprehensive model benchmark. The main contributions of this thesis are as follows:
+%\section{Contributions} %
+%This thesis makes the following contributions:
+\ws{There is no need for subsection here. The transition can be made from previous text}
+
+ %if we flow: t o
+
+ \ws{Use action verbs when descrining the contributions.}
+ \ws{Example: Implementing a systematic AutoML setup that performs} \me{rephrased all}
+
+\begin{enumerate}
+
+  
+  %\item \textbf{Large-scale inland AIS dataset and pipeline:} 
+  %A large-scale AIS dataset (more than 4{,}000{,}000 trajectories) for inland waterways, together with an automated pipeline that extracts, cleans and labels vessel trajectories, including domain labels for different types of waterways. 
+  
+
+  \item \textbf{Curating a domain-annotated inland AIS dataset:} %Developing an automated preprocessing pipeline to extract, clean, and segment public AIS logs, resulting in a novel, large-scale dataset of over four million trajectories augmented with geographic domain labels for different waterway types. 
+  %%
+  %Contribution 1: An inland AIS preprocessing pipeline that consolidates standard cleaning and resampling steps and extends them with OSM-based semantic domain labelling and domain-aware data preparation, producing a large-scale, reproducible dataset for motion model evaluation."  (just a suggestion)
+  %%
+  Developing an automated \ac{AIS} preprocessing pipeline that consolidates standard cleaning and resampling steps and extends them  with semantic domain labels based on \ac{OSM}, handles domain-aware data preparation, and produces a reproducable large-scale dataset of over four million trajectories.
+  \ws{I do not think this is valid contribution. You did not contribute the dataset. This needs to be worded better. You can combine the pipeline contribution with the AutoML system.} \me{dicussed. } 
+
+  \item \textbf{Implementing a systematic \ac{AutoML} setup for motion models:} Developing a \ac{HPO} framework for kinematic models, stochastic filters, and deep learning models to ensure a fair and reproducible comparison of trajectory prediction methods for inland vessel tracking. 
+
+
+  \ws{The evaluation is usually the last point. You should metnion the quantity of data and numbers of model.}
+  %\item \textbf{Empirical comparison of motion model families:} 
+  %A fair and comprehensive comparison between kinematic baselines, stochastic filters and learned models within a common evaluation framework.
+  %\item \textbf{Domain-aware motion modelling:} 
+  %An empirical evaluation of the added predictive value obtained by incorporating domain labels into preprocessing and model training for inland vessel motion models. \ws{Merge all the evaluations in one contribution}
+  \item \textbf{Evaluating motion model families and domain-aware modelling:} Conducting a comprehensive empirical comparison of ten distinct motion models, spanning kinematic, stochastic, and deep learning approaches, across more than four million inland vessel trajectories. This unified evaluation assesses predictive capabilities and quantifies the performance gains achieved by integrating geographic domain labels into the preprocessing and training phases. 
+\end{enumerate}
+
+
+\ws{Here, please write: The remainder of this thesis is structured as follows: ... Then list the chapters one by one and what they contain. It should be with ref and in text (no enumuration}
+The remainder of this thesis is structured as follows:
+ %and here mention that in Section X the research questions are presented
+% Comment Tim
+In Chapter \ref{chap:relatedwork}, we review related work on kinematic motion models, stochastic filters, deep sequence models, \ac{AIS} data preprocessing pipelines, and automated hyperparameter optimisation.
+In Chapter \ref{chap:dataset}, we outline the preprocessing pipeline we developed to extract, clean, segment, and annotate the trajectories with geographic domain labels, followed by analysis of the resulting dataset characteristics.
+In Chapter \ref{chap:methology}, we present the methodology,
+explaining the theoretical backgrounds of \ac{Seq2Seq} and \ac{AutoML}, alongside the mathematical formalisations of the kinematic motion models and stochastic filters we implemented.
+In Chapter \ref{chap:experimentalsetup}, we define the research questions and experiments and explain the evaluation framework,  which includes data splits, evaluation metrics, and the exact model configurations, as well as optimisation and model training procedures.
+In Chapter \ref{chap:results}, we present and discuss the experimental results, addressing each research question through a comparative evaluation of the models and configurations, along with an analysis of how geographic domain information impacts predictive performance.
+In Chapter \ref{chap:conclusion}, we conclude the thesis by highlighting the performance differences between models, followed by a discussion of some limitations of the study along with potential paths for future research.
+\ws{No need to write about the appendix. It is optional, If you want, you can delete it.}
+The appendices provide Supplementary Figures (Appendix \ref{chap:appendixdataplots}), Supplementary Tables (Appendix \ref{appx:B}), Methodological Details (Appendix \ref{chap:appendixderivations}) and an overview of the implemented codebase (Appendix \ref{chap:appendixcodebase}) 
+

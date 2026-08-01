@@ -1,0 +1,90 @@
+
+WIP save vor integration der filter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%------------Rewrite-------------------------%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%!TEX root=../main.tex
+\chapter{Related Work}
+\label{chap:relatedwork}
+
+
+Multi-target tracking systems for autonomous inland vessels rely on a prediction step to propagate 
+each tracked vessel's state forward in time between sensor updates. The accuracy of this prediction 
+directly affects the quality of the tracker's state estimates and reduces uncertainty that accumulates
+over the prediction horizon. Classical kinematic motion models have long served this role, but 
+their simplified dynamics motivate the exploration of data-driven alternatives trained on \ac{AIS} 
+data. The following sections review the state of the art in vessel trajectory prediction and 
+identify the key gaps this thesis addresses.
+
+\subsection*{From Kinematic Models to Deep Learning}
+
+Classical trajectory prediction in the maritime industry frequently uses statistical methods or kinematic models such as \ac{CV} or \ac{CTRV} \parencite{8693856CV, li2003survey}. % 2 surveys. thjink its fair to use surveys for this einordnung
+
+While these methods are computationally lightweight and well-suited for short-term predictions under ideal conditions, they can fail to capture the  non-linear dependencies introduced by shallow waters, reefs, or sudden maneuvers \parencite{articlebilstmsus}. %slight contradiction with my own results of Exp 2
+This motivates the adoption of more expressive, data-driven models. 
+
+Researchers have increasingly adopted neural networks for this purpose. A comprehensive review by \textcite{Zhang22} revealed that \ac{LSTM} networks and their variants dominate the field of trajectory prediction. Unlike standard \acp{RNN}, which suffer from the vanishing gradient problem when handling long time-series data \parencite{279181bengio}, \acp{LSTM} more effectively capture long-term temporal dependencies. As a consequence, \ac{S2S} architectures based on \acp{LSTM} have become the established baseline for modern vessel trajectory modeling \parencite{donandt2022shortterm, Zhang22}.
+
+A key development beyond this baseline is the \ac{Bi-LSTM}, which processes sequences in both forward and backward directions to better 
+capture the full context of a trajectory segment. \textcite{articlebilstmsus} showed that \acp{Bi-LSTM} can significantly outperform 
+traditional forecasting models like ARIMA and \acp{MLP}, alongside \acp{LSTM} in complex maritime scenarios.
+The most recent shift in trajectory prediction challenges these recurrent architectures by 
+integrating attention mechanisms \parencite{Zhang22}. \textcite{sekhon2020} proposed 
+a framework combining \acp{LSTM} with spatial and temporal attention layers, which allow the 
+model to predict the trajectories of multiple interacting vessels by selectively attending to 
+both neighbouring vessels and relevant past timestamps. This 
+approach directly applies to scenarios relevant to autonomous 
+surface vessels. Their spatial attention mechanism requires concurrent AIS observations from multiple neighbouring vessels, which assumes a live AIS receiver. This thesis operates under a different assumption: only a single vessel's own historical AIS data is used as input and each target is predicted independently.
+
+Despite these advances, existing deep learning work remains largely limited to open-ocean or coastal settings: 
+\textcite{articlebilstmsus} evaluate their \ac{Bi-LSTM} model 
+exclusively on large vessels in open coastal waters around Taiwan, where trajectories are 
+comparatively straight and predictable, and limit their evaluation to trajectories of only ten vessels. \textcite{sekhon2020} evaluate on only 8,676 samples from a 
+single US harbour and do not motivate their hyperparameter choices. 
+
+Inland-specific studies are 
+rare: \textcite{donandt2022shortterm} is one of the few %generally, the research group around donand published more papers in this direction
+works targeting short-term inland prediction, but limits model training and evaluation to a 
+single 90-kilometre section of the Danube river, using between 250k and 280k trajectory 
+sequences.
+Subsequent work by the same research group extends the attention mechanism presented by \textcite{sekhon2020} to an interaction-aware multi-vessel LSTM, explicitly adapted for the inland domain \parencite{legel2025}. The work is, however, limited to a 16km stretch of the Rhine. %auf nachfrage gibt es hier noch paper dazwischen der donandt gruppe. da geht es aber um die entwicklung dieser attention mechanismen, die sind nicht fous der arbeit. mein pukt den ich hier mache ist, dass alle nur begrenzt ausgewertet wurden.
+
+Our work operates on a scale of millions of sequences across multiple measurement 
+stations and waterway types, and provides a substantially broader and more diverse training and 
+evaluation basis.
+
+\me{sollte ich anmerken dass die survey alt ist und mitlerweile transormer dominieren? tun sie das? eher up and coming.. vlt kann man das geschickt formulieren}
+\me{WIP: restructure this subsection a bit into paragraphs to add filters. doundation will be a bit different and can be an afterthought, becasue there is no implemention yet that i can criticise}
+
+Testing citations:\\
+\cite{donandt2022shortterm} cite -> full citation, dont?\\
+\parencite{donandt2022shortterm} parencite -> end of clause\\
+\textcite{donandt2022shortterm} textcite -> paper or authorr is subject\\
+\citeauthor{donandt2022shortterm} citeauthor-> dont?\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\sug{MISSING SUBSECTION — Stochastic Filters: You implement a Kalman Filter (KF with CV) and an Extended Kalman Filter (EKF with CTRV) as part of your core experimental comparison (Section 5.5), and both appear in your contributions and RQ1. However, filters are never mentioned in the Related Work. Add a short paragraph positioning filtering methods between pure kinematic models and deep learning: they improve on raw CV/CTRV by incorporating uncertainty and update steps, but still rely on simplified, hand-crafted motion assumptions that struggle with nonlinear inland manoeuvres. \citeauthor{donandt2022shortterm} \parencite{donandt2022shortterm} themselves note that ``Kalman filters have been suggested to overcome the linearity constraint of CVMs but have limited prediction horizons,'' which you can cite directly to motivate why filters are included as baselines but are not sufficient on their own.}
+
+
+
+\sug{MISSING SUBSECTION — Foundation Models for Time-Series: Your Problem Statement explicitly claims that ``foundation models have, to our knowledge, not yet been applied to inland vessel trajectory prediction,'' and you implement Chronos-2 and TiREX (Section 5.6) as central baselines. Yet the Related Work contains no mention of foundation models. Add a subsection reviewing pretrained time-series foundation models (e.g., Chronos, Moirai, TiREX) and explicitly noting their absence in maritime or inland vessel motion modelling. Without this, a reader of Chapter 2 has no context for why these models appear in Chapter 5. ALSO MISSING FILTERS}
+
+
+\subsection*{Data Preprocessing and Context-Awareness}
+
+The performance of any deep learning model heavily depends on the quality of the \ac{AIS} input data. \cite{Zhao_Shi_Yang_2018} provided a foundational framework for \ac{AIS} preprocessing, establishing rigorous methods for handling position jumps and denoising trajectories through track partitioning and association. Furthermore, they proposed a unique method for correcting time stamp deviations to improve temporal accuracy.
+\sug{Re-skim \texttt{Zhao\_Shi\_Yang\_2018}: do they handle inland waterway topology at all? If not, add one sentence stating that their pipeline treats trajectories as purely geometric sequences, agnostic to waterway structure.}
+More recent work by \cite{zaman2024deep} also explored this field, but utilised significantly simpler filtering techniques.
+\sug{Name the specific technique Zaman et al.\ use (e.g., ``a speed-threshold filter'') rather than just calling it ``simpler'' — concrete detail is more convincing and harder to dismiss during review.}
+
+Despite these cleaning efforts, existing methods treat trajectories as purely mathematical sequences of coordinates, ignoring the physical topology of the waterway. This is particularly limiting in inland environments, where a vessel approaching a lock behaves fundamentally differently from one navigating an open river, still both would be processed identically by standard pipelines.
+\sug{This is your strongest gap statement — consider making it even more explicit: no existing inland AIS preprocessing pipeline incorporates waterway topology as a semantic label. Note that \citeauthor{donandt2022shortterm} \parencite{donandt2022shortterm} take a step in this direction by encoding river curvature as a context vector, but this is limited to a single geometric feature of a single river section and does not generalise to discrete waterway-type labels across heterogeneous environments. Note other sources that use multy modal information (e.g. source 14 in donandt or ask Tim for more, he is working on it}
+
+
+\subsection*{Automated Machine Learning for Fair Evaluation}
+
+In existing studies, architectures such as \acp{LSTM} are often evaluated using manually tuned hyperparameters. However, suboptimal configurations can heavily skew results and make comparisons between kinematic and deep learning models unreliable, leaving proper \ac{HPO} as an open challenge.
+\parencite{donandt2022shortterm} manually fix their hidden layer size to 512, dropout to 0.1, and the number of encoder/decoder layers to 3, and explicitly acknowledge in their conclusion that further hyper-parameter optimization needs to be conducted. \sug{\citeauthor{articlebilstmsus} \parencite{articlebilstmsus} fix their Bi-LSTM hyperparameters manually — learning rate 0.001, dropout 0.2, neuron counts 200 and 100, batch size 64 — without any systematic search procedure. The authors even note in their own related work that hyperparameter optimisation for SVR ``remains a challenge,'' yet apply no optimisation to their own model either. This is a representative instance of the manual tuning practice that makes cross-study comparisons unreliable.}
+
+While \ac{AutoML} is an established solution for general time-series forecasting to handle \ac{HPO} \parencite{Alsharef2022MLAutoMLTimeSeries}, its application in maritime motion modeling is virtually unexplored.
+\sug{Re-skim \texttt{Alsharef2022MLAutoMLTimeSeries}: does it cover any maritime or vessel trajectory domain? If not, state that explicitly — e.g., ``Alsharef et al.\ survey AutoML for time-series forecasting broadly, but no application to maritime or inland vessel motion modelling is reported.'' This transforms a vague claim into a documented gap. Also consider adding one sentence justifying the choice of Optuna over other AutoML frameworks (e.g., Hyperopt, Auto-sklearn).}
+\me{hatte auf dem handy noch eine quelle gespeichert. titel irgendwas mit optuna. die hier einfügen}

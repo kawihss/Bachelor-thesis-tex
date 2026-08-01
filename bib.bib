@@ -1,363 +1,875 @@
+
+
+%updated according to https://www.overleaf.com/project/6a310a69cdab948cd7c961bd rules, original version commented out 
+
 @article{HutterEtAl2009,
 author = {Hutter, Frank and Hoos, Holger H. and Leyton-Brown, Kevin and St\"{u}tzle, Thomas},
-title = {ParamILS: An Automatic Algorithm Configuration Framework},
+% title = {ParamILS: An Automatic Algorithm Configuration Framework},
+title = {{ParamILS}: An Automatic Algorithm Configuration Framework},
 year = {2009},
-issue_date = {September 2009},
-publisher = {AI Access Foundation},
-address = {El Segundo, CA, USA},
+%issue_date = {September 2009},
+% publisher = {AI Access Foundation},
+% address = {El Segundo, CA, USA},
 volume = {36},
 number = {1},
-issn = {1076-9757},
-journal = {J. Artif. Int. Res.},
+%issn = {1076-9757},
+% journal = {J. Artif. Int. Res.},
+journal = {Journal of Artificial Intelligence Research ({JAIR})},
 month = {sep},
-pages = {267–306},
-numpages = {40}
+% pages = {267–306},
+pages = {267--306},
+%numpages = {40}
 }
+
 
 @inproceedings{HBPSTK2021TSPnormalization,
 author = {Heins, Jonathan and Bossek, Jakob and Pohl, Janina and Seiler, Moritz and Trautmann, Heike and Kerschke, Pascal},
-title = {On the Potential of Normalized TSP Features for Automated Algorithm Selection},
+% title = {On the Potential of Normalized TSP Features for Automated Algorithm Selection},
+title = {On the Potential of Normalized {TSP} Features for Automated Algorithm Selection},
 year = {2021},
-booktitle = {Proceedings of the 16th ACM/SIGEVO Conference on Foundations of Genetic Algorithms},
+% booktitle = {Proceedings of the 16th ACM/SIGEVO Conference on Foundations of Genetic Algorithms},
+booktitle = {In Proceedings of the ACM/SIGEVO Conference on Foundations of Genetic Algorithms ({FOGA})}
 }
 
+
 @inproceedings{BossekKN00T19TSPcreative,
-author = {Bossek, Jakob and Kerschke, Pascal and Neumann, Aneta and
-Wagner, Markus and Neumann, Frank and Trautmann, Heike},
+author = {Bossek, Jakob and Kerschke, Pascal and Neumann, Aneta and Wagner, Markus and Neumann, Frank and Trautmann, Heike},
 title = {Evolving diverse {TSP} instances by means of novel and creative mutation operators},
-booktitle = {Proceedings of the 15th ACM/SIGEVO Conference on Foundations of Genetic Algorithms},
-pages     = {58--71},
-year      = {2019},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
+% booktitle = {Proceedings of the 15th ACM/SIGEVO Conference on Foundations of Genetic Algorithms},
+booktitle = {In Proceedings of the ACM/SIGEVO Conference on Foundations of Genetic Algorithms ({FOGA})},
+pages = {58--71},
+year = {2019},
+% publisher = {Association for Computing Machinery},
+% address = {New York, NY, USA},
 }
+
 %intro
+
 @misc{Eurostat2024ModalSplit,
-  author       = {{Eurostat}},
-  title        = {Freight Transport Statistics -- Modal Split},
-  year         = {2024},
-  howpublished = {Statistics Explained, European Commission},
-  url          = {https://ec.europa.eu/eurostat/statistics-explained/index.php/Freight_transport_statistics_-_modal_split},
-  note         = {Data extracted March 2024, accessed March 2026}
+author = {{Eurostat}},
+title = {Freight Transport Statistics -- Modal Split},
+year = {2024},
+howpublished = {Statistics Explained, European Commission},
+url = {https://ec.europa.eu/eurostat/statistics-explained/index.php/Freight_transport_statistics_-_modal_split},
+note = {Data extracted March 2024, accessed March 2026}
 }
+
+
 @techreport{BSU2024,
-  author      = {{Bundesstelle für Seeunfalluntersuchung}},
-  title       = {Jahresbericht 2024},
-  institution = {BSU -- Bundesstelle für Seeunfalluntersuchung},
-  year        = {2025},
-  month       = {jun},
-  address     = {Hamburg, Germany},
-  url         = {https://www.bsu-bund.de/SharedDocs/pdf/DE/Jahresstatistik/Jahresbericht_2024.pdf},
-  note        = {Veröffentlicht Juni 2025}
+author = {{Bundesstelle für Seeunfalluntersuchung}},
+title = {Jahresbericht 2024},
+% institution = {BSU -- Bundesstelle für Seeunfalluntersuchung},
+institution = {Bundesstelle für Seeunfalluntersuchung},
+year = {2025},
+month = {jun},
+% address = {Hamburg, Germany},
+url = {https://www.bsu-bund.de/SharedDocs/pdf/DE/Jahresstatistik/Jahresbericht_2024.pdf},
+%note = {Veröffentlicht Juni 2025}
 }
+
 
 
 @article{TimEis2025,
-  author    = {Eisenblätter, Nick and Rehbronn, Tim and Kurowski, Martin 
-               and Benz, David and Vallery, Heike and Jeinsch, Torsten},
-  title     = {Automated Maneuvering of Networked Vessels in Confined Waters},
-  journal   = {Journal of Physics: Conference Series},
-  volume    = {3123},
-  year      = {2025},
-  publisher = {IOP Publishing},
-  doi       = {10.1088/1742-6596/3123/1/012020},
-  note      = {8th International Conference on Maritime Autonomous Surface 
-               Ships (ICMASS 2025) \& Intelligent and Smart Shipping 
-               Symposium (ISSS), Hamburg, Germany, 8--9 October 2025},
+    author = {Eisenblätter, Nick and Rehbronn, Tim and Kurowski, Martin and Benz, David and Vallery, Heike and Jeinsch, Torsten},
+    title = {Automated Maneuvering of Networked Vessels in Confined Waters},
+    journal = {Journal of Physics: Conference Series},
+    volume = {3123},
+    number = {1},
+    pages = {012020},
+    year = {2025},
+    month = {oct},
+    doi = {10.1088/1742-6596/3123/1/012020},
+    %note = {International Conference on Maritime Autonomous Surface Ships ({ICMASS} 2025) \& Intelligent and Smart Shipping Symposium ({ISSS})}
 }
-
-
 
 %DATA:
+
+
 @misc{noaa2025aisdict,
-  title = {Automatic Identification System (AIS) Data Dictionary},
-  author = {{NOAA Marine Cadastre}},
-  year = {2025},
-  month = {sep},
-  url = {https://coast.noaa.gov/data/marinecadastre/ais/data-dictionary.pdf},
-  note = {Updated September 24, 2025; Broadcast Points Data Dictionaries (2018--2024 and 2025--present)}
+author = {{NOAA Marine Cadastre}},
+title = {Automatic Identification System ({AIS}) Data Dictionary},
+year = {2025},
+month = {sep},
+url = {https://coast.noaa.gov/data/marinecadastre/ais/data-dictionary.pdf},
+%note = {Updated September 24, 2025; Broadcast Points Data Dictionaries (2018--2024 and 2025--present)}
+note = {Broadcast Points Data Dictionaries (2018--2024 and 2025--present)}
 }
+
+
+
 @techreport{itu-r-m1371-1-2001,
-  author = {{International Telecommunication Union (ITU)}},
-  title = {Technical characteristics for an automatic identification system using time division multiple access in the VHF maritime mobile frequency band},
-  institution = {ITU Radiocommunication Sector},
-  year = {2001},
-  number = {ITU-R M.1371-1},
-  url = {https://law.resource.org/pub/us/cfr/ibr/004/itu-r.M-1371-1.2001.pdf},
-  note = {Incorporated by reference in 47 CFR}
+% author = {{International Telecommunication Union (ITU)}},
+author = {{International Telecommunication Union}},
+% title = {Technical characteristics for an automatic identification system using time division multiple access in the VHF maritime mobile frequency band},
+title = {Technical characteristics for an automatic identification system using time division multiple access in the {VHF} maritime mobile frequency band},
+% institution = {ITU Radiocommunication Sector},
+institution = {International Telecommunication Union Radiocommunication Sector},
+year = {2001},
+number = {ITU-R M.1371-1},
+url = {https://law.resource.org/pub/us/cfr/ibr/004/itu-r.M-1371-1.2001.pdf},
+% note = {Incorporated by reference in 47 CFR}
+note = {Incorporated by reference in 47 {CFR}}
 }
 
 @misc{solas2014,
-  author = {{International Maritime Organization (IMO)}},
-  title = {International Convention for the Safety of Life at Sea (SOLAS), 1974},
-  edition = {2014 Consolidated Edition},
-  year = {2014},
-  publisher = {IMO},
-  doi = {10.25678/BC2M-YC67},
-  url = {https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/Index/SOLAS/SOLAS_2018.pdf},
-  note = {Chapter V, Regulation 19: Carriage requirements for shipborne navigational systems}
+% author = {{International Maritime Organization (IMO)}},
+author = {{International Maritime Organization}},
+% title = {International Convention for the Safety of Life at Sea (SOLAS), 1974},
+title = {International Convention for the Safety of Life at Sea ({SOLAS}), 1974},
+edition = {2014 Consolidated Edition},
+year = {2014},
+% publisher = {IMO},
+% publisher = {International Maritime Organization},
+doi = {10.25678/BC2M-YC67},
+url = {https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/Index/SOLAS/SOLAS_2018.pdf},
+%note = {Chapter V, Regulation 19: Carriage requirements for shipborne navigational systems}
 }
 
-@article{Zhao_Shi_Yang_2018, title={Ship Trajectories Pre-processing Based on AIS Data}, volume={71}, DOI={10.1017/S0373463318000188}, number={5}, journal={Journal of Navigation}, author={Zhao, Liangbin and Shi, Guoyou and Yang, Jiaxuan}, year={2018}, pages={1210–1230}} 
+@article{Zhao_Shi_Yang_2018,
+author = {Zhao, Liangbin and Shi, Guoyou and Yang, Jiaxuan},
+% title={Ship Trajectories Pre-processing Based on AIS Data},
+title = {Ship Trajectories Pre-processing Based on {AIS} Data},
+journal = {Journal of Navigation},
+volume = {71},
+number = {5},
+year = {2018},
+% pages={1210–1230},
+pages = {1210--1230},
+% DOI={10.1017/S0373463318000188}
+doi = {10.1017/S0373463318000188}
+}
 
 @inproceedings{autonomousTH,
 author = {Dijt, Pim and Mettes, Pascal},
 title = {Trajectory Prediction Network for Future Anticipation of Ships},
 year = {2020},
 isbn = {9781450370875},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
+% publisher = {Association for Computing Machinery},
+% address = {New York, NY, USA},
 url = {https://doi.org/10.1145/3372278.3390676},
 doi = {10.1145/3372278.3390676},
-booktitle = {Proceedings of the 2020 International Conference on Multimedia Retrieval},
-pages = {73–81},
-numpages = {9},
-keywords = {trajectory prediction, future anticipation},
-location = {Dublin, Ireland},
-series = {ICMR '20}
+% booktitle = {Proceedings of the 2020 International Conference on Multimedia Retrieval},
+booktitle = {In Proceedings of the International Conference on Multimedia Retrieval ({ICMR})},
+% pages = {73–81},
+pages = {73--81},
+%numpages = {9},
+%keywords = {trajectory prediction, future anticipation},
+% location = {Dublin, Ireland},
+% series = {ICMR '20}
 }
 
- @misc{OpenStreetMap,
-   author = {{OpenStreetMap contributors}},
-   title = {{Planet dump retrieved from https://planet.osm.org }},
-   howpublished = "\url{ https://www.openstreetmap.org }",
-   year = {2017},
- }
+
+@misc{OpenStreetMap,
+author = {{OpenStreetMap contributors}},
+% title = {{Planet dump retrieved from https://planet.osm.org }},
+title = {{Planet dump retrieved from https://planet.osm.org}},
+% howpublished = "\url{ https://www.openstreetmap.org }",
+url = {https://www.openstreetmap.org},
+year = {2017}
+}
+
+
 %=====================================================================================
 %Proposal
+
 @article{zaman2024deep,
-  author = {Zaman, Umair and Khan, Jawad and Lee, Eunkyu and Balobaid, Abdullah S. and Aburasain, Reyadh Y. and Kim, Kyungsup},
-  title = {Deep learning innovations in South Korean maritime navigation: Enhancing vessel trajectories prediction with AIS data},
-  journal = {PLOS ONE},
-  year = {2024},
-  month = {10},
-  volume = {19},
-  number = {10},
-  pages = {e0310385},
-  doi = {10.1371/journal.pone.0310385},
-  pmid = {39446863},
-  pmcid = {PMC11500964}
+author = {Zaman, Umair and Khan, Jawad and Lee, Eunkyu and Balobaid, Abdullah S. and Aburasain, Reyadh Y. and Kim, Kyungsup},
+% title = {Deep learning innovations in South Korean maritime navigation: Enhancing vessel trajectories prediction with AIS data},
+title = {Deep learning innovations in {South Korean} maritime navigation: Enhancing vessel trajectories prediction with {AIS} data},
+journal = {PLOS ONE},
+year = {2024},
+% month = {10},
+month = {oct},
+volume = {19},
+number = {10},
+pages = {e0310385},
+doi = {10.1371/journal.pone.0310385},
+pmid = {39446863},
+pmcid = {PMC11500964}
 }
 
+
 @article{SVANBERG2019103520,
-title = {AIS in maritime research},
+% title = {AIS in maritime research},
+title = {{AIS} in maritime research},
 journal = {Marine Policy},
 volume = {106},
 pages = {103520},
 year = {2019},
-issn = {0308-597X},
-doi = {https://doi.org/10.1016/j.marpol.2019.103520},
-url = {https://www.sciencedirect.com/science/article/pii/S0308597X18309667},
+%issn = {0308-597X},
+% doi = {https://doi.org/10.1016/j.marpol.2019.103520},
+doi = {10.1016/j.marpol.2019.103520},
+%url = {https://www.sciencedirect.com/science/article/pii/S0308597X18309667},
 author = {Martin Svanberg and Vendela Santén and Axel Hörteborn and Henrik Holm and Christian Finnsgård},
-abstract = {Although not originally developed for research use, the Automatic Identification System (AIS) enables its data to be used in research. The present paper provides a structured overview of how AIS data is used for various research applications. Ten areas have been identified, spread across maritime, marine and other journals. Many stakeholders beyond the most frequently mentioned – authorities and maritime administrations – can benefit from the research in which AIS data is used. AIS data can be incorporated in various types of modelling approaches and play a small or large role as a source of data. AIS data can also be validated or used to validate research from other data sources. Although a large amount of AIS-based research adds to the literature, there is still a large potential for using AIS data for research by making greater use of the variety in AIS messages, combining AIS with other sources of data, and extending both spatial and temporal perspectives.}
+% abstract = {Although not originally developed for research use, the Automatic Identification System (AIS) enables its data to be used in research. The present paper provides a structured overview of how AIS data is used for various research applications. Ten areas have been identified, spread across maritime, marine and other journals. Many stakeholders beyond the most frequently mentioned – authorities and maritime administrations – can benefit from the research in which AIS data is used. AIS data can be incorporated in various types of modelling approaches and play a small or large role as a source of data. AIS data can also be validated or used to validate research from other data sources. Although a large amount of AIS-based research adds to the literature, there is still a large potential for using AIS data for research by making greater use of the variety in AIS messages, combining AIS with other sources of data, and extending both spatial and temporal perspectives.}
 }
 
-@ARTICLE{Zhang22,
-  author={Zhang, Xiaocai and Fu, Xiuju and Xiao, Zhe and Xu, Haiyan and Qin, Zheng},
-  journal={IEEE Transactions on Intelligent Transportation Systems}, 
-  title={Vessel Trajectory Prediction in Maritime Transportation: Current Approaches and Beyond}, 
-  year={2022},
-  volume={23},
-  number={11},
-  pages={19980-19998},
-  keywords={Trajectory;Transportation;Safety;Predictive models;Hidden Markov models;Support vector machines;Soft sensors;Maritime transportation;safety;vessel;trajectory prediction;deep learning},
-  doi={10.1109/TITS.2022.3192574}}
+@article{Zhang22,
+author = {Zhang, Xiaocai and Fu, Xiuju and Xiao, Zhe and Xu, Haiyan and Qin, Zheng},
+journal = {IEEE Transactions on Intelligent Transportation Systems},
+title = {Vessel Trajectory Prediction in Maritime Transportation: Current Approaches and Beyond},
+year = {2022},
+volume = {23},
+number = {11},
+% pages={19980-19998},
+pages = {19980--19998},
+% keywords={Trajectory;Transportation;Safety;Predictive models;Hidden Markov models;Support vector machines;Soft sensors;Maritime transportation;safety;vessel;trajectory prediction;deep learning},
+doi = {10.1109/TITS.2022.3192574}
+}
 
 
-
-@Article{Zhai,
-AUTHOR = {Zhai, Guan and Meng, Huadong and Wang, Xiqin},
-TITLE = {A Constant Speed Changing Rate and Constant Turn Rate Model for Maneuvering Target Tracking},
-JOURNAL = {Sensors},
-VOLUME = {14},
-YEAR = {2014},
-NUMBER = {3},
-PAGES = {5239--5253},
-URL = {https://www.mdpi.com/1424-8220/14/3/5239},
-PubMedID = {24633450},
-ISSN = {1424-8220},
-ABSTRACT = {This paper addresses the problem of modeling maneuvering target motion in tracking applications. A target trajectory can typically be divided into segments with different dynamic motion modes, such as a constant velocity motion, a constant acceleration motion or a constant turn rate motion. To integrate the different motion modes into a uniform model, a Constant Speed Changing Rate and Constant Turn Rate (CSCRCTR) model is proposed. A new state vector is defined, and the state transition function is derived. Based on the CSCRCTR model, we present a tracking algorithm using a particle filter. The performances of the CSCRCTR model, the uniform model (UM) and the interacting multiple model (IMM) for tracking a simulated maneuvering target are compared and show that the CSCRCTR model maintains a good consistency for different types of motions and achieves better accuracy than UM and IMM when maneuvers occur.},
-DOI = {10.3390/s140305239}
+@article{Zhai,
+author = {Zhai, Guan and Meng, Huadong and Wang, Xiqin},
+title = {A Constant Speed Changing Rate and Constant Turn Rate Model for Maneuvering Target Tracking},
+journal = {Sensors},
+volume = {14},
+year = {2014},
+number = {3},
+pages = {5239--5253},
+%url = {https://www.mdpi.com/1424-8220/14/3/5239},
+pubmedid = {24633450},
+%issn = {1424-8220},
+% abstract = {This paper addresses the problem of modeling maneuvering target motion in tracking applications. A target trajectory can typically be divided into segments with different dynamic motion modes, such as a constant velocity motion, a constant acceleration motion or a constant turn rate motion. To integrate the different motion modes into a uniform model, a Constant Speed Changing Rate and Constant Turn Rate (CSCRCTR) model is proposed. A new state vector is defined, and the state transition function is derived. Based on the CSCRCTR model, we present a tracking algorithm using a particle filter. The performances of the CSCRCTR model, the uniform model (UM) and the interacting multiple model (IMM) for tracking a simulated maneuvering target are compared and show that the CSCRCTR model maintains a good consistency for different types of motions and achieves better accuracy than UM and IMM when maneuvers occur.},
+doi = {10.3390/s140305239}
 }
 
 @article{Alsharef2022MLAutoMLTimeSeries,
-  author  = {Alsharef, A. and Aggarwal, K. and Sonia and Kumar, M. and Mishra, A.},
-  title   = {Review of ML and AutoML Solutions to Forecast Time-Series Data},
-  journal = {Archives of Computational Methods in Engineering},
-  year    = {2022},
-  volume  = {29},
-  number  = {7},
-  pages   = {5297--5311},
-  doi     = {10.1007/s11831-022-09765-0},
-  note    = {PMID: 35669518; PMCID: PMC9159649},
+author = {Alsharef, A. and Aggarwal, K. and Sonia and Kumar, M. and Mishra, A.},
+% title = {Review of ML and AutoML Solutions to Forecast Time-Series Data},
+title = {Review of {ML} and {AutoML} Solutions to Forecast Time-Series Data},
+journal = {Archives of Computational Methods in Engineering},
+year = {2022},
+volume = {29},
+number = {7},
+pages = {5297--5311},
+doi = {10.1007/s11831-022-09765-0},
+% note = {PMID: 35669518; PMCID: PMC9159649}
+% note = {{PMID}: 35669518; {PMCID}: {PMC9159649}}
 }
 
 @article{abdar2021review,
-  author = {Abdar, Moloud and Pourpanah, Farhad and Hussain, Sadiq and Rezazadegan, Dana and Liu, Li and Ghavamzadeh, Mohammad and Fieguth, Paul and Cao, Xiaochun and Khosravi, Abbas and Acharya, U. Rajendra and Makarenkov, Vladimir and Nahavandi, Saeid},
-  title = {A Review of Uncertainty Quantification in Deep Learning: Techniques, Applications and Challenges},
-  journal = {Information Fusion},
-  year = {2021},
-  volume = {76},
-  pages = {243--297},
-  doi = {10.1016/j.inffus.2021.05.008}
+author = {Abdar, Moloud and Pourpanah, Farhad and Hussain, Sadiq and Rezazadegan, Dana and Liu, Li and Ghavamzadeh, Mohammad and Fieguth, Paul and Cao, Xiaochun and Khosravi, Abbas and Acharya, U. Rajendra and Makarenkov, Vladimir and Nahavandi, Saeid},
+title = {A Review of Uncertainty Quantification in Deep Learning: Techniques, Applications and Challenges},
+journal = {Information Fusion},
+year = {2021},
+volume = {76},
+pages = {243--297},
+doi = {10.1016/j.inffus.2021.05.008}
+}
+@article{AutoMLHoos,
+author = {Baratchi, Mitra and Wang, Can and Limmer, Steffen and van Rijn, Jan N. and Hoos, Holger and Bäck, Thomas and Olhofer, Markus},
+title = {Automated machine learning: past, present and future},
+journal = {Artificial Intelligence Review},
+year = {2024},
+volume = {57},
+number = {5},
+pages = {122},
+doi = {10.1007/s10462-024-10726-1},
+%url = {https://doi.org/10.1007/s10462-024-10726-1}
 }
 
-@article{AutoMLHoos,
-  author = {Baratchi, Mitra and Wang, Can and Limmer, Steffen and van Rijn, Jan N. and Hoos, Holger and Bäck, Thomas and Olhofer, Markus},
-  title = {Automated machine learning: past, present and future},
-  journal = {Artificial Intelligence Review},
-  year = {2024},
-  volume = {57},
-  number = {5},
-  pages = {122},
-  doi = {10.1007/s10462-024-10726-1},
-  url = {https://doi.org/10.1007/s10462-024-10726-1}
-}
 
 
 %BAckground
-@misc{sutskever2014sequencesequencelearningneural,
-      title={Sequence to Sequence Learning with Neural Networks}, 
-      author={Ilya Sutskever and Oriol Vinyals and Quoc V. Le},
-      year={2014},
-      eprint={1409.3215},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/1409.3215}, 
+%@misc{sutskever2014sequencesequencelearningneural, %preprint version but i found the published one (below)
+author = {Ilya Sutskever and Oriol Vinyals and Quoc V. Le},
+title = {Sequence to Sequence Learning with Neural Networks},
+year = {2014},
+eprint = {1409.3215},
+note = {arXiv},
+primaryClass = {cs.CL},
+url = {https://arxiv.org/abs/1409.3215}
 }
 
+
+@inproceedings{sutskever2014sequencesequencelearningneural,
+author = {Sutskever, Ilya and Vinyals, Oriol and Le, Quoc V.},
+title = {Sequence to Sequence Learning with Neural Networks},
+% booktitle = {Advances in Neural Information Processing Systems},
+booktitle = {In Proceedings of the Annual Conference on Neural Information Processing Systems ({NeurIPS})},
+% editor = {Z. Ghahramani and M. Welling and C. Cortes and N. Lawrence and K. Weinberger},
+% publisher = {Curran Associates, Inc.},
+volume = {27},
+% pages = {},
+year = {2014},
+url = {https://proceedings.neurips.cc/paper_files/paper/2014/file/5a18e133cbf9f257297f410bb7eca942-Paper.pdf}
+}
 
 
 @article{hopfieldrnn,
-author = {J J Hopfield },
+author = {J J Hopfield},
 title = {Neural networks and physical systems with emergent collective computational abilities.},
-journal = {Proceedings of the National Academy of Sciences},
+% journal = {Proceedings of the National Academy of Sciences},
+journal = {Proceedings of the National Academy of Sciences}, % ({PNAS})},% only for comnferences did the abbreviations
 volume = {79},
 number = {8},
-pages = {2554-2558},
+% pages = {2554-2558},
+pages = {2554--2558},
 year = {1982},
 doi = {10.1073/pnas.79.8.2554},
-URL = {https://www.pnas.org/doi/abs/10.1073/pnas.79.8.2554},
-eprint = {https://www.pnas.org/doi/pdf/10.1073/pnas.79.8.2554},
-abstract = {Computational properties of use of biological organisms or to the construction of computers can emerge as collective properties of systems having a large number of simple equivalent components (or neurons). The physical meaning of content-addressable memory is described by an appropriate phase space flow of the state of a system. A model of such a system is given, based on aspects of neurobiology but readily adapted to integrated circuits. The collective properties of this model produce a content-addressable memory which correctly yields an entire memory from any subpart of sufficient size. The algorithm for the time evolution of the state of the system is based on asynchronous parallel processing. Additional emergent collective properties include some capacity for generalization, familiarity recognition, categorization, error correction, and time sequence retention. The collective properties are only weakly sensitive to details of the modeling or the failure of individual devices.}}
+%url = {https://www.pnas.org/doi/abs/10.1073/pnas.79.8.2554},
+%eprint = {https://www.pnas.org/doi/pdf/10.1073/pnas.79.8.2554},
+% abstract = {Computational properties of use of biological organisms or to the construction of computers can emerge as collective properties of systems having a large number of simple equivalent components (or neurons). The physical meaning of content-addressable memory is described by an appropriate phase space flow of the state of a system. A model of such a system is given, based on aspects of neurobiology but readily adapted to integrated circuits. The collective properties of this model produce a content-addressable memory which correctly yields an entire memory from any subpart of sufficient size. The algorithm for the time evolution of the state of the system is based on asynchronous parallel processing. Additional emergent collective properties include some capacity for generalization, familiarity recognition, categorization, error correction, and time sequence retention. The collective properties are only weakly sensitive to details of the modeling or the failure of individual devices.}
+}
+
 
 @article{hochreiterLSTM,
 author = {Hochreiter, Sepp and Schmidhuber, Jürgen},
-year = {1997},
-month = {11},
-pages = {1735-1780},
 title = {Long Short-Term Memory},
-volume = {9},
 journal = {Neural Computation},
+year = {1997},
+% month = {11},
+month = {nov},
+volume = {9},
+number = {8},
+% pages = {1735-1780},
+pages = {1735--1780},
 doi = {10.1162/neco.1997.9.8.1735}
 }
 
-@misc{gentleschmidt2019recurrentneuralnetworksrnns,
-      title={Recurrent Neural Networks (RNNs): A gentle Introduction and Overview}, 
-      author={Robin M. Schmidt},
-      year={2019},
-      eprint={1912.05911},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/1912.05911}, 
+@misc{gentleschmidt2019recurrentneuralnetworksrnns, %arxiv, but this is not researchm just an overview
+author = {Robin M. Schmidt},
+title = {Recurrent Neural Networks ({RNNs}): A gentle Introduction and Overview},
+year = {2019},
+eprint = {1912.05911},
+note = {arXiv, v1},
+primaryClass = {cs.LG},
+url = {https://doi.org/10.48550/arXiv.1912.05911},
+%note = {v1}
 }
 
-@ARTICLE{279181bengio,
-  author={Bengio, Y. and Simard, P. and Frasconi, P.},
-  journal={IEEE Transactions on Neural Networks}, 
-  title={Learning long-term dependencies with gradient descent is difficult}, 
-  year={1994},
-  volume={5},
-  number={2},
-  pages={157-166},
-  keywords={Recurrent neural networks;Production;Delay effects;Intelligent networks;Neural networks;Discrete transforms;Computer networks;Cost function;Neurofeedback;Displays},
-  doi={10.1109/72.279181}}
+
+@article{279181bengio,
+author = {Bengio, Y. and Simard, P. and Frasconi, P.},
+title = {Learning long-term dependencies with gradient descent is difficult},
+journal = {{IEEE} Transactions on Neural Networks},
+year = {1994},
+volume = {5},
+number = {2},
+% pages = {157-166},
+pages = {157--166},
+% keywords = {Recurrent neural networks;Production;Delay effects;Intelligent networks;Neural networks;Discrete transforms;Computer networks;Cost function;Neurofeedback;Displays},
+doi = {10.1109/72.279181}
+}
+
 
 @book{AIBook,
-url = {https://doi.org/10.1515/9783111344126},
-title = {Artificial Intelligence},
-title = {Machine Learning, Convolutional Neural Networks and Large Language Models},
+ title = {Artificial Intelligence},
+ subtitle = {Machine Learning, Convolutional Neural Networks and Large Language Models},
 editor = {Leonidas Deligiannidis and George Dimitoglou and Hamid R. Arabnia},
-publisher = {De Gruyter},
-address = {Berlin, Boston},
-doi = {doi:10.1515/9783111344126},
-isbn = {9783111344126},
+ publisher = {De Gruyter},
 year = {2024},
-lastchecked = {2026-03-21}
+% address = {Berlin, Boston},
+isbn = {9783111344126},
+% doi = {doi:10.1515/9783111344126},
+doi = {10.1515/9783111344126},
+% url = {https://doi.org/10.1515/9783111344126},
+% lastchecked = {2026-03-21}
 }
+
 
 @article{articlebilstmsus,
 author = {Yang, Cheng-Hong and Wu, Chih-Hsien and Shao, Jen-Chung and Wang, Yi-Chuan and Hsieh, Chih-Min},
+% title = {AIS-Based Intelligent Vessel Trajectory Prediction using Bi-LSTM},
+title = {{AIS}-Based Intelligent Vessel Trajectory Prediction using {Bi-LSTM}},
+% journal = {IEEE Access},
+journal = {{IEEE} Access},
 year = {2022},
-month = {01},
-pages = {1-1},
-title = {AIS-Based Intelligent Vessel Trajectory Prediction using Bi-LSTM},
+% month = {01},
+month = {jan},
 volume = {10},
-journal = {IEEE Access},
+% pages = {1-1},
+pages   = {24302--24315},
 doi = {10.1109/ACCESS.2022.3154812}
 }
 
+
 @inproceedings{attentioniayn,
 author = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, \L{}ukasz and Polosukhin, Illia},
-title = {Attention is all you need},
+title = {Attention Is All You Need},
 year = {2017},
-isbn = {9781510860964},
-publisher = {Curran Associates Inc.},
-address = {Red Hook, NY, USA},
-abstract = {The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles, by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.0 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature.},
-booktitle = {Proceedings of the 31st International Conference on Neural Information Processing Systems},
-pages = {6000–6010},
-numpages = {11},
-location = {Long Beach, California, USA},
-series = {NIPS'17}
+% isbn = {9781510860964},
+% publisher = {Curran Associates Inc.},
+% address = {Red Hook, NY, USA},
+% abstract = {The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles, by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.0 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature.},
+% booktitle = {Proceedings of the 31st International Conference on Neural Information Processing Systems},
+booktitle = {In Proceedings of the Annual Conference on Neural Information Processing Systems ({NeurIPS})},
+% pages = {6000–6010},
+pages = {6000--6010},
+% numpages = {11},
+% location = {Long Beach, California, USA},
+% series = {NIPS'17}
 }
 
-@misc{zeng2022transformerseffectivetimeseries,
+
+%@misc{zeng2022transformerseffectivetimeseries,
       title={Are Transformers Effective for Time Series Forecasting?}, 
       author={Ailing Zeng and Muxi Chen and Lei Zhang and Qiang Xu},
       year={2022},
       eprint={2205.13504},
-      archivePrefix={arXiv},
+      note={arXiv},
       primaryClass={cs.AI},
       url={https://arxiv.org/abs/2205.13504}, 
 }
 
-@misc{ansari2024chronoslearninglanguagetime,
+@inproceedings{zeng2022transformerseffectivetimeseries,
+author = {Zeng, Ailing and Chen, Muxi and Zhang, Lei and Xu, Qiang},
+title = {Are Transformers effective for time series forecasting?},
+% booktitle = {Proceedings of the Thirty-Seventh AAAI Conference on Artificial Intelligence and Thirty-Fifth Conference on Innovative Applications of Artificial Intelligence and Thirteenth Symposium on Educational Advances in Artificial Intelligence},
+booktitle = {In Proceedings of the {AAAI} Conference on Artificial Intelligence},
+year = {2023},
+% isbn = {978-1-57735-880-0},
+% publisher = {AAAI Press},
+% url = {https://doi.org/10.1609/aaai.v37i9.26317},
+% abstract = {Recently, there has been a surge of Transformer-based solutions for the long-term time series forecasting (LTSF) task. Despite the growing performance over the past few years, we question the validity of this line of research in this work. Specifically, Transformers is arguably the most successful solution to extract the semantic correlations among the elements in a long sequence. However, in time series modeling, we are to extract the temporal relations in an ordered set of continuous points. While employing positional encoding and using tokens to embed sub-series in Transformers facilitate preserving some ordering information, the nature of the permutation-invariant self-attention mechanism inevitably results in temporal information loss.To validate our claim, we introduce a set of embarrassingly simple one-layer linear models named LTSF-Linear for comparison. Experimental results on nine real-life datasets show that LTSF-Linear surprisingly outperforms existing sophisticated Transformer-based LTSF models in all cases, and often by a large margin. Moreover, we conduct comprehensive empirical studies to explore the impacts of various design elements of LTSF models on their temporal relation extraction capability. We hope this surprising finding opens up new research directions for the LTSF task. We also advocate revisiting the validity of Transformer-based solutions for other time series analysis tasks (e.g., anomaly detection) in the future.},
+% articleno = {1248},
+% numpages = {8},
+% series = {AAAI'23/IAAI'23/EAAI'23},
+doi = {10.1609/aaai.v37i9.26317}
+}
+
+
+%@misc{ansari2024chronoslearninglanguagetime,
       title={Chronos: Learning the Language of Time Series}, 
       author={Abdul Fatir Ansari and Lorenzo Stella and Caner Turkmen and Xiyuan Zhang and Pedro Mercado and Huibin Shen and Oleksandr Shchur and Syama Sundar Rangapuram and Sebastian Pineda Arango and Shubham Kapoor and Jasper Zschiegner and Danielle C. Maddix and Hao Wang and Michael W. Mahoney and Kari Torkkola and Andrew Gordon Wilson and Michael Bohlke-Schneider and Yuyang Wang},
       year={2024},
       eprint={2403.07815},
-      archivePrefix={arXiv},
+      note={arXiv},
       primaryClass={cs.LG},
       url={https://arxiv.org/abs/2403.07815}, 
 } 
-
-@misc{bahdanau2016neuralmachinetranslationjointly,
-      title={Neural Machine Translation by Jointly Learning to Align and Translate}, 
-      author={Dzmitry Bahdanau and Kyunghyun Cho and Yoshua Bengio},
-      year={2016},
-      eprint={1409.0473},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/1409.0473}, 
+@article{ansari2024chronoslearninglanguagetime,
+author = {Abdul Fatir Ansari and Lorenzo Stella and Ali Caner Turkmen and Xiyuan Zhang and Pedro Mercado and Huibin Shen and Oleksandr Shchur and Syama Sundar Rangapuram and Sebastian Pineda Arango and Shubham Kapoor and Jasper Zschiegner and Danielle C. Maddix and Hao Wang and Michael W. Mahoney and Kari Torkkola and Andrew Gordon Wilson and Michael Bohlke-Schneider and Bernie Wang},
+title = {Chronos: Learning the Language of Time Series},
+journal = {Transactions on Machine Learning Research},
+year = {2024},
+% issn = {2835-8856},
+url = {https://openreview.net/forum?id=gerNCVqqtR},
+% note = {Expert Certification}
 }
 
-@misc{beck2024xlstmextendedlongshortterm,
-      title={xLSTM: Extended Long Short-Term Memory}, 
-      author={Maximilian Beck and Korbinian Pöppel and Markus Spanring and Andreas Auer and Oleksandra Prudnikova and Michael Kopp and Günter Klambauer and Johannes Brandstetter and Sepp Hochreiter},
-      year={2024},
-      eprint={2405.04517},
-      archivePrefix={arXiv},
+
+@inproceedings{bahdanau2016neuralmachinetranslationjointly,
+author = {Bahdanau, Dzmitry and Cho, Kyunghyun and Bengio, Yoshua},
+title = {Neural Machine Translation by Jointly Learning to Align and Translate},
+booktitle = {In Proceedings of the International Conference on Learning Representations ({ICLR})},
+year = {2015},
+url = {https://doi.org/10.48550/arXiv.1409.0473}
+}
+
+
+
+%@misc{beck2024xlstmextendedlongshortterm,
+author = {Beck, Maximilian and Pöppel, Korbinian and Spanring, Markus and Auer, Andreas and Prudnikova, Oleksandra and Kopp, Michael and Klambauer, Günter and Brandstetter, Johannes and Hochreiter, Sepp},
+title = {x{LSTM}: Extended Long Short-Term Memory},
+year = {2024},
+eprint = {2405.04517},
+note = {arXiv},
+primaryClass = {cs.LG},
+url = {https://doi.org/10.48550/arXiv.2405.04517}
+}
+@inproceedings{beck2024xlstmextendedlongshortterm,
+author = {Beck, Maximilian and Pöppel, Korbinian and Spanring, Markus and Auer, Andreas and Prudnikova, Oleksandra and Kopp, Michael and Klambauer, Günter and Brandstetter, Johannes and Hochreiter, Sepp},
+title = {{xLSTM}: Extended Long Short-Term Memory},
+    booktitle = {In Proceedings of the Annual Conference on Neural Information Processing Systems ({NeurIPS})},   
+year = {2024},
+volume = {37},
+pages = {107547--107603}, 
+doi = {10.52202/079017-3417}
+}
+
+
+
+@inproceedings{Liang_2024foundation,
+author = {Liang, Yuxuan and Wen, Haomin and Nie, Yuqi and Jiang, Yushan and Jin, Ming and Song, Dongjin and Pan, Shirui and Wen, Qingsong},
+title = {Foundation Models for Time Series Analysis: A Tutorial and Survey},
+% booktitle = {Proceedings of the 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining},
+booktitle = {In Proceedings of the Conference on Knowledge Discovery and Data Mining ({SIGKDD})},
+year = {2024},
+% pages = {6555–6565},
+pages = {6555--6565},
+doi = {10.1145/3637528.3671451}
+}
+
+@article{articlebilstmorigins,
+author = {Graves, Alex and Schmidhuber, Jürgen},
+title = {Framewise phoneme classification with bidirectional {LSTM} and other neural network architectures},
+journal = {Neural Networks},
+year = {2005},
+% month = {07},
+month = {jul},
+volume = {18},
+% pages = {602-10},
+pages = {602--610},
+doi = {10.1016/j.neunet.2005.06.042}
+}
+
+
+%they specified this bibtex in github https://github.com/NX-AI/tirex
+@inproceedings{auer2025tirexzeroshotforecastinglongtrex,
+  title = {{{TiRex}}: Zero-Shot Forecasting Across Long and Short Horizons with Enhanced In-Context Learning},
+  author = {Andreas Auer and Patrick Podest and Daniel Klotz and Sebastian B{\"o}ck and G{\"u}nter Klambauer and Sepp Hochreiter},
+  booktitle = {In proceedings of the Annual Conference on Neural Information Processing Systems ({NeurIPS})},
+  year = {2025},
+  url = {https://doi.org/10.48550/arXiv.2505.23719},
+}
+
+
+
+
+
+
+@article{8693856CV,
+    author = {Xiao, Zhe and Fu, Xiuju and Zhang, Liye and Goh, Rick Siow Mong},
+    title = {Traffic Pattern Mining and Forecasting Technologies in Maritime Traffic Service Networks: A Comprehensive Survey},
+    journal = {IEEE Transactions on Intelligent Transportation Systems},
+    volume = {21},
+    number = {5},
+    % pages = {1796-1825},
+    pages = {1796--1825},
+    year = {2020},
+    doi = {10.1109/TITS.2019.2908191}
+    % keywords = {Artificial intelligence;Spaceborne radar;...} (removed)
+}
+
+@book{ValleryDoerschel2025RTSkript, %unused
+    author    = {Vallery, Heike and Dörschel, Lorenz},
+    % title   = {Regelungstechnik sowie Höhere Regelungstechnik und weitere Ergänzungen},
+    title     = {{Regelungstechnik} sowie {Höhere} {Regelungstechnik} und weitere {Ergänzungen}},
+    year      = {2025},
+    % edition = {49. Auflage},
+    edition   = {49},
+    publisher = {Verlag Mainz},
+    % pages   = {402--423},  (removed: pages belong in \cite[], not @book)
+    % address = {Aachen},    (removed: per instructions)
+    note      = {Umdruck zur Vorlesung, Institut für {Regelungstechnik} ({IRT}), {RWTH} Aachen University}
+}
+
+
+@article{Kalman1960,
+    author  = {Kalman, Rudolf E.},
+    title   = {A New Approach to Linear Filtering and Prediction Problems},
+    % journal = {Transactions of the ASME--Journal of Basic Engineering},
+    journal = {Transactions of the {ASME} -- Journal of Basic Engineering},
+    volume  = {82},
+    number  = {1},
+    pages   = {35--45},
+    year    = {1960},
+    doi     = {10.1115/1.3662552}
+}
+
+
+@incollection{Schmidt1966EKF,
+    author    = {Schmidt, Stanley F.},
+    title     = {Application of State-Space Methods to Navigation Problems},
+    booktitle = {Advances in Control Systems},
+    volume    = {3},
+    pages     = {293--340},
+    year      = {1966},
+    publisher = {Elsevier},% (removed: per instructions, but flagged by overleaf)
+    doi       = {10.1016/B978-1-4831-9716-6.50011-4}
+}
+
+@inproceedings{donandt2022shortterm,
+    author    = {Donandt, Kathrin and B{\"o}ttger, Karim and S{\"o}ffker, Dirk},
+    title     = {Short-Term Inland Vessel Trajectory Prediction with Encoder-Decoder Models},
+    % booktitle = {Proceedings of the 2022 IEEE 25th International Conference on Intelligent Transportation Systems (ITSC)},
+    booktitle = {In Proceedings of the {IEEE} International Conference on Intelligent Transportation Systems ({ITSC})},
+    pages     = {974--979},
+    year      = {2022},
+    % address  = {Macau, China},   (removed: per instructions)
+    % publisher = {IEEE},          (removed: per instructions)
+    doi       = {10.1109/ITSC55140.2022.9922148},
+    % eprint  = {2406.02770},      (removed: published version cited)
+    % note = {arXiv},     (removed: published version cited)
+    % primaryClass  = {cs.LG}      (removed: published version cited)
+}
+
+@article{you2020stseq2seq,
+    author  = {You, Liang and Xiao, Shuai and Peng, Qing and Claramunt, Christophe and Han, Xiao and Guan, Zheng and Zhang, Jianping},
+    title   = {{ST-Seq2Seq}: A Spatio-Temporal Feature-Optimized {Seq2Seq} Model for Short-Term Vessel Trajectory Prediction},
+    journal = {IEEE Access},
+    volume  = {8},
+    pages   = {218565--218574},
+    year    = {2020},
+    % publisher = {IEEE},  (removed: per instructions)
+    doi     = {10.1109/ACCESS.2020.3041762}
+}
+
+@misc{bsh_ais_kiel_2025,
+    author       = {{Bundesamt für Seeschifffahrt und Hydrographie ({BSH})}},
+    % title      = {AIS data for ship emission measurement on the mesurementsite Kiel 2025 - series},
+    title        = {{AIS} Data for Ship Emission Measurement on the Measurement Site {Kiel} 2025 -- Series},
+    year         = {2025},
+    url          = {https://gdi.bsh.de/de/feed/AIS-data-for-ship-emission-measurement-on-the-mesurementsite-Kiel-2025-series.xml},
+   % note         = {Provided under the Data Licence Germany -- Attribution -- Version 2.0 (\url{https://www.govdata.de/dl-de/by-2-0})}
+}
+
+@misc{bsh_ais_bremerhaven_2025,
+    author       = {{Bundesamt für Seeschifffahrt und Hydrographie ({BSH})}},
+    % title      = {AIS data for ship emission measurement on the mesurementsite Bremerhaven 2025 - series},
+    title        = {{AIS} Data for Ship Emission Measurement on the Measurement Site {Bremerhaven} 2025 -- Series},
+    year         = {2025},
+    url          = {https://gdi.bsh.de/de/feed/AIS-data-for-ship-emission-measurement-on-the-mesurementsite-Bremerhaven-2025-series.xml},
+    %note         = {Provided under the Data Licence Germany -- Attribution -- Version 2.0 (\url{https://www.govdata.de/dl-de/by-2-0})}
+}
+
+@misc{bsh_ais_wedel_2025,
+    author       = {{Bundesamt für Seeschifffahrt und Hydrographie ({BSH})}},
+    % title      = {AIS data for ship emission measurement on the mesurementsite Wedel 2025 - series},
+    title        = {{AIS} Data for Ship Emission Measurement on the Measurement Site {Wedel} 2025 -- Series},
+    year         = {2025},
+    url          = {https://gdi.bsh.de/de/feed/AIS-data-for-ship-emission-measurement-on-the-mesurementsite-Wedel-2025-series.xml},
+    %note         = {Provided under the Data Licence Germany -- Attribution -- Version 2.0 (\url{https://www.govdata.de/dl-de/by-2-0})}
+}
+
+@book{hutter2019automated,
+    title     = {Automated Machine Learning: Methods, Systems, Challenges},
+    editor    = {Hutter, Frank and Kotthoff, Lars and Vanschoren, Joaquin},
+    year      = {2019},
+    publisher = {Springer},
+    series    = {The Springer Series on Challenges in Machine Learning},
+    doi       = {10.1007/978-3-030-05318-5},
+    % isbn    = {978-3-030-05317-8}  (removed: optional, uncommon in thesis references)
+}
+@inproceedings{Feurer2015,
+    author    = {Feurer, Matthias and Klein, Aaron and Eggensperger, Katharina and Springenberg, Jost and Blum, Manuel and Hutter, Frank},
+    % title   = {Efficient and robust automated machine learning},
+    title     = {Efficient and Robust Automated Machine Learning},
+    % booktitle = {Advances in Neural Information Processing Systems},
+    booktitle = {In Proceedings of the Annual Conference on Neural Information Processing Systems ({NeurIPS})},   
+    volume    = {28},
+    year      = {2015}
+}
+@article{Jones1998,
+    author  = {Jones, Donald R. and Schonlau, Matthias and Welch, William J.},
+    % title = {Efficient global optimization of expensive black-box functions},
+    title   = {Efficient Global Optimization of Expensive Black-Box Functions},
+    % journal = {Journal of Global optimization},
+    journal = {Journal of Global Optimization},
+    volume  = {13},
+    number  = {4},
+    pages   = {455--492},
+    year    = {1998},
+    % publisher = {Springer}  (removed: per instructions)
+}
+
+
+@inproceedings{Zhang2021Attention,
+    author    = {Zhang, Sheng and Wang, Long and Zhu, Mingdong and Chen, Siwen and Zhang, Haisu and Zeng, Zhaowen},
+    % title   = {A Bi-directional LSTM Ship Trajectory Prediction Method based on Attention Mechanism},
+    title     = {A Bi-Directional {LSTM} Ship Trajectory Prediction Method Based on Attention Mechanism},
+    % booktitle = {2021 IEEE 5th Advanced Information Technology, Electronic and Automation Control Conference (IAEAC)},
+    booktitle = {In Proceedings of the {IEEE} Advanced Information Technology, Electronic and Automation Control Conference ({IAEAC})},
+    % pages   = {1-5},
+    pages     = {1--5},
+    year      = {2021},
+    doi       = {10.1109/IAEAC50856.2021.9391059}
+}
+
+@book{Thrun2005,
+    % author  = {Sebastian Thrun and Wolfram Burgard and Dieter Fox},
+    author    = {Thrun, Sebastian and Burgard, Wolfram and Fox, Dieter},
+    title     = {Probabilistic Robotics},
+    publisher = {MIT Press},
+    year      = {2005},
+    % isbn    = {978-0-262-20162-9}  (removed: optional, uncommon in thesis references)
+}
+
+@article{li2003survey,
+    author  = {Li, X. Rong and Jilkov, Vesselin P.},
+    % title = {Survey of Maneuvering Target Tracking. {Part~I}: Dynamic Models},
+    title   = {Survey of Maneuvering Target Tracking. Part~I: Dynamic Models},
+    % journal = {IEEE Transactions on Aerospace and Electronic Systems},
+    journal = {{IEEE} {Transactions} on {Aerospace} and {Electronic} {Systems}},
+    volume  = {39},
+    number  = {4},
+    pages   = {1333--1364},
+    year    = {2003},
+    doi     = {10.1109/TAES.2003.1261132}
+}
+@misc{ansari2025chronos2,
+    author  = {Ansari, Abdul Fatir and Shchur, Oleksandr and Küken, Jaris and Auer, Andreas and Han, Boran and Mercado, Pedro and Rangapuram, Syama Sundar and Shen, Huibin and Stella, Lorenzo and Zhang, Xiyuan and Goswami, Mononito and Kapoor, Shubham and Maddix, Danielle C. and Guerron, Pablo and Hu, Tony and Yin, Junming and Erickson, Nick and Desai, Prateek Mutalik and Wang, Hao and Rangwala, Huzefa and Karypis, George and Wang, Yuyang and Bohlke-Schneider, Michael},
+    title   = {{Chronos-2}: From Univariate to Universal Forecasting},
+    year    = {2025},
+    % eprint = {2510.15821},
+    eprint  = {2510.15821v1},
+    note = {arXiv, v1},
+    url = {https://doi.org/10.48550/arXiv.2510.15821}
+}
+
+@inproceedings{bergstra2011algorithms,
+    author    = {Bergstra, James S. and Bardenet, R{\'e}mi and Bengio, Yoshua and K{\'e}gl, Bal{\'a}zs},
+    title     = {Algorithms for Hyper-Parameter Optimization},
+    % booktitle = {Advances in Neural Information Processing Systems},
+booktitle = {In Proceedings of the Annual Conference on Neural Information Processing Systems ({NeurIPS})},
+volume    = {24},
+    year      = {2011},
+    % publisher = {Curran Associates, Inc.}  (removed: per instructions)
+}
+
+@inproceedings{optuna_2019,
+    author    = {Akiba, Takuya and Sano, Shotaro and Yanase, Toshihiko and Ohta, Takeru and Koyama, Masanori},
+    % title   = {Optuna: A Next-generation Hyperparameter Optimization Framework},
+    title     = {{Optuna}: A Next-Generation Hyperparameter Optimization Framework},
+    % booktitle = {Proceedings of the 25th {ACM} {SIGKDD} International Conference on Knowledge Discovery and Data Mining},
+    booktitle = {In Proceedings of the Conference on {Knowledge} {Discovery} and {Data} {Mining} ({SIGKDD})},
+    year      = {2019},
+    % pages   = {}  
+}
+
+
+@inproceedings{sekhon2020,
+  title = 	 {A Spatially and Temporally Attentive Joint Trajectory Prediction Framework for Modeling Vessel Intent},
+  author =       {Sekhon, Jasmine and Fleming, Cody},
+    booktitle = {In Proceedings of the Conference on Learning for Dynamics and Control ({L4DC})},
+  pages = 	 {318--327},
+  year = 	 {2020},
+  %editor = 	 {Bayen, Alexandre M. and Jadbabaie, Ali and Pappas, George and Parrilo, Pablo A. and Recht, Benjamin and Tomlin, Claire and Zeilinger, Melanie},
+  volume = 	 {120}, %use or no???
+ % series = 	 {Proceedings of Machine Learning Research},
+  %month = 	 {10--11 Jun},
+  %publisher =    {PMLR},
+  %pdf = 	 {http://proceedings.mlr.press/v120/sekhon20a/sekhon20a.pdf},
+  url = 	 {https://proceedings.mlr.press/v120/sekhon20a.html},
+  %abstract = 	 {Ships, or vessels, often sail in and out of cluttered environments over the course of their trajectories. Safe navigation in such cluttered scenarios requires an accurate estimation of the intent of neighboring vessels and their effect on the self and vice-versa well into the future. In manned vessels, this is achieved by constant communication between people on board, nautical experience, and audio and visual signals. In this paper we propose a deep neural network based architecture to predict intent of neighboring vessels into the future for an unmanned vessel solely based on positional data.}
+}
+
+
+
+
+@inproceedings{legel2025, % fixed this, wrong paper before
+    author    = {Legel, Tom and Söffker, Dirk and Schätzle, Roland and Donandt, Kathrin},
+    title     = {Towards Explainable Deep Learning for Ship Trajectory Prediction in Inland Waterways},
+    % booktitle = {35th European Safety and Reliability Conference (ESREL 2025) and the 33rd Society for Risk Analysis Europe Conference (SRA-E 2025)},
+    booktitle = {In Proceedings of the European Safety and Reliability Conference ({ESREL}) and the Society for Risk Analysis Europe Conference ({SRA-E})},
+    % pages   = {1111–1117},
+    pages     = {1111--1117},
+    year      = {2025},
+    doi       = {10.3850/978-981-94-3281-3_esrel-sra-e2025-p1370-cd},
+    % url     = {http://dx.doi.org/10.3850/978-981-94-3281-3_ESREL-SRA-E2025-P1370-cd},  (removed: redundant with doi)
+    % series  = {ESREL SRA-E 2025},     (removed: per instructions)
+    % collection = {ESREL SRA-E 2025},  (removed: per instructions)
+    % publisher = {Research Publishing Services}  (removed: per instructions)
+}
+
+%WIP TODO FROM HERE ON --------------------------------
+
+
+@article{kfreview,
+    author  = {Jwo, Dah-Jing and Cho, Ta-Shun},
+    % title = {Critical remarks on the linearised and extended Kalman filters with geodetic navigation examples},
+    title   = {Critical Remarks on the Linearised and Extended {Kalman} {Filters} with Geodetic Navigation Examples},
+    journal = {Measurement},
+    volume  = {43},
+    number  = {9},
+    % pages = {1077-1089},
+    pages   = {1077--1089},
+    year    = {2010},
+    % doi   = {https://doi.org/10.1016/j.measurement.2010.05.008},
+    doi     = {10.1016/j.measurement.2010.05.008},
+    % url   = {https://www.sciencedirect.com/science/article/pii/S0263224110001296},  (removed: redundant with doi)
+    % keywords = {Linearised Kalman filter, Extended Kalman filter, Total state estimate, Error state estimate, Navigation},  (removed: not for bibliography)
+    % abstract = {The Kalman filter has been used in a wide variety of engineering applications. There are two typical forms in implementing the nonlinear Kalman filter in conjunction with linearisation trajectory for which calculation of Jacobian matrices is involved: the linearised Kalman filter (LKF) and the extended Kalman filter (EKF). This paper aims to serve as a tutorial to the readers for providing better understanding and correctly implementing the two forms of nonlinear filters. Some critical remarks useful in designing a nonlinear Kalman filter are pointed out. Linearisation of the trajectory for the LKF and EKF is discussed. Performance degradation due to linearisation error is illustrated. Divergence problem for the LKF is presented. Implementation practice for the LKF and the EKF via total state estimate in conjunction with the error state estimate (in which the state variables are incremental quantities) are provided. Discussion on increase of dynamic process noise to the estimation precision in LKF and EKF is involved. Clear description of the implementation algorithms is provided. The step-by-step procedure for performing the filters is provided accompanied with two geodetic navigation examples. The materials prepared in this paper can be modified for further development in various applications.}  (removed: not for bibliography)
+}
+
+@article{timeseriesreview,
+    author  = {Wang, Yuxuan and Wu, Haixu and Dong, Jiaxiang and Liu, Yong and Wang, Chen and Long, Mingsheng and Wang, Jianmin},
+    title   = {Deep Time Series Models: A Comprehensive Survey and Benchmark},
+    journal = {{IEEE} {Transactions} on {Pattern} {Analysis} and {Machine} {Intelligence}},
+    % pages = {1-20},
+    % pages   = {1--20},
+    year    = {2026},
+    doi     = {10.1109/TPAMI.2026.3690845},
+
+}
+
+
+@misc{DiBiase_PennState_GEOG160,
+    author = {DiBiase, David},
+    % title = {2.2 The Need for Coordinate Systems},
+    %title  = {The Need for Coordinate Systems},
+    title = {GEOG 160: Mapping Our Changing World},  %(removed: not a valid @misc field)
+    year   = {2015},
+    url    = {https://courses.ems.psu.edu/geog160/node/1914},
+    %note   = {In: {GEOG} 160: Mapping Our Changing World, Penn State University. Licensed under {CC} {BY-NC-SA} 4.0}
+}
+
+
+@article{zhou2024optunabilstm,
+    author  = {Zhou, Yipeng and Dong, Ze and Bao, Xiongguan},
+    % title = {A Ship Trajectory Prediction Method Based on an Optuna–BILSTM Model},
+    title   = {A Ship Trajectory Prediction Method Based on an {Optuna}--{BiLSTM} Model},
+    journal = {Applied Sciences},
+    volume  = {14},
+    number  = {9},
+    % ARTICLE-NUMBER = {3719},  (removed: non-standard field)
+    pages   = {3719},
+    year    = {2024},
+    doi     = {10.3390/app14093719},
+    % url   = {https://www.mdpi.com/2076-3417/14/9/3719},  (removed: redundant with doi)
+    % issn  = {2076-3417}  (removed: already commented out)
+}
+
+
+
+@inproceedings{deng2023efficient,
+    author    = {Deng, Difan and Karl, Florian and Hutter, Frank and Bischl, Bernd and Lindauer, Marius},
+    title     = {Efficient Automated Deep Learning for Time Series Forecasting},
+    % booktitle = {Machine Learning and Knowledge Discovery in Databases},
+    booktitle = {In Proceedings of the European Conference on Machine Learning and Principles and Practice of Knowledge Discovery in Databases ({ECML} {PKDD})},
+    pages     = {664--680},
+    year      = {2023},
+    % editor   = {Amini, Massih-Reza and ...},  (removed: per instructions)
+    % publisher = {Springer Nature Switzerland},  (removed: per instructions)
+    % address  = {Cham},                          (removed: per instructions)
+    % isbn     = {978-3-031-26409-2}              (removed: per instructions)
+}
+
+@article{Capobianco_2021,
+   title={Deep Learning Methods for Vessel Trajectory Prediction Based on Recurrent Neural Networks},
+   volume={57},
+   ISSN={2371-9877},
+   %url={http://dx.doi.org/10.1109/TAES.2021.3096873},
+   DOI={10.1109/taes.2021.3096873},
+   number={6},
+   journal={IEEE Transactions on Aerospace and Electronic Systems},
+   %publisher={Institute of Electrical and Electronics Engineers (IEEE)},
+   author={Capobianco, Samuele and Millefiori, Leonardo M. and Forti, Nicola and Braca, Paolo and Willett, Peter},
+   year={2021},
+   month=Dec, pages={4329–4346} }
+
+@article{DEVOS2021107558,
+title = {The Impact of Autonomous Ships on Safety at Sea – A Statistical Analysis},
+journal = {Reliability Engineering \& System Safety},
+volume = {210},
+pages = {107558},
+year = {2021},
+issn = {0951-8320},
+doi = {10.1016/j.ress.2021.107558},
+author = {Jiri {de Vos} and Robert G. Hekkenberg and Osiris A. {Valdez Banda}}
+}
+
+@article{kfapplications,
+author = {Urrea, Claudio and Agramonte, Rayko},
+title = {Kalman Filter: Historical Overview and Review of Its Use in Robotics 60 Years after Its Creation},
+journal = {Journal of Sensors},
+volume = {2021},
+number = {1},
+pages = {9674015},
+doi = {10.1155/2021/9674015},
+%url = {https://onlinelibrary.wiley.com/doi/abs/10.1155/2021/9674015},
+%eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1155/2021/9674015},
+
+year = {2021}
+}
+
+@misc{podest2026tirex2generalizingtirexmultivariate, %todo shorten
+      title={TiRex-2: Generalizing TiRex to Multivariate Data and Streaming}, 
+      author={Patrick Podest and Marco Pichler and Elias Bürger and Levente Zólyomi and Bernhard Voggenberger and Wilhelm Berghammer and Daniel Klotz and Sebastian Böck and Günter Klambauer and Sepp Hochreiter},
+      year={2026},
+      eprint={2607.01204},
+      note={arXiv, v1},
       primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2405.04517}, 
+      url={https://doi.org/10.48550/arXiv.2607.01204}, 
 }
-@inproceedings{Liang_2024foundation, series={KDD ’24},
-   title={Foundation Models for Time Series Analysis: A Tutorial and Survey},
-   url={http://dx.doi.org/10.1145/3637528.3671451},
-   DOI={10.1145/3637528.3671451},
-   booktitle={Proceedings of the 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining},
-   publisher={ACM},
-   author={Liang, Yuxuan and Wen, Haomin and Nie, Yuqi and Jiang, Yushan and Jin, Ming and Song, Dongjin and Pan, Shirui and Wen, Qingsong},
-   year={2024},
-   month=aug, pages={6555–6565},
-   collection={KDD ’24} }
