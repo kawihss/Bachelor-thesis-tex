@@ -1,9 +1,7 @@
 %!TEX root=../main.tex
-\chapter{Data \& Preprocessing} %\me{part of Methodology?} \todo{slack}
+\chapter{Data \& Preprocessing} 
 \label{chap:dataset}
 \acresetall %reset abbrevations
-
-\ws{Subsections should have a significant amount of text. For these small sizes, you can use paragraph}
 
 
 %\todo{use past tense for finished work!} \me{done,}\\
@@ -11,56 +9,29 @@
 %\todo{more detailed captions: the reader must be able to understand the table without looking at the text in the thesis.} \me{done} \\
 %\todo{figures in appendix: dont explain in text.  You can write: more details are presented in Appendix X (refer an appendix section and there write the details and refer to the figures) -> wait for pagecount to see what i can include here.} \me{open}\\
 %\todo{check for any left over stacked headings, replace with referenced intros}
-\ws{sections do not discuss. Instead: in this section, we discuss .. please fix across the thesis} \me{in general revise this active phrasing}
 %\todo{always use [t] for tables to interrupt the text less}
 
-\ws{stacked heading is generally a bad idea. Here, you can write text like: in this chapter, we .... then refer sections one by one. You can label them using \texttt{label} command then refer to them in text.}
-
-In this chapter, we detail the data foundation of this thesis. First, Section \ref{sec:data_sources}, we introduce the publicly available \ac{AIS} dataset used for our experiments. In Section \ref{sec:data_preprocessing}, we outline the five-step preprocessing pipeline developed to extract, clean, segment, and normalize the raw trajectories. Finally, we summarise the key characteristics of the final dataset in Section \ref{sec:dataset_characteristics}.
+In this chapter, we detail the data foundation of this thesis. First, in Section \ref{sec:data_sources}, we introduce the publicly available \ac{AIS} dataset used for our experiments. In Section \ref{sec:data_preprocessing}, we outline the five-step preprocessing pipeline developed to extract, clean, segment, and normalise the raw trajectories. Finally, we summarise the key characteristics of the final dataset in Section \ref{sec:dataset_characteristics}.
 
 \section{Data Sources}
 \label{sec:data_sources}
-
-\ws{The work cannot use data. We used the data. Better: In this work, we used public data .. (note the usage of past tense as well (finished work))}
-In this work, we used publicly available \ac{AIS} data from three different environments \ws{what does geographic domains mean? Needs some elaboration} \me{replaced} 
-to ensure diversity in traffic patterns, waterway types, and vessel behaviours.
+In this work, we used publicly available \ac{AIS} data from three different environments to ensure diversity in traffic patterns, waterway types, and vessel behaviours.
 The datasets cover measurement stations in three German cities, % Kiel,  Bremerhaven and Wedel, 
 recorded by \ac{AIS} receivers operated by the the Federal Maritime and Hydrographic Agency (Bundesamt für Seeschifffahrt und Hydrographie (BSH)) as part of their ship emissions monitoring programme. 
-\ws{You cannot assume every reader knows the cities of Germany and the German language. Please write something like: measurement stations in three German cities .. and the name of the office in English, the federal office of xxxx.}
 These data are organised by measurement station and month, downloadable per day, and publicly accessible via GovData. They are provided under the \emph{Data licence Germany – attribution – Version 2.0\footnote{\url{https://www.govdata.de/dl-de/by-2-0)}}}.
  %Datenlizenz Deutschland – Namensnennung – Version 2.0 sorry i was very careful not to translate it since the name was very explicit, but i found the official english version now
-\ws{same here. Please write some explanation in English for the term.}
-For each measuring station, we used all data available for the year 2025 to avoid any seasonal effects \parencite{bsh_ais_kiel_2025, bsh_ais_bremerhaven_2025, bsh_ais_wedel_2025}. %The U.S. dataset is sourced from the NOAA Marine Cadastre Nationwide \ac{AIS} dataset, distributed as daily CSV files covering all U.S. coastal and inland waters, and accessible via the Marine Cadastre vessel traffic portal. Records are filtered geographically to the Upper Mississippi River area within the relevant bounding box. \todo{polygon + foto weltkarte}
+For each measuring station, we used all data available for the year 2025 to avoid any seasonal effects \parencite{bsh_ais_kiel_2025, bsh_ais_bremerhaven_2025, bsh_ais_wedel_2025}.
 
-%\subsection{Raw Data Format}
 \paragraph{Raw Data Format.}
-\ws{always put . after the paragraph text} \me{addressed in full thesis}
 
-\ws{ \textbackslash \textbackslash{} are almost never needed when writing a text. Either leave a blank line (i.e., a new paragraph) or not} \me{addressed in full thesis}
-
-The \ac{AIS} data are stored as semicolon-delimited log files with fields including navigation status, heading, \ac{SOG}, latitude/longitude,\ac{COG}, true heading, and a UTC timestamp. % (YYMMDD HHMMSS)
-%The NOAA Marine Cadastre \ac{AIS} data follow a standardised CSV format as defined by the NOAA data dictionary, with columns \texttt{MMSI}, \texttt{BaseDateTime}, \texttt{LAT}, \texttt{LON}, \texttt{SOG}, \texttt{COG}, \texttt{Heading}, and optional vessel metadata including \texttt{VesselName}, \texttt{IMO}, \texttt{VesselType}, \texttt{Length}, \texttt{Width}, \texttt{Draft}, and \texttt{Cargo} \cite{noaa2025aisdict}.\todo{weird citation format, can I switch to [NOAA25]?? siehe slack so viel wir möglich in diesem stil, ich denke bei echten authoren mache ich das aber bei so organisationen in brackets}
-%Both datasets add unique identifiers to vessels, allowing individual tracking. 
+The \ac{AIS} data are stored as semicolon-delimited log files with fields including navigation status, heading, \ac{SOG}, latitude/longitude, \ac{COG}, true heading, and a UTC timestamp. % (YYMMDD HHMMSS)
 The dataset assigns a unique identifier, the \ac{MMSI} to each vessel, allowing individual tracking.
-
-
-
 
 \section{Data Preprocessing}
 \label{sec:data_preprocessing}
-\me{i restructured section 3.2 by moving and merging some paragraphs for better flow and thematic fit, and made minor adjustments to content. this includes the parts that you already read. the part you did not cover yet is now 3.2.4}
-%This section follows the structure of my implementation and refers to the files     \texttt{01\_extract.py},  \texttt{02\_clean.py}, \texttt{03\_sample.py}, \texttt{04\_track\_segmentation.py}, and \texttt{05\_normalize.py}.
 
-\ws{No need to mention the code files in the thesis like this.}
-
-
-\ws{In this work,}
 In this work, the raw \ac{AIS} data underwent 
-\ws{the term data in scientific context is often treated as `plural' so it should be `undergo'. See this here: \url{https://www.thesaurus.com/articles/data-is-or-data-are}} \me{thank you. sometimes counter intuitive, especially in past tense}
 a five-step pipeline to produce trajectories: (1) Data extraction and cleaning, (2) geographic domain assignment (3) resampling, (4) trajectory segmentation, and (5) feature engineering and normalisation.
-\ws{The steps should exactly match the titles of the subsections}
-\ws{In this section, we explain these steps in detail.}
-\ws{The resulting dataset features are presented in Table X}
 In this section, we explain these steps in detail. The resulting dataset features are presented in Table \ref{tab:unified-format}. A simplified visualisation of steps 1, 3 and 4 can be found in Figure \ref{fig:preprocessing-a} in Appendix~\ref{chap:appendixdataplots}.
 
  \begin{table}[t]
@@ -88,12 +59,11 @@ In this section, we explain these steps in detail. The resulting dataset feature
     \texttt{rot\_norm} & Normalised rate of turn \\
     \bottomrule
     \end{tabular}
-    \caption[Overview of AIS Data Fields]{Overview of \acf{AIS} data fields available after preprocessing. The table distinguishes between absolute fields used for evaluation and track identification, and the normalised features used by the trajectory prediction models. 
-    \ws{The tables and figures must be self-contained, so the caption should be more detailed. Self-contained means that the reader must be able to understand the table without looking at the text in the thesis.} 
+    \caption[Overview of AIS Data Fields]{Overview of \acf{AIS} data fields available after preprocessing. The table distinguishes between the absolute fields used for evaluation and track identification, and the normalised features used by the trajectory prediction models. 
     }
     \label{tab:unified-format}
 \end{table}
-%\caption{Overview of the AIS data fields available after data cleaning, resampling, and feature engineering. The table distinguishes between absolute/metadata fields used for evaluation and track identification, and the normalised features specifically constructed to train the trajectory prediction models.}
+
 
 \begin{comment} % old extraction, now part of cleaning
         \subsection{Extracting} \me{make paragraph? too short for subsec, assymetric. could jsut add to cleaning, dont have to stick to the code}
@@ -112,7 +82,6 @@ In this section, we explain these steps in detail. The resulting dataset feature
 % more advanced filtering:https://arxiv.org/pdf/2001.01592
 %\paragraph{Cleaning and Filtering.}
 
-\ws{The title extraction does not really represent the content. The content has filtering. Is there a better title for this paragraph?}
 The first stage of the pipeline focuses on extracting dynamic position information and removing erroneous records.
 Raw \ac{AIS} log files contain multiple message types beyond vessel position reports, including voyage-related data% (Type 5)
 , static data reports%(Type 24)
@@ -121,50 +90,33 @@ Raw \ac{AIS} log files contain multiple message types beyond vessel position rep
 ~\parencite{itu-r-m1371-1-2001}. 
 To isolate relevant vessel movements, navigation aids (buoys etc.%, \ac{MMSI} starting with 99
 ) and aircrafts were filtered out, and only message types carrying dynamic position information were retained%: Type 1 (Class A, scheduled), Type 2 (Class A, assigned), Type 3 (Class A, response), Type 18 (Class B), and Type 27 (long-range)
-. These provide SOG, COG, heading, and coordinates. All other messages were discarded prior to parsing. This initial parsing reduced the raw dataset by approximately 15\%. 
-During this extraction, known encoding errors were also corrected;  \ws{you need to elaborate on this. Explain briefly the known encoding errors} %, by means such as adding constant value of 102.4 to all negative SOGs and converting a heading of 511 to NaN.
-specifically, we added a constant offset of 102.4 to correct negative SOG readings, and converted the default heading values of 511 to missing data (NaN).
+. These provide \ac{SOG}, \ac{COG}, heading, and coordinates. All other messages were discarded prior to parsing. This initial parsing reduced the raw dataset by approximately 15\%. 
+During this extraction, known encoding errors were also corrected; %, by means such as adding constant value of 102.4 to all negative SOGs and converting a heading of 511 to NaN.
+specifically, we added a constant offset of 102.4 to correct \ac{SOG} readings that were negative due to parsing errors, and converted the default heading values of 511 to missing data (NaN), as specified in \textcite{itu-r-m1371-1-2001}. % % If a parser uses signed instead of unsigned integers, in a 10-bit field this causes values above 511 to overflow into negative numbers. Adding 1024 steps (102.4 knots) corrects this binary two's complement error.
 Additionally duplicate records, which we define as two data points with the same timestamp and \ac{MMSI}, were resolved. 
 Duplicates can occur when multiple stations receive the same signals. Approximately two-thirds of the duplicates were exact matches and were directly discarded in the cleaning process; 
-the one-third that were not exact matches were handled by retaining the row with the least zero entries as the first and the oldest as the second criteria choice, respecively.
+the one-third that were not exact matches were handled by retaining the row with the least zero entries as the first and the oldest as the second criteria choice, respectively.
 
 
 
 %\paragraph{Kinematic Outlier Detection.} fällt unter celaning und filtering
 Following the initial extraction, the dataset was filtered for spatial and kinematic outliers. 
-First, the data were restricted to specific geographic bounding boxes for each target region, as detailed in Table \ref{tab:geo-bounds}, which functioned as a primary filter for large coordinate errors. \ws{functioned}
-Within these boundaries, the dataset was further refined by applying a hard threshold to exclude unrealistic velocity readings, dropping any records with a reported \ac{SOG} greater than 30 knots.
-In order to identify faulty \ac{GNSS} coordinates, we utilised the distance between consecutive points as follows: \ws{we utilised the distance between consecutive points as follows:} \me{thank you, way better}
-\ws{wrong grammar. The movement of a vessel} 
-If the movement of a vessel exceeded what is physically achievable based on its reported \ac{SOG} and the time elapsed since the previous timestamp, the point was discarded.
+First, the data were restricted to specific geographic bounding boxes for each target region, as detailed in Table \ref{tab:geo-bounds}, which functioned as a primary filter for large coordinate errors. 
+Following \textcite{articlebilstmsus} approach, within these boundaries, the dataset was further filtered by excluding any records with a reported \ac{SOG} exceeding 30 knots as implausible sensor or transmission errors.
+In order to identify faulty \ac{GNSS} coordinates, we utilised the distance between consecutive points as follows: 
+If the distance exceeded what is physically achievable based on the reported \ac{SOG} of the vessel and the time that elapsed since the previous timestamp, the point was discarded.
 During this cleaning phase, no interpolation was performed to fill the resulting gaps.
-This prevented the introduction of synthetic data before the formal resampling stage, which was not necessary because of the large number \ws{large number}
+This prevented the introduction of synthetic data before the formal resampling stage, which was not necessary because of the large number 
 of available data points.
 Our kinematic approach to filtering out implausible \ac{GNSS} positions %shows similarity to the more advanced positional preprocessing introduced by
-aligns with the methods proposed by
-\ws{was based on the methods used by} \me{I had the idea independently before finding this paper, but wanted to credit them as to not raise any flags. aligns with..?}
- \textcite{Zhao_Shi_Yang_2018}, who filtered trajectories based on time gaps and physically implausible speed transitions.
+aligns with the methods proposed by \textcite{Zhao_Shi_Yang_2018}, who filtered trajectories based on time gaps and physically implausible speed transitions.
 \begin{comment}
-    \ws{describe the method in one sentence only. Too many details. These details are needed in the related work section, but not here}
+    ws{describe the method in one sentence only. Too many details. These details are needed in the related work section, but not here}
 They cut tracks wherever the gap between consecutive messages exceeds 10 minutes. In a subsequent spatial pass, they compute an implied speed from the GNSS positions and flag a breakpoint wherever it diverges from the reported SOG beyond a 15-knot threshold.
 The time threshold is handled differently in our approach, as is specified in \ref{subsubsec:windowandstride}. \citeauthor{Zhao_Shi_Yang_2018} continue to reassociate the resulting tracks, but for our purposes, the filter is sufficient.
 
 \end{comment}
-\ws{Until here. you can move the details to the related work section if you want.} \me{details are already covered in related work \-\> removed completely here}
 
-\begin{comment} % better integrated now
-    Additionally, we utilised \ws{utilised}
-a hard threshold to filter out unrealistic velocity readings; we excluded records of \ws{; we excluded records of ..} 
-any vessel reporting a \ac{SOG} greater than 30 knots. %\\
-The data were \ws{is->was} \me{or were since its plural now?}
-further refined by applying geographic boundaries specific to each target region.
-These bounding boxes functioned \ws{functioned}
-as a secondary filter for large coordinate errors. %\\ 
-The defined boundaries for each dataset are detailed in Table \ref{tab:geo-bounds}. \ws{.}
-\end{comment}
-
-
-\ws{you can always use [t] for tables to interrupt the text less. Also, no need ot use :, it is enough to refer to in text.} \me{thanks, applied everywhere, looks better}
 
 \begin{table}[t]
 \centering
@@ -177,25 +129,14 @@ Kiel & lat $53.5^\circ$--$54.5^\circ$N, lon $9.2^\circ$--$11.5^\circ$E \\
 Wedel & lat $53.0^\circ$--$54.0^\circ$N, lon $9.0^\circ$--$10.5^\circ$E \ \\
 \bottomrule
 \end{tabular}
-\caption[Geographic Bounding Boxes]{Geographic bounding boxes applied to the raw AIS data for each measurement station. Any recorded vessel positions falling outside these specified latitude and longitude ranges were discarded.\ws{The caption must be more detailed}
-}
+\caption[Geographic Bounding Boxes]{Geographic bounding boxes applied to the raw AIS data for each measurement station. Any recorded vessel positions falling outside these specified latitude and longitude ranges were discarded.}
 \label{tab:geo-bounds}
 \end{table}
 
 %if this is behind table, fine. otherwise i need some new subsubsection title -> forced with H
 
 
-\begin{comment}
-    %integriert
-We define duplicates as data points \ws{in formal publications, better to use data points (with space)} 
-with the same timestamp and \ac{MMSI}.
-Duplicates can occur when multiple stations receive the same signals: \ws{.}
-Approximately two-thirds of the \ws{the} 
-duplicates are exact matches and are \ws{are} 
-directly discarded in the cleaning process; the one-third that are not exact matches are handled by retaining the row with the least zero entries as the \ws{the} 
-first and the oldest as the \ws{the} 
-second criteria choice, respecively. \ws{choice, respectively}. 
-\end{comment}
+
 
 %\paragraph{Derivation and Filtering of Rate of Turn.}
 \label{subsubsec:rotderivateion}
@@ -203,12 +144,9 @@ Finally, because the \ac{ROT} is rarely transmitted by standard \ac{AIS} transpo
 \text{ROT} = \frac{((\Delta\text{COG} + 180) \bmod 360) - 180}{\text{freq\_s} / 60}
 $ in degrees per minute. 
 Positive values indicate a starboard turn and negative values a port turn.  %\\
-To minimise the impact of \ac{GNSS} localisation noise, which causes fluctuations in \ac{COG} and thus artificial spikes in \ac{ROT} at low speeds, we applied \ws{applied} 
-two filters.
-\ws{The first filter excludes} 
-The first filter excluded segments where the \ac{SOG} was below 0.5 knots. 
-\ws{The second filter is threshold-based that removes ..}
-The second filter was threshold-based and removed any remaining data points with a calculated absolute \ac{ROT} exceeding $90^\circ/\text{min}$.% A short discussion on the physical causes of these artifacts and the reasons for utilizing \ac{COG} despite these limitations is provided in Section \ref{subsubsec:kinematiclowvel}.
+To minimise the impact of \ac{GNSS} localisation noise, which causes fluctuations in \ac{COG} and thus artificial spikes in \ac{ROT} at low speeds, we applied two filters.
+The first filter excluded segments with an \ac{SOG} below 0.5 knots. 
+The second filter removed any remaining data points with a calculated absolute \ac{ROT} exceeding $90^\circ/\text{min}$.% A short discussion on the physical causes of these artifacts and the reasons for utilizing \ac{COG} despite these limitations is provided in Section \ref{subsubsec:kinematiclowvel}.
     
 
 
@@ -220,41 +158,40 @@ The second filter was threshold-based and removed any remaining data points with
 
     
 %\paragraph{Geographic Context Assignment.}
-To enable the \ws{the}
-training of domain-aware models, each AIS message was \ws{was} 
-assigned a waterway type, further also referred to as the geographic \emph{domain}, based on its coordinates. We distinguish between \texttt{harbour}, \texttt{river}, \texttt{channel} and \texttt{lock} domain.
-To assign those labels, we extracted \ws{ed} 
-water bodies and maritime infrastructure from \ac{OSM} via the OSMnx library \parencite{OpenStreetMap}, and \ws{matched vessel coordinates to these ...}
-matched vessel coordinates to these \ac{OSM} polygons using a spatial join following geometric buffering. %\\ %vlt das zitat hier raus, kommt ja noch in acknowledgements rein sowieso
-%\me{todo emphasise the novelty here} habe das aktuell ja in related work noch hervorgehoben
-Because explicit harbour tags in \ac{OSM} are often incomplete or unreliable, we employed \ws{ed} 
-a heuristic approach to classify waterway domains. \ws{what is `the classification`? should be something like to classify ... xxx}. 
+To enable the training of domain-aware models, each AIS message was assigned a waterway type, based on its coordinates, which is further also referred to as the geographic \emph{domain}. We distinguish between \texttt{harbour}, \texttt{river}, \texttt{channel} and \texttt{lock} domain.
+To assign those labels, we extracted water bodies and maritime infrastructure from \ac{OSM} via the OSMnx library \parencite{OpenStreetMap}, and matched vessel coordinates to these \ac{OSM} polygons using a spatial join following geometric buffering. %\\ %vlt das zitat hier raus, kommt ja noch in acknowledgements rein sowieso
+Because explicit harbour tags in \ac{OSM} are often incomplete or unreliable, we employed a heuristic approach to classify waterway domains. 
 First, we identified polygons tagged as locks, channels, and rivers (see Figure~\ref{fig:OSM_overview_Kiel} for the full taxonomy of domain types).
-\ws{What fo you mean by `explicitly identified'?} \me{rephrased}
 Any remaining valid water bodies within our bounding boxes that are not 
-assigned to any of these types were \ws{were}
-defaulted to the \texttt{harbour} domain.
+assigned to any of these types were defaulted to the \texttt{harbour} domain.
 
-Furthermore\ws{there is no transition word as `further'. Do you mean `Furthermore'?} \me{yes. i thought i could use them interchangeably, but further shifts the meaning.}
-, to account for \ac{GNSS} inaccuracies and completely unmapped open port basins, we expanded \ws{ed} 
-each \ac{OSM} polygon by a class- and dataset-specific radius before joining.
-For instance, we used \ws{ed}
-a large buffer for harbours to capture vessels in unmapped bays and applied \ws{ed} 
-smaller buffers for channels and locks.
-In cases where these expanded polygons overlap, a priority mapping of \texttt{lock} > \texttt{river} > \texttt{channel} > \texttt{harbour} was \ws{was} 
-applied to resolve conflicts (e.g., a lock is prioritised over a river). %\\    
-Points that fell outside the buffered water polygons are labeled as \texttt{unknown} and excluded from the training data. Given the % heuristic 
- nature of this topological assignment, the resulting spatial contexts were verified through manual visual inspection and the buffers tuned accordingly to ensure geographic validity. A visualisation of the label definitions in Kiel can be seen in Figure \ref{fig:OSM_overview_Kiel}, and the spatially assigned data applied to the Kiel and Bremerhaven datasets is illustrated in Figure \ref{fig:OSM_assigned}.
+Furthermore, to account for \ac{GNSS} inaccuracies and completely unmapped open port basins, we expanded each \ac{OSM} polygon by a class- and dataset-specific radius before joining.
+For instance, we used a large buffer for harbours to capture vessels in unmapped bays and applied smaller buffers for channels and locks.
+In cases where these expanded polygons overlap, a priority mapping of \texttt{lock} > \texttt{river} > \texttt{channel} > \texttt{harbour} was applied to resolve conflicts (e.g., a lock is prioritised over a river). %\\    
+Points that fell outside the buffered water polygons are labelled as \texttt{unknown} and excluded from the training data. Given the % heuristic 
+ nature of this assignment, the resulting assignments were verified through manual visual inspection and the buffers tuned accordingly to ensure geographic validity. A visualisation of the label definitions in Kiel can be seen in Figure \ref{fig:OSM_overview_Kiel}, and the spatially assigned data applied to the Kiel and Bremerhaven datasets is illustrated in Figure \ref{fig:OSM_assigned}. The buffers are available in Table \ref{tab:buffer_radii}.
 
-   
+\begin{table}[t]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Domain} & \textbf{Bremerhaven} & \textbf{Kiel} & \textbf{Wedel} \\
+\midrule
+Harbour  & 800 & 1000 & 0 \\
+River    & 250 &  250 & 250 \\
+Lock     &  50 &   50 & 0 \\
+Channel  &   0 &   50 & 50 \\
+\bottomrule
+\end{tabular}
+\caption[Geometric Buffers]{Geometric buffer radii (in metres) per domain and harbour used to assign context to \acf{OSM} coordinates. All points within those ranges of an \acs{OSM} assignemnt where marked with the respective domain, according to the priority mapping}
+\label{tab:buffer_radii}
+\end{table}   
 
 \begin{figure}%vlt in den anhang
     \centering
     \includegraphics[width=0.98\linewidth] %, trim= 1cm 4cm 1cm 4.5cm, clip]%{figures/OSM_overview_Kiel.png}
     {figures/osmoverviewKiel_larg.png}
     \caption[OpenStreetMap Labels]{Spatial distribution of waterway types in the Kiel harbour area, extracted from \textcite{OpenStreetMap}. Distinct types are color-coded across the map, with the legend on the right detailing the full taxonomy of available geographic domains. Axes denote longitude (x) and latitude (y).
-    \ws{The caption should be more detailed and}
-    \ws{the labels are very small and difficult to read.} \me{replotted zoomed in now}
     %\me{ regenerate with assign\_all\_waterway.py}
     }
     \label{fig:OSM_overview_Kiel}
@@ -294,23 +231,17 @@ Points that fell outside the buffered water polygons are labeled as \texttt{unkn
     % Hauptunterschrift
     %\caption[OpenStreetMap Labels assigned to AIS Data]{Labels provided by \textcite{OpenStreetMap} assigned to AIS data 
     \caption[Domain-assigned AIS Data]{Visualization of the geographic domain assignments for AIS trajectories in two measurement sites. The color of each data point represents its corresponding waterway type: gray for harbour, green for channel, blue for river, red for lock, and purple for remaining exceptions. Axes indicate longitude (x) and latitude (y).
-    \ws{same issues. Brief caption and}
-    \ws{small label (unreadable)} \me{replotted with more zoom and larger text, added description}
     %\todo{visualize\_osm\_on\_ais.py. need to run on vera in IRT; Vera is offline -- done}
     } 
     \label{fig:OSM_assigned}
 \end{figure}
     
 \subsection{Resampling} 
-\ws{I do not see how the following text is related to the previous paragraph that is titled `kinematic outlier detection'. Is it possible to give it another title?} \me{this was in 3.2.1. I think moving it here solves this issue. it's motivated by interpolation, so just as fitting here}
+
 Accurate and consistent geometric distances are required for linear interpolation, for several motion models, and for our evaluation metrics.
-\ws{Therefore, geographic coordinates were projected}
-Therefore, Geographic coordinates were projected to the \ac{UTM}, \ws{introduce UTM in full term}
-for which the zone is determined automatically from the median longitude of each dataset.
+Therefore, geographic coordinates were projected to the \ac{UTM}, for which the zone was determined automatically from the median longitude of each dataset.
 The Cartesian representation ensures that linear interpolation produces geometrically correct intermediate positions, that normalisation operates on a uniform scale, and that Euclidean distance computations in loss functions are physically meaningful regardless of latitude.
 Further details regarding the coordinate projection can be found in Figure \ref{fig:utm_overview} in Appendix~\ref{chap:appendixdataplots}.
-%An illustration of the projection is shown \ws{is shown} %can be found in Figure \ref{fig:utm_overview} 
-\ws{If you refer to a figure in text like this, it cannot be in the appendix} \me{how would i refer to it? this is already non descriptive. just "More details can be found in.."? "Further details and a visual illustration of this projection are provided in Appendix A."?}.
 
 
 \begin{table}[t]
@@ -336,154 +267,42 @@ $>$ 23 knots                        & 2 s                & $>$ 23 knots   & 5 s 
 \label{tab:ais-frequencies}
 \end{table}
 
-
-\ws{I see no need for paragraph titles in this section. It is about one topic only. You can use normal paragraph breaks}
 %\paragraph{AIS Reporting Requirements.}
-Having established a consistent spatial framework, the pipeline must also address the temporal domain.
+Having established a consistent spatial framework, the pipeline must also address temporal characteristics.
 The reporting frequency of \ac{AIS} transponders is not uniform, because transmission intervals are dynamically adjusted based on vessel class, speed, and manoeuvring status according to the messaging protocol  \parencite{itu-r-m1371-1-2001}.
-Class A transponders are mandatory for large commercial vessels (typically $>300$GT international or $>500$GT domestic) and transmit significantly more often than Class B transponders used by smaller or recreational vessels. \ws{crafts?} \me{plural should also be craft. not 100 \% sure, using vessels instead}
+Class A transponders are mandatory for large commercial vessels (typically $>300$GT international or $>500$GT domestic) and transmit significantly more often than the Class B transponders used by smaller or recreational vessels. 
 The variable intervals are summarised in Table \ref{tab:ais-frequencies}.
-This necessitates \ws{This necessiates} 
-a standardised resampling approach.
-Consequently, the raw \ac{AIS} data were resampled to a uniform 30s grid, a frequency that captures our target speed range of 2 to 14 knots, and ensures \ws{ensure (because you used `to')} \me{rephrased}
-that vessels equipped with either Class A or Class B transponders remain viable for model training. %\\
-The interpolation method varied according to the \ws{according to the}
-feature type.
-For most telemetry features, time linear interpolation was \ws{was}
-applied.
-Geographic coordinates were interpolated using \ac{PCHIP} \ws{define this as ac} 
-, which was preferred over natural cubic splines as the latter can produce oscillations near track endpoints.
-\ac{PCHIP} preserves monotonicity locally and yields smoother and  \ws{and (remove ,)} 
-more realistic trajectories than % \ws{than} 
-piecewise linear interpolation.
-Categorical attributes, \ws{,} 
-such as the domain, \ws{,} 
-cannot be interpolated mathematically and are instead inherited from the last valid AIS observation.%\\
+They necessitate a standardised resampling approach.
+Consequently, the raw \ac{AIS} data were resampled to a uniform 30s grid, a frequency that captures our target speed range of 2 to 14 knots, and ensures that vessels equipped with either Class A or Class B transponders remain viable for model training. %\\
+The interpolation method varied according to the feature type.
+For most telemetry features, time linear interpolation was applied.
+Geographic coordinates were interpolated using \ac{PCHIP}, which was preferred over natural cubic splines as the latter can produce oscillations near track endpoints.
+\ac{PCHIP} preserves monotonicity locally and yields smoother and more realistic trajectories than piecewise linear interpolation.
+Categorical attributes, such as the domain, cannot be interpolated mathematically and are instead inherited from the last valid \ac{AIS} observation.%\\
 
 %Continuous telemetry features and coordinates are interpolated, but categorical attributes like the assigned geographic context cannot be handled mathematically. Instead, any new, interpolated point inherits the geographic context of the last valid AIS observation.
-To quantify the reliability of interpolated values, we computed \ws{ed}  
-a temporal offset feature, denoted as $\Delta t$.
+To quantify the reliability of interpolated values, we computed a temporal offset feature, denoted as $\Delta t$.
 This feature represents the absolute time difference between each resampled point and its nearest original observation:
 $\Delta t = |t_{resampled} - t_{original, nearest}|$.
 %\begin{equation*}
 %\Delta t = |t_{resampled} - t_{original, nearest}|
 %\end{equation*}
 By including $\Delta t$ as a feature in subsequent modelling steps, the system can account for interpolation uncertainty.
-A higher $\Delta t$ indicates \ws{indicates the possibility of?} \me{i wrote possibly because this dt was not something i found in literature, but something i came up with myself. i would either write "possibly indicates" or leave it out} 
-lower confidence in the precision of the interpolated state at a \ws{a}
+A higher $\Delta t$ indicates lower confidence in the precision of the interpolated state at a 
 specific timestamp.
 
 \subsection{Trajectory Segmentation}
 
-\ws{This needs rephrasing to something like: This stage transforms the trajectories into samples suitable for training. It includes the following steps: (1) ..... In this section, the steps are explained in details. A visualisation of this step is illustrated in Figure} \ref{fig:preprocessing-a} \ws{then explain the steps you mentioned in paragprahsparagraphs (the titles should match)} \me{visualization moved 1 level up to 3.2 intro} 
-This stage of the pipeline transforms the cleaned trajectories into samples suitable for training. It includes the following steps: (1) Sliding Window Segmentation, (2) Data Augmentation (3) Kinematic Filtering and (4) Stratified Train-Validation-Test Splitting.
-In this section, the steps are explained in detail. 
+In this stage of the pipeline, cleaned trajectories are transformed into samples suitable for training. 
+It includes the following steps: (1) Stratified Train-Validation-Test Splitting, (2) Sliding Window Segmentation, (3) Kinematic Filtering and (4) Data Augmentation.
+In the following, these steps are explained in detail. 
 
-
-\ws{Currently the paragraph command is over-used. I will re-read this section when it is modified}\me{to have matching titles, i needed to keep the paragraphs, however, two were merged and one was removed to another subsection}
-
-\paragraph{Sliding Window Segmentation.} 
-\label{subsubsec:windowandstride}
-In the first phase, trajectories were partitioned using a sliding window approach with a 5-minute context window and a 5-minute prediction horizon. 
-This specific window size sits at the lower end of context lengths typically used in related inland literature \parencite{donandt2022shortterm, you2020stseq2seq}, and aligns with the collision risk alerting window considered practically
-relevant for inland navigation \parencite{donandt2022shortterm}. 
-%A 1-minute stride was applied between consecutive samples for all classes except for \texttt{lock}, for which we applied a stride of 10s, due to sparse data availability. %details on lock later
-To increase data utility, a 1-minute stride was applied between consecutive samples.
-%To maintain the integrity of the motion dynamics, a guard was implemented: if % a window spans a data blackout where 
-%the elapsed time exceeded the theoretical duration ($T_{ctx} + T_{pred}$)% by more than 10\%
-%, the segment was discarded. 
-A temporal guard was implemented to discard segments where the elapsed time exceeded the theoretical duration ($T_{ctx} + T_{pred}$), to ensure, that the models only learn from continuous motion sequences without gaps.
-This handled both, gaps in the original data and the gaps we introduced with filters in previous preprocessing steps.
-\begin{comment} too much detail, mocved into related work
-    \textcite{donandt2022shortterm} note, that window lengths in related inland vessel work vary considerably and no consensus on what constitutes short-term prediction exists. They summarise context lengths in
-the inland literature as ranging from 4 to 10 minutes, and themselves predicted
-15 minutes ahead using 5 to 10 minutes of AIS history. In their training they used an unusually long prediction of 30 minutes to improve generalisation.
-%\cite{autonomousTH} use only 12\,s of context to predict the next 2 minutes, which is suitable for their input rate of 4Hz and multimodal data (?).%not that relevant, not AIS
-\cite{you2020stseq2seq} applied a 10-minute context to predict 5 minutes
-ahead on the Yangtze River. 
-Our 5-minute context is therefore on the lower end of this range, motivated by our specific
-interest in manoeuvring dynamics in confined spaces like port entries, exits and lock
-approaches. %, where older history rapidly loses relevance. %need source? study?
-\end{comment}
-%\paragraph{Domain-Aware Splitting.}
-During this windowing process, generating completely homogeneous domain samples can be challenging due to \ac{GNSS} noise causing rapid label alternations near polygon borders.
-To resolve this, a rolling majority vote over a 3-minute window (six samples at 30s frequency) was applied to smooth out label jitter. The trajectory was then split into sub-tracks when a persistent transition into a new geographic context occurred.
-
-
-\paragraph{Data Augmentation.}
-\label{subsubsec:augmentation}
-
-\begin{comment}
-wieder outdated
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=1\linewidth, trim={0cm 0cm 0cm 29cm}, clip]{figures/simple_histograms_beforeaugmentation.pdf}%before augmentation
-    \caption{Class Distribution before Augmentation}
-    \label{fig:barplotbeforeaugmentation}
-\end{figure}
-\end{comment}
-
-\begin{comment}
-    \begin{figure}[ht]
-    \centering
-    \includegraphics[width=1\linewidth, trim={0cm 0cm 0cm 29cm}, clip]{figures/simple_histograms.pdf}%placeholder \todo
-    \caption[Preprocessed Dataset domain distribution]{Distribution of vessel trajectories across geographic domains for the Kiel, Bremerhaven, and Wedel datasets after the complete preprocessing pipeline. The counts include augmented trajectories generated for the lock domain, which remains underrepresented compared to the heavily dominating harbour class. \todo{ too small. idk if there is a fix that still fits-> just harbour and domain name, caption does the rest. also switch to unified scale?}}
-    \label{fig:barplotaftereaugmentation}
-\end{figure}
-
-\end{comment}
-
-\begin{table}[htbp] 
-\centering
-\caption[Preprocessed Dataset Domain Distribution]{Distribution of vessel trajectories across geographic domains and measurement stations after preprocessing. Cell shading intensity corresponds to the relative volume of trajectories.The counts include augmented trajectories generated for the lock domain, which remains underrepresented compared to the heavily dominating harbour class.}
-\label{tab:trajectory_distribution}
-\begin{tabular}{lrrrr|r}
-\toprule
-\textbf{Station} & \textbf{Harbour} & \textbf{Channel} & \textbf{Lock} & \textbf{River} & \textbf{Total} \\
-\midrule
-Kiel & \cellcolor{blue!40}2,397,340 & \cellcolor{blue!10}470,044 & \cellcolor{blue!2}5,134 & 748 & \textbf{2,873,266} \\
-Bremerhaven & \cellcolor{blue!30}1,863,012 & 23 & \cellcolor{blue!5}22,023 & \cellcolor{blue!5}70,787 & \textbf{1,955,845} \\
-Wedel & 0 & 0 & 0 & \cellcolor{blue!20}1,332,553 & \textbf{1,332,553} \\
-\midrule
-\textbf{Total} & \textbf{4,260,352} & \textbf{470,067} & \textbf{27,157} & \textbf{1,404,088} & \textbf{6,161,664} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-%\todo{replace with table or better visualisation}
-The distribution of vessel trajectories across geographic contexts is highly imbalanced, with lock passages being comparatively rare (Table \ref{tab:trajectory_distribution}). % (Figure \ref{fig:barplotbeforeaugmentation}).
-To ensure sufficient representation, geometric data augmentation was applied to the \texttt{lock} segments within the training partition. %\\ 
-Initially, the sliding window stride was reduced from 60 seconds to 10 seconds specifically for these segments. The tighter stride extracted a higher number of overlapping context-prediction samples from the same physical traversal. %In a local test subset, this reduced stride increased the yield from 48 to 87 valid trajectory samples. %\\
-Furthermore, each lock sample was augmented around its spatial centroid by rotating coordinates through 16 random angles and mirroring them along their longitudinal axis.
-\begin{comment}
-    %details
-    \begin{itemize}
-    \item \textbf{Rotation:} The trajectory coordinates ($x, y$) are rotated by 16 randomly sampled angles between $0^\circ$ and $360^\circ$. Angular features such as COG and heading are shifted by the same angle using modulo $360^\circ$ arithmetic to maintain kinematic integrity.
-    \item \textbf{Mirroring:} The rotated trajectories are mirrored along their local longitudinal axis, with angular features inverted accordingly.
-\end{itemize}
-\end{comment}
-Through this combination of tighter striding and geometric transformations, the lock subset was significantly expanded.
-A local subset of 87 genuine samples was expanded to 1,783 augmented training samples. %leave this in?
-Globally, the lock class was augmented to a final size of 73,557 % 118,603
-, as can be see in the overview in \ref{tab:trajectory_distribution}. The resulting augmented trajectories were visually inspected. %\\% to ensure continuous spatial integrity.
-Despite this significant expansion of the \texttt{lock} class, the overall dataset remains inherently imbalanced, as the \texttt{harbour} dynamics still represent the vast majority of the data. We intentionally avoided downsampling of the majority classes at this stage to preserve the full scale of the captured traffic for the final dataset. The choice of how to strictly balance the classes is left to the model training phase or to future researchers using this data.
-
-
-\paragraph{Kinematic Filtering.}
-To focus the model on active vessel dynamics rather than stationary behaviour, a two-tier speed filter was applied to every generated track. A track was excluded if % it meets either of the following criteria:
-the maximum \ac{SOG} within the segment did not exceed 0.5 knots or more than 50\% of the data points within the segment reported an \ac{SOG} below 1.0 knots.
-%\begin{itemize}
-%    \item \textbf{Anchoring Detection}: The maximum Speed Over Ground (SOG) within the segment does not exceed 0.5 knots.
-%    \item \textbf{Low-Speed Persistence}: More than 50\% of the data points within the segment report an SOG below 1.0 knots.
-%\end{itemize}
-While these filters removed a significant portion of the raw data, they were essential for isolating manoeuvring patterns and preventing the model from biases towards stationary or moored vessels. %\\
-Notably, more than 90\% of points marked \texttt{lock} were filtered out in this step. This was intentional, since vessels spend a lot of time stationary in those locks. The dynamics we are interested in, entry and exit, are not filtered out.
 
 \paragraph{Stratified Train-Validation-Test Splitting.}
 \label{subsubsec:stratifiedtvtsplit}
-Finally, to prevent data leakage, the dataset was partitioned at the vessel level rather than the track level into a 70/15/15 train-validation-test split.
- If the data were split randomly by track ID, the sliding window stride would cause the model to see overlapping temporal segments of the same vessel across the training and test sets. %\\
+In order to prevent data leakage, the dataset was partitioned at the vessel level rather than the track level into a 70:15:15 train-validation-test split.
+ If the data were split randomly by track% ID
+ , the sliding window stride would cause the model to see overlapping temporal segments of the same vessel across the training and test sets. %\\
 However, a simple random split at the vessel level is also insufficient due to the high diversity in vessel behaviour and the resulting class imbalance.  To ensure that each data split contains a representative distribution of motion dynamics, we used a stratified split based on $k$-means clustering.
 Prior to the split, a three-dimensional feature vector was generated for each unique vessel, made of its mean velocity, maximum absolute \ac{ROT}, and primary geographic context. % note in limitations that OHE was not used but numerical encoding, which implies an order and is wrong in this case
 \begin{comment} %too long
@@ -500,16 +319,96 @@ Prior to the split, a three-dimensional feature vector was generated for each un
 These features were standardised using Z-score normalisation and clustered into five groups. The optimal number of strata was estimated using the elbow method on a small subset of the dataset. Further details about this estimation can be found in Figure \ref{fig:elbow_strat} in Appendix~\ref{chap:appendixdataplots}.
 Finally, the stratified trajectory segments were saved separated by evaluation split and geographic domain, %(e.g., river, lock, harbour). 
  enabling targeted training and evaluation of the motion models.
+
+\paragraph{Sliding Window Segmentation.} 
+\label{subsubsec:windowandstride}
+Next, trajectories were partitioned using a sliding window approach with a 5-minute context window and a 5-minute prediction horizon. 
+This specific window size sits at the lower end of context lengths typically used in related inland literature \parencite{donandt2022shortterm, you2020stseq2seq}, and aligns with the collision risk alerting window considered practically
+relevant for inland navigation \parencite{donandt2022shortterm}. 
+%A 1-minute stride was applied between consecutive samples for all classes except for \texttt{lock}, for which we applied a stride of 10s, due to sparse data availability. %details on lock later
+To increase data utility, a 1-minute stride was applied between consecutive samples.
+%To maintain the integrity of the motion dynamics, a guard was implemented: if % a window spans a data blackout where 
+%the elapsed time exceeded the theoretical duration ($T_{ctx} + T_{pred}$)% by more than 10\%
+%, the segment was discarded. 
+A temporal guard was implemented to discard segments where the elapsed time exceeded the theoretical duration ($T_{ctx} + T_{pred}$), to ensure, that the models only learn from continuous motion sequences without gaps.
+The guard simultaneously handled any gaps in the original data and the gaps we introduced with filters in previous preprocessing steps.
+\begin{comment} too much detail, mocved into related work
+    \textcite{donandt2022shortterm} note, that window lengths in related inland vessel work vary considerably and no consensus on what constitutes short-term prediction exists. They summarise context lengths in
+the inland literature as ranging from 4 to 10 minutes, and themselves predicted
+15 minutes ahead using 5 to 10 minutes of AIS history. In their training they used an unusually long prediction of 30 minutes to improve generalisation.
+%\cite{autonomousTH} use only 12\,s of context to predict the next 2 minutes, which is suitable for their input rate of 4Hz and multimodal data (?).%not that relevant, not AIS
+\cite{you2020stseq2seq} applied a 10-minute context to predict 5 minutes
+ahead on the Yangtze River. 
+Our 5-minute context is therefore on the lower end of this range, motivated by our specific
+interest in manoeuvring dynamics in confined spaces like port entries, exits and lock
+approaches. %, where older history rapidly loses relevance. %need source? study?
+\end{comment}
+%\paragraph{Domain-Aware Splitting.}
+During this windowing process, generating completely homogeneous domain samples can be challenging due to \ac{GNSS} noise causing rapid label alternations near polygon borders.
+To resolve this, a rolling majority vote over a 3-minute window (six samples at 30s frequency) was applied to smooth out label jitter. The trajectory was then split into sub-tracks when a persistent transition into a new geographic context occurred. Consequently, every sample includes only one domain. Since the domain is known at inference time, domain prediction was not required for this work.
+
+
+\paragraph{Kinematic Filtering.}
+To focus the model on active vessel dynamics rather than stationary behaviour, a two-tier speed filter was applied to every generated track. A track was excluded if % it meets either of the following criteria:
+the maximum \ac{SOG} within the segment did not exceed 0.5 knots or if more than 50\% of the data points within the segment reported an \ac{SOG} below 1.0 knots.
+%\begin{itemize}
+%    \item \textbf{Anchoring Detection}: The maximum Speed Over Ground (SOG) within the segment does not exceed 0.5 knots.
+%    \item \textbf{Low-Speed Persistence}: More than 50\% of the data points within the segment report an SOG below 1.0 knots.
+%\end{itemize}
+While these filters removed a significant portion of the raw data, they were essential for isolating manoeuvring patterns and preventing the model from biases towards stationary or moored vessels. %\\
+Notably, more than 90\% of points marked \texttt{lock} were filtered out in this step. This was intentional, since vessels spend a lot of time stationary in those locks. The dynamics we are interested in, entry and exit, were not filtered out.
+
+\paragraph{Data Augmentation.}
+\label{subsubsec:augmentation}
+
+\begin{table}[t] 
+\centering
+\caption[Preprocessed Dataset Domain Distribution]{Distribution of vessel trajectories across geographic domains and measurement stations after preprocessing. Cell shading intensity corresponds to the relative volume of trajectories. The counts include augmented trajectories generated for the lock domain, which remains underrepresented compared to the heavily dominating harbour class.}
+\label{tab:trajectory_distribution}
+\begin{tabular}{lrrrr|r}
+\toprule
+\textbf{Station} & \textbf{Harbour} & \textbf{Channel} & \textbf{Lock} & \textbf{River} & \textbf{Total} \\
+\midrule
+Kiel & \cellcolor{blue!40}2,397,340 & \cellcolor{blue!10}470,044 & \cellcolor{blue!4}51,534 & 748 & \textbf{2,919,666} \\
+Bremerhaven & \cellcolor{blue!30}1,863,012 & 23 & \cellcolor{blue!3}22,023 & \cellcolor{blue!5}70,787 & \textbf{1,955,845} \\
+Wedel & 0 & 0 & 0 & \cellcolor{blue!20}1,332,553 & \textbf{1,332,553} \\
+\midrule
+\textbf{Total} & \textbf{4,260,352} & \textbf{470,067} & \textbf{73,557} & \textbf{1,404,088} & \textbf{6,208,064} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+%\todo{replace with table or better visualisation}
+The distribution of vessel trajectories across geographic contexts is highly imbalanced, with lock passages being comparatively rare (Table \ref{tab:trajectory_distribution}). % (Figure \ref{fig:barplotbeforeaugmentation}).
+To ensure sufficient representation, data augmentation was applied to the \texttt{lock} segments within the training partition. %\\ 
+Initially, the sliding window stride was reduced from 60 seconds to 10 seconds specifically for these segments. The tighter stride extracted a higher number of overlapping context-prediction samples from the same physical traversal, approximately doubling the number of original samples. %In a local test subset, this reduced stride increased the yield from 48 to 87 valid trajectory samples. %\\
+Furthermore, each lock sample was augmented around its spatial centroid by rotating coordinates through 16 random angles and mirroring these rotated samples along their longitudinal axis. This added 32 augmented samples per genuine sample, which means that the latter make up for 3.3\% of the lock dataset.
+\begin{comment}
+    %details
+    \begin{itemize}
+    \item \textbf{Rotation:} The trajectory coordinates ($x, y$) are rotated by 16 randomly sampled angles between $0^\circ$ and $360^\circ$. Angular features such as COG and heading are shifted by the same angle using modulo $360^\circ$ arithmetic to maintain kinematic integrity.
+    \item \textbf{Mirroring:} The rotated trajectories are mirrored along their local longitudinal axis, with angular features inverted accordingly.
+\end{itemize}
+\end{comment}
+Through the combination of tighter striding and geometric transformations, the lock subset was significantly expanded to a total of 
+%A local subset of 87 genuine samples was expanded to 1,783 augmented training samples. %leave this in? doenst add up
+%Globally, the lock class was augmented to a final size of ..
+73,557 samples, as can be seen in the overview in \ref{tab:trajectory_distribution}. 
+%The resulting augmented trajectories were visually inspected. %\\% to ensure continuous spatial integrity.
+We avoided data leakage of synthetic duplicates of training samples into the held out validation and test sets completely by splitting the data first and applying the spatial augmentation exclusively to the training set.
+Despite this significant expansion of the \texttt{lock} class, the overall dataset remains inherently imbalanced, as the \texttt{harbour} dynamics still represent the vast majority of the data. We intentionally avoided downsampling of the majority classes at this stage to preserve the full scale of the captured traffic for the final dataset. The choice of how to strictly balance the classes is left to the model training phase or to future researchers using this data.
+
+
  
 \subsection{Feature Engineering and Normalisation}
-\ws{titles of subsections should not have .}
 %\paragraph{Feature Engineering and Normalisation.}
 \label{subsec:featureengineering}
 
 The final stage of the preprocessing pipeline generates the motion features used as model inputs and standardises them to ensure numerical stability during training.
-To ensure the deep learning models learn generalised motion patterns rather than memorizing specific geographic locations,absolute GNSS positions and projected ($x, y$) coordinates were deliberately omitted from the feature set. %search space
-This forces the networks to learn generalizable vessel dynamics rather than location-specific patterns. 
-Instead, absolute UTM coordinates were converted into step-wise displacements ($dx, dy$) by calculating the difference between successive timestamps. Furthermore, to handle the $0^{\circ}/360^{\circ}$ wrap-around of the COG, the angle was represented using its sine and cosine components.
+To ensure the deep learning models learn generalised motion patterns rather than memorising specific geographic locations, absolute \ac{GNSS} positions and projected ($x, y$) coordinates were deliberately omitted from the feature set. %search space
+This forces the networks to learn generalisable vessel dynamics rather than location-specific patterns. 
+Instead, absolute \ac{UTM} coordinates were converted into step-wise displacements ($dx, dy$) by calculating the difference between successive timestamps. Furthermore, to handle the $0^{\circ}/360^{\circ}$ wrap-around of the \ac{COG}, the angle was represented using its sine and cosine components.
 
 %s\subsubsection{Feature Transformation}
 %\paragraph{Feature Transformation.}
@@ -530,38 +429,31 @@ Following the feature transformation, Z-score normalisation was applied. %, tran
 To prevent data leakage, the normalisation parameters (mean $\mu$ and standard deviation $\sigma$) were strictly calculated from the training set. This global scaler was then saved and applied to the validation and test sets without further modification. %\\
 The complete set of available features for model training is detailed in Table \ref{tab:unified-format}. The selection of which specific features to include for each model was handled %dynamically
 using \ac{AutoML}, as specified in section \ref{subsub:featureselection}.
-After Normalisation, the data were parsed into a Parquet file format for faster loading times and more efficient memory usage.
+After Normalisation, the data were parsed into Parquet files for faster loading times and more efficient memory usage.
 
 %\paragraph{Anonymisation.}
-Finally, to prepare the dataset for publication and ensure privace, vessel IDs were anonymised via SHA-256 hashing of the \ac{MMSI}. \ws{introduce full term} \me{using ac which resets once per chapter}
-We preserved positional privacy by expressing \acs{UTM} \ws{use ac with this term}
-coordinates relative to median position of the dataset. 
+Finally, to prepare the dataset for publication and ensure privacy, vessels were anonymised via SHA-256 hashing of the \ac{MMSI}. 
+We preserved positional privacy by expressing \acs{UTM} coordinates relative to median position of the dataset. 
 This removes any absolute geographic reference.
 % The published Dataset will therefore be available from the cleaning step onwards.
-\ws{was this done by you or is it from the source data? Id the latter, no need to include it in the data processing} \me{done by me, using active phrasing now}
 
 \section[Dataset Characteristics]{Characteristics of the Preprocessed Dataset}%passenden namen finden
 \label{sec:dataset_characteristics}
 %On a typical day, the Kiel and Bremerhaven datasets contain between 200 and 500 unique vessels. % the math is not mathing. schlechtes sample dann, oder rausgefilterete verssels
 
-\ws{make it clear in the title and in the text that the characteristics are for the data post processing}
-
-\ws{between ... x and x ... veseeles were detected (we did not detect them.)}
 %Over a full year, 40,249 vessels were detected in Kiel, 26,908 vessels in Bremerhaven and 14,109 Vessels in Wedel. 
 Following the extraction and filtering stages, 40,249 unique vessels remained in the Kiel dataset, 26,908 in Bremerhaven, and 14,109 in Wedel over the full year of 2025.
-Preprocessing the Kiel dataset produced \ws{produced}
-2,919,666  trajectories across all contexts, as can be seen in Table \ref{tab:trajectory_distribution}.
+Preprocessing the Kiel dataset produced 2,919,666 trajectories across all contexts, as can be seen in Table \ref{tab:trajectory_distribution}.
 The figure shows the composition of the final dataset after running the full preprocessing pipeline, including augmentation for the lock datasets.
 The harbour context dominates across all stations, with Kiel contributing 2,397,340 trajectories, Bremerhaven 1,863,012, and Wedel exclusively providing 1,332,553 river trajectories.% redundant Despite augmentation, we have a pronounced class imbalance, especially between harbour and locks, which is one point that motivates the split of our models into different contexts. %\todo{je nach implementierung hier anpassen}
 
 %\me{simple reasons for those 3 exceptions in the histograms: Speed limit in Nord-Ostsee Channel at 6.5 knots, speed limit in kiel harbour area at 10 knots and all locks have standing in either start or end of the data -> include this? in evaluation?}
-Figure \ref{fig:kinematic_violins} shows the feature distributions of \ac{SOG} and \ac{ROT} as violin plots, and confirm, that the applied filters produce a kinematically plausible set of trajectories consistent with the expected operating range of inland vessels and speed limits in the respective areas. They also confirm that key characteristics differ between domains.
+Figure \ref{fig:kinematic_violins} shows the feature distributions of \ac{SOG} and \ac{ROT} as violin plots. The distributions confirm, that the applied filters produce a kinematically plausible set of trajectories which is consistent with the expected operating range of inland vessels and the speed limits in the respective areas. They also confirm that key characteristics differ between domains.
 The \ac{COG} distribution can be better explained by looking at a polar histogram (Figure \ref{fig:polarhist}).
 The dominant headings reflect the routing geometry around each measurement station. %\\
 %Exemplaric visualisations of trajectories for each domain can be found in figures .
 %Further details and exemplary visualisations of trajectories for each domain can be found in Appendix \ref{fig:domain1} to \ref{fig:domain4}.
 Further qualitative comparisons of the generated trajectories for each domain are provided in Appendix~\ref{chap:appendixdataplots} (Figures~\ref{fig:domain1}, \ref{fig:domain2}, \ref{fig:domain3}, and \ref{fig:domain4}).
-\ws{Do not refer figures that are in the appendix like this. You can write: more details are presented in Appendix X (refer an appendix section and there write the details and refer to the figures)} \me{i chose descriptive captions instead of floating text in the appendix to stay constistent. is this reference better?}
 
 
 \begin{figure}[h]

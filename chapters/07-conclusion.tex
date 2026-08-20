@@ -73,6 +73,10 @@ Furthermore, the data primarily reflects the movement patterns of large commerci
 
 Finally, using \ac{AIS} data and labelling the data live in practise comes with one more obvious drawdown that needs to be acknowledged: To have access to the geographic domain labels, the tracking  system will either need a stable internet connection, or a memory that it can download the labels to before running. 
 
+\paragraph{Station Domain Overlap.} 
+Another limitation is that trajectories in each waterway-type domain are usually dominated by a single measurement station (Table \ref{tab:trajectory_distribution}). The correlation between domain and measurement station means that models could potentially learn station characteristics instead of domain characteristics. To test if this is an issue, it is possible to use our One-Hot-Encoded \ac{LSTM} from Exp \Romannum{3} with the measurement station as a feature instead of the domain. If it is an issue, targeted data selection and augmentation, as well as the addition of more measurement stations can mitigate it in future work.
+
+
 \paragraph{Data Efficiency and Scaling.} Future work should also investigate the relationship between dataset volume and model predictive performance to determine the point of diminishing returns. Given the high computational cost of training on the full dataset, identifying the threshold at which additional data yields no significant improvements in accuracy would improve the scalability and efficiency of the training pipeline.
 
 
@@ -116,6 +120,7 @@ Future iterations of this work should save the per-trajectory evaluation for mor
 
 \paragraph{Domain Labels and Context Representation.}
 In this work, we rely on a four-class domain labelling scheme (harbour, river, channel, lock) obtained from \ac{OSM}. %For trajectories with multiple domains, a majority vote is applied.
+We should note that most \ac{OSM} data are labelled by hand by volunteer contributors. We could not verify the correctness of the annotations for this study beyond plausibility checks with satellite images, and we cannot guarantee that no noise was introduced due to mislabelled waterways. This limitation is inherent to a label based approach.
 A natural next step would be to refine the domain representation, for example by introducing additional domain types, or by clustering waterway segments based on kinematic key characteristics to obtain a more fine-grained context. It would also be interesting to investigate whether representing the domain as a sequence over time, instead of a single static vector per sample, further improves performance for longer context windows.
 
 \paragraph{Hyperparameter Optimisation Budget.}
@@ -153,6 +158,12 @@ Training such models from scratch on the AIS data was out of scope for this thes
  For applications in multi-target tracking and autonomous navigation, a well-calibrated estimate of predictive uncertainty is important. A natural extension would therefore be to equip the LSTM with probabilistic outputs%, for example by ... %predicting multiple quantiles, training small ensembles, or applying conformal prediction on top of the existing point forecasts.
  %\todo{look into it, types of uncertainty} Such methods 
  . That would make it possible to evaluate the calibration of LSTM-based motion models in the same way as for the probabilistic baselines and to study how uncertainty behaviour differs between domains.
+
+
+\paragraph{Multiple Model Frameworks.}
+In this work, we evaluated isolated stochastic filters (\ac{KF}, \ac{EKF}) and a heuristic, threshold-based Hybrid CV/CTRV model.
+Practical \ac{MTT} systems often rely on probabilistic frameworks to switch between filters.
+A natural extension to the current filters that future work should investigate is an \ac{IMM} filter, which dynamically mixes multiple kinematic states (e.g., CV and CTRV) based on Markov transition probabilities. In the context of machine learning, an approach analogous to the \ac{IMM} filter is the \ac{MoE} architecture. Future work could explore \ac{MoE} to dynamically weight multiple \ac{LSTM} variants, or to construct hybrid systems that directly combine the predictions of classical filters with learned sequence models.
 
 %-------------------------------postambel
 %\me{das hier runter sehr unwihtig}
