@@ -88,7 +88,7 @@
     \includegraphics[height=0.32\textheight, page=1]{figures/animationpreprocessingwithsampling.pdf}\\[4pt]
     \includegraphics[height=0.32\textheight, page=2]{figures/animationpreprocessingwithsampling.pdf}\\[4pt]
     \includegraphics[height=0.32\textheight, page=3]{figures/animationpreprocessingwithsampling.pdf}
-    \caption[Preprocessing visualisation (1/2)]{Preprocessing visualisation. First, implausible messages are removed. The remaining trajectories are then resampled to a fixed 30 s grid. After resampling, a sliding window is applied to to extract the final tracks. (1/2)}
+    \caption[Preprocessing visualisation (1/2)]{Preprocessing visualisation. First, implausible messages are removed. The remaining trajectories are then resampled to a fixed 30 s grid. After resampling, a sliding window is applied to to extract the final samples. (1/2)}
     \label{fig:preprocessing-a}
 \end{figure}
 
@@ -103,7 +103,7 @@
 
     %letzt folie nicht ultra wichtig
 
-    \caption[Preprocessing visualisation (2/2)]{Preprocessing visualisation. First, implausible messages are removed. The remaining trajectories are then resampled to a fixed 30 s grid. After resampling, a sliding window is applied to to extract the final tracks. (2/2)}
+    \caption[Preprocessing visualisation (2/2)]{Preprocessing visualisation. First, implausible messages are removed. The remaining trajectories are then resampled to a fixed 30 s grid. After resampling, a sliding window is applied to to extract the final samples. (2/2)}
     \label{fig:preprocessing-b}
 \end{figure}
 %nochmla
@@ -816,7 +816,7 @@ while the Jacobian is reduced to the form defined by Equation~\ref{eq:jacobian_t
     \caption[Code Overview: Model Layer]{%
         \textbf{Model layer class hierarchy.}
         All models inherit from \texttt{BaselineModel} (\texttt{models/base\_model.py}), which defines the common interface used by the evaluation framework: \texttt{predict(context\_df,~n\_pred\_steps)}.
-        The \emph{kinematic} group (\texttt{models/kinematic.py}) contains: \texttt{ConstantVelocityModel} (CV), \texttt{ConstantTurnRateVelocityModel} (CTRV), \texttt{ConstantTurnRateVelocityArcModel} (CTRV Arc), and \texttt{HybridCVCTRVModel}, which selects between CV and CTRV per track based on a rotation-rate threshold.
+        The \emph{kinematic} group (\texttt{models/kinematic.py}) contains: \texttt{ConstantVelocityModel} (CV), \texttt{ConstantTurnRateVelocityModel} (CTRV), \texttt{ConstantTurnRateVelocityArcModel} (CTRV Arc), and \texttt{HybridCVCTRVModel}, which selects between CV and CTRV per sample based on a rotation-rate threshold.
         The \emph{filter} group (\texttt{models/filters.py}) contains \texttt{KalmanFilter} and \texttt{CTRVExtendedKalmanFilter}.
         The \emph{sequence} group (\texttt{models/sequence/}) contains data-driven models: \texttt{TirexLSTMModel} (TiRex), \texttt{MinimalLSTMModel (LSTM)}, and \texttt{Chronos2ZeroShotModel} (Chronos-2).
     }    \label{fig:codemodels}

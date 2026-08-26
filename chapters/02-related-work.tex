@@ -119,7 +119,7 @@ Finally, we incorporate the aforementioned foundation models into our evaluation
 Raw \ac{AIS} data contains errors including physically implausible positions, inconsistent timestamps, and unreliable velocity readings \parencite{Zhao_Shi_Yang_2018}. Without systematic preprocessing, such artefacts propagate into learned motion representations and may corrupt model training.
 To address this, \textcite{Zhao_Shi_Yang_2018} proposed a foundational framework for \ac{AIS} preprocessing.
 Their framework includes multiple steps.
-First, physical integrity checks are applied, where invalid data points violating fixed bounds are discarded and tracks with fewer than 100 points are removed.  
+First, physical integrity checks are applied, where invalid data points violating fixed bounds are discarded and trajectories with fewer than 100 points are removed.  
 Second, checks designed to enforce spatial integrity identify and remove physically implausible transitions are applied.
 Specifically, a trajectory is first partitioned wherever two consecutive points are more than 10 minutes apart.
 Sub-tracks resulting from this split that contain fewer than 100 points are discarded.

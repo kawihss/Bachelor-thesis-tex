@@ -69,52 +69,28 @@ Maritime transport on inland waterways forms a %critical
 backbone of European logistics and a key application domain for autonomous and cooperative surface vessels, 
 where reliable short-term motion prediction of surrounding traffic is essential for % multi-target tracking and 
 safe navigation. 
-While \ac{AIS} data is widely used to train these prediction models, existing data-based approaches often treat \ac{AIS} trajectories as generic time series without utilising geographic domain knowledge, and they lack comprehensive comparisons against classical baselines. 
-These gaps prevent practitioners from reliably choosing between deep sequence, kinematic, and filter-based motion models.  
+While \ac{AIS} data is widely used to train these prediction models, existing data-based approaches often treat \ac{AIS} trajectories as generic time series without utilising geographic domain knowledge, and they lack comprehensive comparisons against kinematic and filter based baselines. 
+These gaps prevent practitioners from reliably choosing between motion model families.  
 Furthermore, any potential accuracy gains from encoding simple waterway‑type information in data‑driven motion models remain unexplored.
- \ws{Mention the gap here in one or two sentences, then why the gap is significant}
-\wsx{still the gap not mentioned here. It should be before `in this thesis'}
 In this thesis, we address these limitations through a comprehensive study of trajectory prediction for inland vessels based on \ac{AIS} data. 
-In particular, we examine how kinematic models, stochastic filters, and task-specific, as well as pretrained deep sequence (foundation) models compare under a unified %, domain-aware 
-evaluation framework. \me{introducing the foundation term here for later results.}
+In particular, we examine how kinematic models, stochastic filters, and task-specific, as well as pretrained deep sequence (foundation) models compare in predicting vessel trajectories five minutes ahead under a unified evaluation framework. 
 To this end, our work introduces three main contributions. 
-%\todo{link the 3 contributions to the gaps. }
-\ws{Link the contributions to the gaps and how it is solved.
-They should be in line with the contributions you have in the introduction}
-\wsx{When I wrote this, I did not mean to write `to overcome` before each contribution. I means to write the gaps then write `in this thesis' then write what you did. No need to duplicate the gaps there.}
 First, we construct a large-scale %AIS
-dataset with more than four million trajectories on inland waterways, and develop a %n automated 
+dataset with more than four million samples on inland waterways, and develop a %n automated 
 pipeline that extracts, cleans, segments, and labels vessel tracks, including domain labels for different waterway types. 
 %On top of this dataset, we implement an % systematic
 Second, we implement an
 \acs{AutoML}-based \wsx{here use AutoML only (short form) because of -based} hyperparameter optimisation setup 
-to systematically tune models across different model families. Third, we conduct a comprehensive evaluation that compares kinematic models, stochastic filters, and deep sequence models under a unified framework. \me{these 3 in past tense?}
-%that tunes % kinematic models, stochastic filters, and both task-specific and pretrained deep sequence models, to enable a fair comparison across model families. 
-\begin{comment} % detailed version that links to the gaps - too much ws
-To this end, our work introduces three targeted contributions. 
-First, to overcome the failure to utilise geographic context, we construct a large-scale dataset of over four million inland trajectories and develop a pipeline that explicitly extracts, cleans, segments, and labels vessel tracks with semantic waterway types. Second, to solve the lack of fair and comprehensive baseline comparisons, we implement an AutoML-based hyperparameter optimisation setup that systematically tunes each model across all model families. Third, to quantify the actual benefit of this spatial awareness, we conduct a comprehensive evaluation that measures the direct impact of domain-specific training and explicit domain encoding and compares the performance of models within all aforementioned model families.
-\end{comment}
-\wsx{The contributions are too detailed. Make them briefer. No need for listing of what it solves, i.e., No need of things like `, to solve the lack of fair and comprehensive baseline comparisons,' These should be mentioned as gaps before you list what you have done.}
-%The experiments show that kinematic and filter-based models are clearly outperformed by learned sequence models% for short-term AIS-based trajectory prediction
-%, with LSTM-based architectures achieving the lowest errors% across metrics and domains
-%. Foundation models reach kinematic-level accuracy without any task-specific training, making them attractive as low-effort baselines. Moreover, training the LSTM with domain specific splits and incorporating simple one-hot encodings of waterway domains both yield consistent performance gains, particularly in environments such as channels and locks. % Overall, t
-%The results suggest that future inland multi-target tracking systems should prioritise domain-aware deep sequence models as motion models %\ws{abstracts are typically one paragraph with no line breaks.}
-\ws{Also, some quantitative results are missing at the nd}
-The experiments demonstrate that learned sequence models clearly outperform kinematic and filter-based models. \me{show or showed?}\ws{in the abstract, it is better to use present. Also, showed is not good. I suggest: demonstrate}
-Specifically \ac{LSTM}-based models achieve \wsx{achieve} the lowest errors. 
-\ws{Word it as X outperforms Y, not Y outperformed by X. The latter is nice for a novel but much less clear.}
+to systematically tune models across different model families. Third, we conduct a comprehensive evaluation that compares kinematic models, stochastic filters, and deep sequence models under a unified framework. 
+The experiments demonstrate that learned sequence models clearly outperform kinematic and filter-based models. 
+Specifically \ac{LSTM}-based models achieve the lowest errors. 
 They demonstrated an approximate 28\% improvement compared with the \ac{CV} baseline, achieving a lower \ac{RMSE} loss by 44.37 m. % (from an original 155.73 m with the \ac{CV} model on the test dataset)%  of 111.36 m on the test dataset. %,  (155.73 m). 
-\wsx{`They reduced' is wrong. It means that there is one `test RMSE' barrel that is being reduced by the models. It should be written as: LSTM-based models demonstrated X\% improvement compared with XXX, achieving lower RMSE loss by ... }
 Additionally, we found that foundation models reach similar accuracy to kinematic models % kinematic-level
-\ws{kinematic-level is vague, you mean similar accuracy to kinematic models?} % accuracy 
 without any task-specific training%
 %(e.g., TiRex achieving 155.71 m \ac{RMSE}, nearly identical to that of the \ac{CV} model \wsx{No 's with inanimate} 155.73 m)
 , making them attractive as low-effort baselines, though their probabilistic calibration qualities vary. 
-\wsx{No need for this detail from here. Just list the LSTM results as the best ones (i.e., the ones with domain-specific splits}
-\begin{comment}
-    Moreover, training the \ac{LSTM} with domain-specific splits and incorporating simple one-hot encodings of waterway domains both yield consistent performance gains. The domain-aware architecture lowered the \ac{RMSE} by approximately 10\% in channels (to 50.23 m) and by over 26\% in locks (to 50.77 m). The results suggest that future inland multi-target tracking systems should prioritise domain-aware deep sequence models as motion models.
-\end{comment}
-Moreover, training the \ac{LSTM} with domain-specific splits and incorporating simple one-hot encodings of waterway domains yielded the best overall predictive performance. These results suggest that future inland multi-target tracking systems should prioritise domain-aware deep sequence models as motion models.
+Moreover, training the \ac{LSTM} with domain-specific splits and incorporating simple one-hot encodings of waterway domains yielded the best overall predictive performance. 
+These results suggest that, for applications prioritising predictive accuracy, future inland multi-target tracking systems should adopt domain-aware deep sequence models as motion models.
 
 
 

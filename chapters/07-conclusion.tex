@@ -20,21 +20,13 @@
 %title?
 %\section{Conclusions and Summary}
 
-\ws{This is short. More details are needed. For example, mention exact numbers and details you got from the experiments.} \me{rewrote this until ..waterway domains}
-
-%\me{need some good title for what is the original "conclusion" ´"take home message"}
-\ws{you can remove the section here and use section* for the rest (i.e, without numbeing}
-
-
 
 
 
 %\section{Conclusions and Summary}
 
-In this thesis, we systematically evaluated motion models for inland vessel trajectory prediction across a large-scale dataset of over four million trajectories.
+In this thesis, we systematically evaluated motion models for inland vessel trajectory prediction across a large-scale dataset of over four million samples.
 The overarching goal was to benchmark kinematic, filter-based, and deep sequence models under a unified framework and to quantify the impact of incorporating geographic domain knowledge.
-
-\ws{do not mention research questions. The reader might read the conclusion section before knowing what the research questions are. It is not needed for flow anyway.}
 
 Our experiments demonstrate that the evaluated learned sequence models, specifically the \acp{LSTM}, clearly outperform kinematic models and stochastic filters.
 The baseline \ac{LSTM} reduced the overall test \ac{RMSE} to 111.36~m, achieving a roughly 28\% error reduction compared to the standard \ac{CV} model (155.73~m). %\me{is reduction in percent useful for RMSE? since it is squared..}
@@ -48,6 +40,8 @@ This was particularly evident in domains with distinct kinematic characteristics
 
 Finally, we demonstrated that explicitly providing domain information as a simple one-hot encoded input yields robust and statistically significant performance gains.
 While the overall dataset average improved only modestly, the domain-aware architecture (\ac{LSTM} + Domain*) achieved large error reductions specifically in the channel and lock domains, lowering the \ac{RMSE} by approximately 10\% in channels (from 55.85~m to 50.23~m) and by over 26\% in locks (from 68.59~m to 50.77~m).
+Encoding domain information directly into a single \ac{LSTM} via one-hot features closely matches the accuracy of separately trained per-domain models, offering a practical alternative that avoids maintaining multiple domain-specific models in deployment.
+
 
 Taken together, these findings suggest that future multi-target tracking systems for inland navigation should prioritise deep sequence models for trajectory prediction.
 Furthermore, embedding basic environmental context into the model architecture is a sample-efficient strategy to improve prediction accuracy in specific waterway domains.
@@ -56,25 +50,25 @@ Furthermore, embedding basic environmental context into the model architecture i
 \section*{Limitations \& Future Work}%todo change title to match contents
 \label{chap:limitation}
 
-\ws{sections do not discuss. Instead: in this section, we discuss .. please fix across the thesis}
 In this section, we discuss limitations of this work, together with ideas on how these limitations could be approached in future work, sorted by Dataset, Methods and specific model limitations. 
 %\acresetall %reset abbrevations
 
 %\todo{manual sampling before running the TPE-> biased to that region, lack of exploitation-> either also add more random runs, or do HP selection befroehand, or just add many random runs that will cover all hp sets. at least the initial runs were very likely globally good, as i optimised them on a smaller set, so this can also be seen as a prior we want to bias to, though that was not my intention}
 
-\ws{This chapter can be a section* in the conclusions chapter. No need to give it a separate chapter.}
 %\todo{ There are also notes regarding the combination of Chapters 7, 8, 9 in one.     I can only read these after the restructuring. Now, it won't be as effective to read the text out of correct context.}\\
 \subsection*{Dataset}
 
 \paragraph{Data Availability and AIS Biases.}
-The results in this thesis are based on AIS logs from three German measurement stations and a single calendar year. While the datasets cover a large number of trajectories, they still reflect the traffic patterns of a limited set of waterways and regulatory conditions. For the observation period of the year 2025, the data availability varies across the three measurement sites: Kiel (357 days), Wedel (351 days), and Bremerhaven (326 days). In AIS networks,  data loss can occur for diverse reasons, such as hardware maintenance. Notably, there were no data for June 2025 in Bremerhaven. The gaps are not a concern in practice. Since the deep learning models operate on short, localised trajectory windows rather than continuous long-term sequences, full calendar coverage is not required. Each available day yields a large number of independent training samples, and together they cover a representative variety of traffic pattern. Extending the analysis to additional years and measurement sites systems would be necessary to assess whether the observed error distributions and monthly trends generalise well. 
+The results in this thesis are based on AIS logs from three German measurement stations and a single calendar year. While the datasets cover a large number of trajectories, they still reflect the traffic patterns of a limited set of waterways and regulatory conditions. For the observation period of the year 2025, the data availability varies across the three measurement sites: Kiel (357 days), Wedel (351 days), and Bremerhaven (326 days). In AIS networks,  data loss can occur for diverse reasons, such as hardware maintenance. Notably, there were no data for June 2025 in Bremerhaven. The gaps are not a concern in practice. Since the deep learning models operate on short trajectory windows rather than continuous long-term sequences, full calendar coverage is not required. Each available day yields a large number of independent training samples, and together they cover a representative variety of traffic pattern. Extending the analysis to additional years and measurement sites systems would be necessary to assess whether the observed error distributions and monthly trends generalise well. 
 
 Furthermore, the data primarily reflects the movement patterns of large commercial vessels, which are mandated to carry Class A transponders under the \ac{SOLAS} \parencite{solas2014}. This includes cargo vessels exceeding 300GT on international voyages and all tankers. Consequently, smaller recreational craft and fishing vessels with Class B transponders are significantly underrepresented. Because Class B devices transmit at lower power and with less frequent update rates (as detailed in Table \ref{tab:ais-frequencies}), the resulting models may be biased to the more predictable dynamics of large commercial ships.
 
 Finally, using \ac{AIS} data and labelling the data live in practise comes with one more obvious drawdown that needs to be acknowledged: To have access to the geographic domain labels, the tracking  system will either need a stable internet connection, or a memory that it can download the labels to before running. 
 
+
+
 \paragraph{Station Domain Overlap.} 
-Another limitation is that trajectories in each waterway-type domain are usually dominated by a single measurement station (Table \ref{tab:trajectory_distribution}). The correlation between domain and measurement station means that models could potentially learn station characteristics instead of domain characteristics. To test if this is an issue, it is possible to use our One-Hot-Encoded \ac{LSTM} from Exp \Romannum{3} with the measurement station as a feature instead of the domain. If it is an issue, targeted data selection and augmentation, as well as the addition of more measurement stations can mitigate it in future work.
+Another limitation is that samples for each waterway-type domain are usually dominated by a single measurement station (Table \ref{tab:trajectory_distribution}). The correlation between domain and measurement station means that models could potentially learn station characteristics instead of domain characteristics. To test if this is an issue, it is possible to use our One-Hot-Encoded \ac{LSTM} from Exp \Romannum{3} with the measurement station as a feature instead of the domain. If it is an issue, targeted data selection and augmentation, as well as the addition of more measurement stations can mitigate it in future work.
 
 
 \paragraph{Data Efficiency and Scaling.} Future work should also investigate the relationship between dataset volume and model predictive performance to determine the point of diminishing returns. Given the high computational cost of training on the full dataset, identifying the threshold at which additional data yields no significant improvements in accuracy would improve the scalability and efficiency of the training pipeline.
@@ -82,24 +76,30 @@ Another limitation is that trajectories in each waterway-type domain are usually
 
 \paragraph{Augmentation and Class Imbalance.}
 The geometric augmentation detailed in Section \ref{subsubsec:augmentation} addresses the class imbalance for lock manoeuvres, but it also introduces specific assumptions into the training data. 
-The spatial coordinates ($x, y$) and angles are transformed, but the temporal spacing ($\Delta t$) and the velocity magnitude (\ac{SOG}) remain unchanged. Thus, the model observes the exact same acceleration and deceleration patterns multiple times, only from different directions. This repetition increases the risk of the model memorizing specific kinematic profiles rather than learning generalised lock approach behaviour and potentially elevates the epistemic uncertainty when the model encounters new velocity profiles during inference.\\
+The spatial coordinates ($x, y$) and angles are transformed, but the temporal spacing ($\Delta t$) and the velocity magnitude (\ac{SOG}) remain unchanged. Thus, the model observes the exact same acceleration and deceleration patterns multiple times, only from different directions. This repetition increases the risk of the model memorizing specific kinematic profiles rather than learning generalised lock approach behaviour.\\
 Additionally, random rotation assumes spatial invariance, implicitly treating the vessel motion as independent of environmental directionality. For locks, this assumption can safely be made, but one should be careful when augmenting e.g. rivers, where local currents, or wind conditions influence manoeuvring dynamics.\\
 Similarly, the mirroring operation assumes perfect lateral kinematic symmetry, neglecting real-world asymmetries such as the propeller walk , which is common in single-screw inland vessels at low speeds. While these simplifications are necessary to generate a balanced dataset, they limit the exposure of the model to direction-specific environmental disturbances.
 
 Because only data within the lock domain were augmented, hyperparameters are distinct and hard to compare to the other domains. Future work should explore alternative strategies for handling rare domains, such as downsampling of other classes, and quantify how strongly these design choices affect the error distribution and the robustness of the models
 
+A related, though non-synthetic, form of repetition arises from the overlapping sliding window used throughout the entire dataset. Because consecutive windows share most of their underlying trajectory, each additional overlapping sample contributes less new information than a fully independent trajectory would. This autocorrelation also violates the independence assumption underlying the statistical significance tests used in this work, since the effective number of independent observations is lower than the raw sample count, which may make the reported significance levels overly optimistic. We nonetheless consider it preferable to keep these overlapping samples in the dataset, as they still provide additional, if diminishing, training data at negligible cost. Should the dataset volume be reduced as part of the data efficiency investigation proposed above, overlapping samples (e.g., by increasing the stride towards the window length) should be the first candidates for removal, before discarding entire, independent trajectories.
+
+
+\paragraph{Filter Configuration.}
+This work evaluated a fixed configuration of preprocessing filters, without assessing the impact of filtering on the compared models.
+Future work should conduct an ablation study to investigate different filter configurations, in order to quantify their influence on model performance and ranking.
+It remains unclear whether the learned models require all filters to perform well, or whether they could instead learn to handle noisy, near-stationary data directly.
 
 \paragraph{Derived Kinematic Features.}
 \label{subsubsec:kinematiclowvel}
-A notable limitation in the data preprocessing pipeline stems from the fact that the \ac{ROT} is not directly available in most raw AIS messages. It was derived analytically as the time derivative of the \ac{COG}. Since \ac{COG} is calculated from consecutive \ac{GNSS} position fixes rather than being measured by a dedicated directional sensor, it can become highly unreliable at near-stationary speeds. At low velocities, the localisation noise of the \ac{GNSS} receiver exceeds the actual distance travelled. This causes the computed \ac{COG} vector to fluctuate, resulting in artificial, physically unrealistic ROT spikes that do not reflect actual vessel movement. 
+A notable limitation in the data preprocessing pipeline stems from the fact that the \ac{ROT} is not directly available in most raw AIS messages. It was derived analytically as the time derivative of the \ac{COG}. Since \ac{COG} is calculated from consecutive \ac{GNSS} position fixes rather than being measured by a dedicated directional sensor, it can become highly unreliable at near-stationary speeds. At low velocities, the localisation noise of the \ac{GNSS} receiver exceeds the actual distance travelled. This causes the computed \ac{COG} vector to fluctuate, resulting in artificial, physically unrealistic \ac{ROT} spikes that do not reflect actual vessel movement. 
 
 While the true heading channel of the vessel offers a more stable orientation metric at low speeds, we did not use it as as an alternative feature for two primary reasons. First, as per \textcite{itu-r-m1371-1-2001}, true heading is an optional AIS field and is frequently missing, particularly among smaller inland vessels equipped with Class B transponders. Second, heading only indicates the direction the bow of the vessel is pointing, whereas \ac{COG} represents the actual path of motion over the earth. Because inland waterway vessels can be subjected to lateral drift from river currents and wind, \ac{COG} was used for predictions, despite the % \ac{GNSS}-induced 
 limitations at near-zero velocities. %unterschied COG und true heading wäre interessant für den schwimmwinkel als indikator für strömunbg. geht hier aber zu weit und nur möglich wenn wir stark filtern da nicht oft verfügbar
-Since both the \ac{EKF}and the \ac{LSTM} optimisation indicate that the derived rate-of-turn signal does not contribute much predictive value, this choice should be revisited in future works.
+Since both the \ac{EKF} and the \ac{LSTM} optimisation indicate that the derived rate-of-turn signal does not contribute much predictive value, this choice should be revisited in future works.
 
 \paragraph{Integration of Geographic Constraints.}
-As this work already accesses \ac{OSM} data to define geographic domain boundaries, a natural extension is to utilise these polygons as explicit geometric constraints. Currently, the motion models predict trajectories based solely on learned dynamics, which can occasionally result in physically impossible paths that overlap with land. Integrating the \ac{OSM} \ws{why is this duplicated?} \me{typo} 
-water masks directly into the prediction pipeline, possibly through a geometric projection layer that snaps predictions to the nearest water body, or by incorporating a penalty term in the loss function for land-collisions, could significantly improve the performance and safety of the tracking system.
+As this work already accesses \ac{OSM} data to define geographic domain boundaries, a natural extension is to utilise these polygons as explicit geometric constraints. Currently, the motion models predict trajectories based solely on learned dynamics, which can occasionally result in physically impossible paths that overlap with land. Integrating the \ac{OSM} water masks directly into the prediction pipeline, possibly through a geometric projection layer that snaps predictions to the nearest water body, or by incorporating a penalty term in the loss function for land-collisions, could significantly improve the performance and safety of the tracking system.
 
 \paragraph{Stratification.} 
 For the stratification prior to the dataset split, the primary domain, was encoded using label encoding, mapping each domain to a distinct integer. However, the domains are nominal categorical variables with no inherent ranking. This implies that there is a natural order to the domains and causes inaccurate distances in the clustering that follows. Future work should therefore consider the use of one-hot encoding instead, as it represents each domain as an independent binary dimension and avoids introducing any artificial order or magnitude relationship.
@@ -107,6 +107,13 @@ For the stratification prior to the dataset split, the primary domain, was encod
 
 \subsection*{Methods}
 
+\paragraph{Comparability of Optimised Model Variants.}
+\label{paragraph:comparability}
+For both the domain-specific vs.\ mixed-domain comparison (RQ2) and the domain-encoding ablation (\ac{LSTM} vs.\ \ac{LSTM}~+~Domain), each model variant was independently optimised via \ac{HPO} within the same search space, rather than evaluated under one fixed hyperparameter configuration. This choice reflects how these models would be used in practice, where hyperparameters are always tuned for the given data and architecture, but it also means that measured performance differences cannot be attributed solely to the intended manipulation (domain-specific vs.\ mixed data, or presence vs.\ absence of the domain embeddings), since they are confounded with differences in the resulting hyperparameter configurations. As \ac{HPO} offers no guarantee of converging to a global optimum, these comparisons should be read as benchmarks of practically achievable performance rather than controlled, isolated measurements of a single effect.
+
+A further issue specific to the domain-specific vs.\ mixed-domain comparison is that the two training splits contain different numbers of samples, as domain-specific models are trained on strictly smaller subsets of the data. This difference in sample count is itself a change alongside the intended change in data composition, so part of any observed effect may stem from the amount of available training data rather than domain specificity alone.
+
+A separate consideration is the number of training epochs. The maximum number of training epochs was fixed across all models as a boundary condition, which, if reached, could have introduced an unrelated difference between models trained on splits of different sizes. In practice, early stopping halted all variants well before this limit was reached, ruling out training time as a factor.
 
 \paragraph{Hyperparameter Optimisation Bias.}
 \label{lim:prior}
@@ -114,9 +121,14 @@ We initialised the Optuna search for the \ac{LSTM} with a manually selected subs
 
 
 \paragraph{Statistical Analysis.}
-The statistical analysis in Chapter \ref{par:statistical} is based on file-level aggregated metrics, with one file representing one domain on one day on one measurement station. This is used as a fallback to per-trajectory evaluation, since only the aggregated errors were available at evaluation time. As a result, all files contribute equally as blocks, even though they may contain different numbers of trajectories. %If the Friedman test is significant , we apply the Nemenyi post-hoc test for pairwise comparisons and visualise the results using a critical difference diagram. 
-Future iterations of this work should save the per-trajectory evaluation for more accurate metrics.
+The statistical analysis in Chapter \ref{par:statistical} is based on file-level aggregated metrics, with one file representing one domain on one day on one measurement station. This is used as a fallback to per-sample evaluation, since only the aggregated errors were available at evaluation time. As a result, all files contribute equally as blocks, even though they may contain different numbers of samples. %If the Friedman test is significant , we apply the Nemenyi post-hoc test for pairwise comparisons and visualise the results using a critical difference diagram. 
+Because a file's rank does not reflect how many samples it contains, models with near-identical aggregated error metrics can still receive noticeably different average ranks and appear separated in the critical difference diagram, as has happened with the \ac{CV} and \ac{KF} in Table \ref{tab:results_exp0} and Figure \ref{fig:cd_test}. Such artifacts are expected under this block definition and are not evidence of a computational error.
+Future iterations of this work should save the per-sample evaluation for more accurate metrics.
 
+\paragraph{Metrics.} 
+Our evaluation focused exclusively on predictive accuracy and calibration; we did not measure inference time or training time for any of the compared models. This is a relevant omission in practice, since kinematic filters such as the \ac{KF} and \ac{EKF} are frequently preferred in deployed \ac{MTT} systems precisely because of their fast, closed-form inference and low computational cost, making them well-suited for resource-constrained hardware, unlike larger learned models. Future work should therefore report inference and training time alongside accuracy metrics, to enable a more complete assessment of the practical trade-offs between model families.
+
+A further limitation concerns the choice of \ac{RMSE} as the \ac{HPO} objective. We chose \ac{RMSE} because it penalises large deviations more strongly than absolute-error-based metrics. This same property likely amplifies the effect of the heavy-tailed, non-Gaussian residual distribution established in Chapter~\ref{chap:results}, since outliers receive disproportionately high weight in the loss. This plausibly strengthens the bias towards short context lengths. Additionally, \ac{RMSE} aggregates error across both the longitudinal and lateral directions into a single scalar. Future work should also report or optimise for along-track and cross-track deviation separately, which would make it easier to distinguish outliers caused by incorrect speed estimation from those caused by incorrect heading or turn-rate estimation.
 
 \paragraph{Domain Labels and Context Representation.}
 In this work, we rely on a four-class domain labelling scheme (harbour, river, channel, lock) obtained from \ac{OSM}. %For trajectories with multiple domains, a majority vote is applied.
@@ -139,6 +151,7 @@ This choice matches the short 5-minute prediction horizon, but it also restricts
 Autoregressive decoders, where each predicted step is fed back into the model as additional context, are the standard for \acp{LSTM}.
 In the current setup, both context and prediction length are fixed and identical across all models, so it remains unclear how sensitive the observed ranking between models is to these design choices.
 Future work should therefore investigate autoregressive decoders and variable context and prediction windows.
+
 Additionally, a bidirectional encoder should be investigated, as it has improved model performance in other scenarios \parencite{articlebilstmsus}.
 Other gains could be found by introducing attention mechanisms, that give higher weights to relevant timestamps of the context window. 
 In addition to time-wise attention, covariate-informed forecasting with attention across feature channels is particularly relevant.
@@ -188,7 +201,6 @@ A natural extension to the current filters that future work should investigate i
 \section*{Acknowledgements}
 \label{chap:acknowledgements}
 
-\ws{This can be a section* in the conclusion chapter. No need to have a chapter for it}
 \paragraph{OpenStreetMap.} %muss acknowledged werden, abereigene section?
 %\ac{OSM}: $https://wiki.openstreetmap.org/wiki/Researcher_Information$ \cite{OpenStreetMap}
 I thank the \ac{OSM} community and the operators of Overpass and mirror services for providing the infrastructure and data used in this work. %, including for the large queries required during experimentation. 

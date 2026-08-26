@@ -31,7 +31,7 @@ The dataset assigns a unique identifier, the \ac{MMSI} to each vessel, allowing 
 \label{sec:data_preprocessing}
 
 In this work, the raw \ac{AIS} data underwent 
-a five-step pipeline to produce trajectories: (1) Data extraction and cleaning, (2) geographic domain assignment (3) resampling, (4) trajectory segmentation, and (5) feature engineering and normalisation.
+a five-step pipeline to produce teh final samples: (1) Data extraction and cleaning, (2) geographic domain assignment (3) resampling, (4) trajectory segmentation, and (5) feature engineering and normalisation.
 In this section, we explain these steps in detail. The resulting dataset features are presented in Table \ref{tab:unified-format}. A simplified visualisation of steps 1, 3 and 4 can be found in Figure \ref{fig:preprocessing-a} in Appendix~\ref{chap:appendixdataplots}.
 
  \begin{table}[t]
@@ -59,7 +59,7 @@ In this section, we explain these steps in detail. The resulting dataset feature
     \texttt{rot\_norm} & Normalised rate of turn \\
     \bottomrule
     \end{tabular}
-    \caption[Overview of AIS Data Fields]{Overview of \acf{AIS} data fields available after preprocessing. The table distinguishes between the absolute fields used for evaluation and track identification, and the normalised features used by the trajectory prediction models. 
+    \caption[Overview of AIS Data Fields]{Overview of \acf{AIS} data fields available after preprocessing. The table distinguishes between the absolute fields used for evaluation and sample identification, and the normalised features used by the trajectory prediction models. 
     }
     \label{tab:unified-format}
 \end{table}
@@ -230,7 +230,7 @@ Channel  &   0 &   50 & 50 \\
         
     % Hauptunterschrift
     %\caption[OpenStreetMap Labels assigned to AIS Data]{Labels provided by \textcite{OpenStreetMap} assigned to AIS data 
-    \caption[Domain-assigned AIS Data]{Visualization of the geographic domain assignments for AIS trajectories in two measurement sites. The color of each data point represents its corresponding waterway type: gray for harbour, green for channel, blue for river, red for lock, and purple for remaining exceptions. Axes indicate longitude (x) and latitude (y).
+    \caption[Domain-assigned AIS Data]{Visualization of the geographic domain assignments for AIS trajectories in two measurement sites. The colour of each data point represents its corresponding waterway type: gray for harbour, green for channel, blue for river, red for lock, and purple for remaining exceptions. Axes indicate longitude (x) and latitude (y).
     %\todo{visualize\_osm\_on\_ais.py. need to run on vera in IRT; Vera is offline -- done}
     } 
     \label{fig:OSM_assigned}
@@ -273,14 +273,14 @@ The reporting frequency of \ac{AIS} transponders is not uniform, because transmi
 Class A transponders are mandatory for large commercial vessels (typically $>300$GT international or $>500$GT domestic) and transmit significantly more often than the Class B transponders used by smaller or recreational vessels. 
 The variable intervals are summarised in Table \ref{tab:ais-frequencies}.
 They necessitate a standardised resampling approach.
-Consequently, the raw \ac{AIS} data were resampled to a uniform 30s grid, a frequency that captures our target speed range of 2 to 14 knots, and ensures that vessels equipped with either Class A or Class B transponders remain viable for model training. %\\
+Consequently, the raw \ac{AIS} data were to a uniform 30s grid, a frequency that captures our target speed range of 2 to 14 knots, and ensures that vessels equipped with either Class A or Class B transponders remain viable for model training. %\\
 The interpolation method varied according to the feature type.
 For most telemetry features, time linear interpolation was applied.
-Geographic coordinates were interpolated using \ac{PCHIP}, which was preferred over natural cubic splines as the latter can produce oscillations near track endpoints.
+Geographic coordinates were interpolated using \ac{PCHIP}, which was preferred over natural cubic splines as the latter can produce oscillations near trajectory endpoints.
 \ac{PCHIP} preserves monotonicity locally and yields smoother and more realistic trajectories than piecewise linear interpolation.
 Categorical attributes, such as the domain, cannot be interpolated mathematically and are instead inherited from the last valid \ac{AIS} observation.%\\
 
-%Continuous telemetry features and coordinates are interpolated, but categorical attributes like the assigned geographic context cannot be handled mathematically. Instead, any new, interpolated point inherits the geographic context of the last valid AIS observation.
+We need to acknowledge that interpolating data adds patterns to our dataset, that may also be learned by the motion models. 
 To quantify the reliability of interpolated values, we computed a temporal offset feature, denoted as $\Delta t$.
 This feature represents the absolute time difference between each resampled point and its nearest original observation:
 $\Delta t = |t_{resampled} - t_{original, nearest}|$.
@@ -300,70 +300,45 @@ In the following, these steps are explained in detail.
 
 \paragraph{Stratified Train-Validation-Test Splitting.}
 \label{subsubsec:stratifiedtvtsplit}
-In order to prevent data leakage, the dataset was partitioned at the vessel level rather than the track level into a 70:15:15 train-validation-test split.
- If the data were split randomly by track% ID
- , the sliding window stride would cause the model to see overlapping temporal segments of the same vessel across the training and test sets. %\\
-However, a simple random split at the vessel level is also insufficient due to the high diversity in vessel behaviour and the resulting class imbalance.  To ensure that each data split contains a representative distribution of motion dynamics, we used a stratified split based on $k$-means clustering.
-Prior to the split, a three-dimensional feature vector was generated for each unique vessel, made of its mean velocity, maximum absolute \ac{ROT}, and primary geographic context. % note in limitations that OHE was not used but numerical encoding, which implies an order and is wrong in this case
-\begin{comment} %too long
-    Prior to the split, for each csv file (station-day combination), we generated a three-dimensional feature vector for each unique vessel%meant to catch kinematic charaxcteristics
-, based on:
-
-\begin{enumerate}
-    \item \textbf{Mean Velocity:} The average \ac{SOG} over all points.
-    \item \textbf{Manoeuvring Intensity:} The maximum absolute \ac{ROT} observed across all points. 
-    \item \textbf{Primary Geographic Context:} The most frequent %(modal)
-    context label (\texttt{harbour}, \texttt{river}, \texttt{channel}, or \texttt{lock}) assigned to the vessel.
-\end{enumerate}
-\end{comment}
+In order to prevent data leakage, the dataset was partitioned at the vessel level rather than the sample level into a 70:15:15 train-validation-test split.
+ %If the data were split randomly by trajectory% ID
+ %, the sliding window stride would cause the model to see overlapping temporal segments of the same %vessel across the training and test sets. %hier noch eindeutiger eklären waum es reicht
+ %One trajectory is, by construction, always associated to the same vessel.
+ %Thus, splitting the data on the vessel level, we can make sure that no overlapping segments exist %between data splits.
+ Since every sliding-window segment %(see the following paragraph for details)
+ generated from a given vessel is assigned entirely to the same split, no vessel-level information can leak between training and evaluation, regardless of how densely the sliding window is sampled within a split.
+If the data were instead split randomly by sample, the sliding window stride would cause the model to be trained and evaluated on overlapping temporal segments of the same vessel, which would constitute data leakage.
+However, a simple random split at the vessel level is also insufficient due to the high diversity in vessel behaviour and the resulting class imbalance.
+To ensure that each data split contains a representative distribution of motion dynamics, we used a stratified split based on $k$-means clustering.
+Prior to the split, a three-dimensional feature vector was generated for each unique vessel, made of its mean velocity, maximum absolute \ac{ROT}, and primary geographic context.
 These features were standardised using Z-score normalisation and clustered into five groups. The optimal number of strata was estimated using the elbow method on a small subset of the dataset. Further details about this estimation can be found in Figure \ref{fig:elbow_strat} in Appendix~\ref{chap:appendixdataplots}.
-Finally, the stratified trajectory segments were saved separated by evaluation split and geographic domain, %(e.g., river, lock, harbour). 
- enabling targeted training and evaluation of the motion models.
+Finally, the stratified trajectories were saved separated by evaluation split and geographic domain, to enable targeted training and evaluation of the models.
 
 \paragraph{Sliding Window Segmentation.} 
 \label{subsubsec:windowandstride}
 Next, trajectories were partitioned using a sliding window approach with a 5-minute context window and a 5-minute prediction horizon. 
 This specific window size sits at the lower end of context lengths typically used in related inland literature \parencite{donandt2022shortterm, you2020stseq2seq}, and aligns with the collision risk alerting window considered practically
 relevant for inland navigation \parencite{donandt2022shortterm}. 
-%A 1-minute stride was applied between consecutive samples for all classes except for \texttt{lock}, for which we applied a stride of 10s, due to sparse data availability. %details on lock later
 To increase data utility, a 1-minute stride was applied between consecutive samples.
-%To maintain the integrity of the motion dynamics, a guard was implemented: if % a window spans a data blackout where 
-%the elapsed time exceeded the theoretical duration ($T_{ctx} + T_{pred}$)% by more than 10\%
-%, the segment was discarded. 
 A temporal guard was implemented to discard segments where the elapsed time exceeded the theoretical duration ($T_{ctx} + T_{pred}$), to ensure, that the models only learn from continuous motion sequences without gaps.
 The guard simultaneously handled any gaps in the original data and the gaps we introduced with filters in previous preprocessing steps.
-\begin{comment} too much detail, mocved into related work
-    \textcite{donandt2022shortterm} note, that window lengths in related inland vessel work vary considerably and no consensus on what constitutes short-term prediction exists. They summarise context lengths in
-the inland literature as ranging from 4 to 10 minutes, and themselves predicted
-15 minutes ahead using 5 to 10 minutes of AIS history. In their training they used an unusually long prediction of 30 minutes to improve generalisation.
-%\cite{autonomousTH} use only 12\,s of context to predict the next 2 minutes, which is suitable for their input rate of 4Hz and multimodal data (?).%not that relevant, not AIS
-\cite{you2020stseq2seq} applied a 10-minute context to predict 5 minutes
-ahead on the Yangtze River. 
-Our 5-minute context is therefore on the lower end of this range, motivated by our specific
-interest in manoeuvring dynamics in confined spaces like port entries, exits and lock
-approaches. %, where older history rapidly loses relevance. %need source? study?
-\end{comment}
-%\paragraph{Domain-Aware Splitting.}
 During this windowing process, generating completely homogeneous domain samples can be challenging due to \ac{GNSS} noise causing rapid label alternations near polygon borders.
 To resolve this, a rolling majority vote over a 3-minute window (six samples at 30s frequency) was applied to smooth out label jitter. The trajectory was then split into sub-tracks when a persistent transition into a new geographic context occurred. Consequently, every sample includes only one domain. Since the domain is known at inference time, domain prediction was not required for this work.
 
 
 \paragraph{Kinematic Filtering.}
-To focus the model on active vessel dynamics rather than stationary behaviour, a two-tier speed filter was applied to every generated track. A track was excluded if % it meets either of the following criteria:
+To focus the model on active vessel dynamics rather than stationary behaviour, a two-tier speed filter was applied to every generated track. A sample was excluded if % it meets either of the following criteria:
 the maximum \ac{SOG} within the segment did not exceed 0.5 knots or if more than 50\% of the data points within the segment reported an \ac{SOG} below 1.0 knots.
-%\begin{itemize}
-%    \item \textbf{Anchoring Detection}: The maximum Speed Over Ground (SOG) within the segment does not exceed 0.5 knots.
-%    \item \textbf{Low-Speed Persistence}: More than 50\% of the data points within the segment report an SOG below 1.0 knots.
-%\end{itemize}
 While these filters removed a significant portion of the raw data, they were essential for isolating manoeuvring patterns and preventing the model from biases towards stationary or moored vessels. %\\
-Notably, more than 90\% of points marked \texttt{lock} were filtered out in this step. This was intentional, since vessels spend a lot of time stationary in those locks. The dynamics we are interested in, entry and exit, were not filtered out.
+Notably, more than 90\% of points marked \texttt{lock} were filtered out in this step, %das ist nicht die gleiche analyse mit den 89 prozent, sonder hatte das einmal beim laufen gezäehlt mit und ohne
+resulting in a loss of more than 98\% of the possible lock samples after further preprocessing, almost double to the loss of all other domains at 50 to 60\%. This aligned with our expectations, given that vessels spend a lot of time stationary in those locks. The dynamics we are interested in, entry and exit, were not filtered out.
 
 \paragraph{Data Augmentation.}
 \label{subsubsec:augmentation}
 
 \begin{table}[t] 
 \centering
-\caption[Preprocessed Dataset Domain Distribution]{Distribution of vessel trajectories across geographic domains and measurement stations after preprocessing. Cell shading intensity corresponds to the relative volume of trajectories. The counts include augmented trajectories generated for the lock domain, which remains underrepresented compared to the heavily dominating harbour class.}
+\caption[Preprocessed Dataset Domain Distribution]{Distribution of samples across geographic domains and measurement stations after preprocessing. Cell shading intensity corresponds to the relative volume of samples. The counts include augmented samples generated for the lock domain, which remains underrepresented compared to the heavily dominating harbour class.}
 \label{tab:trajectory_distribution}
 \begin{tabular}{lrrrr|r}
 \toprule
@@ -380,7 +355,7 @@ Wedel & 0 & 0 & 0 & \cellcolor{blue!20}1,332,553 & \textbf{1,332,553} \\
 
 
 %\todo{replace with table or better visualisation}
-The distribution of vessel trajectories across geographic contexts is highly imbalanced, with lock passages being comparatively rare (Table \ref{tab:trajectory_distribution}). % (Figure \ref{fig:barplotbeforeaugmentation}).
+The distribution of samples across geographic contexts is highly imbalanced, with lock passages being comparatively rare (Table \ref{tab:trajectory_distribution}). % (Figure \ref{fig:barplotbeforeaugmentation}).
 To ensure sufficient representation, data augmentation was applied to the \texttt{lock} segments within the training partition. %\\ 
 Initially, the sliding window stride was reduced from 60 seconds to 10 seconds specifically for these segments. The tighter stride extracted a higher number of overlapping context-prediction samples from the same physical traversal, approximately doubling the number of original samples. %In a local test subset, this reduced stride increased the yield from 48 to 87 valid trajectory samples. %\\
 Furthermore, each lock sample was augmented around its spatial centroid by rotating coordinates through 16 random angles and mirroring these rotated samples along their longitudinal axis. This added 32 augmented samples per genuine sample, which means that the latter make up for 3.3\% of the lock dataset.
@@ -425,8 +400,11 @@ Instead, absolute \ac{UTM} coordinates were converted into step-wise displacemen
   
 
 %\paragraph{Standardisation and Leakage Prevention.}
-Following the feature transformation, Z-score normalisation was applied. %, transforming each variable to have zero mean and unit variance. % redundant.
-To prevent data leakage, the normalisation parameters (mean $\mu$ and standard deviation $\sigma$) were strictly calculated from the training set. This global scaler was then saved and applied to the validation and test sets without further modification. %\\
+Following the feature transformation, Z-score normalisation was applied.
+To prevent data leakage, the normalisation parameters (mean $\mu$ and standard deviation $\sigma$) were strictly calculated from the training set. % This global scaler was then saved and applied to the validation and test sets without further modification. %\\
+A single, global scaler was fitted this way and applied uniformly across all models and data subsets, including validation and test sets, without further modification. %
+Using one shared scaler instead of a separate scaler per domain avoids introducing an additional source of variation between domain-specific models, but it also means that systematic scale differences between domains are not explicitly separated out at this stage.
+
 The complete set of available features for model training is detailed in Table \ref{tab:unified-format}. The selection of which specific features to include for each model was handled %dynamically
 using \ac{AutoML}, as specified in section \ref{subsub:featureselection}.
 After Normalisation, the data were parsed into Parquet files for faster loading times and more efficient memory usage.
@@ -443,9 +421,9 @@ This removes any absolute geographic reference.
 
 %Over a full year, 40,249 vessels were detected in Kiel, 26,908 vessels in Bremerhaven and 14,109 Vessels in Wedel. 
 Following the extraction and filtering stages, 40,249 unique vessels remained in the Kiel dataset, 26,908 in Bremerhaven, and 14,109 in Wedel over the full year of 2025.
-Preprocessing the Kiel dataset produced 2,919,666 trajectories across all contexts, as can be seen in Table \ref{tab:trajectory_distribution}.
+Preprocessing the Kiel dataset produced 2,919,666 samples across all contexts, as can be seen in Table \ref{tab:trajectory_distribution}.
 The figure shows the composition of the final dataset after running the full preprocessing pipeline, including augmentation for the lock datasets.
-The harbour context dominates across all stations, with Kiel contributing 2,397,340 trajectories, Bremerhaven 1,863,012, and Wedel exclusively providing 1,332,553 river trajectories.% redundant Despite augmentation, we have a pronounced class imbalance, especially between harbour and locks, which is one point that motivates the split of our models into different contexts. %\todo{je nach implementierung hier anpassen}
+The harbour context dominates across all stations, with Kiel contributing 2,397,340 samples, Bremerhaven 1,863,012, and Wedel exclusively providing 1,332,553 river samples.% redundant Despite augmentation, we have a pronounced class imbalance, especially between harbour and locks, which is one point that motivates the split of our models into different contexts. %\todo{je nach implementierung hier anpassen}
 
 %\me{simple reasons for those 3 exceptions in the histograms: Speed limit in Nord-Ostsee Channel at 6.5 knots, speed limit in kiel harbour area at 10 knots and all locks have standing in either start or end of the data -> include this? in evaluation?}
 Figure \ref{fig:kinematic_violins} shows the feature distributions of \ac{SOG} and \ac{ROT} as violin plots. The distributions confirm, that the applied filters produce a kinematically plausible set of trajectories which is consistent with the expected operating range of inland vessels and the speed limits in the respective areas. They also confirm that key characteristics differ between domains.
@@ -453,7 +431,7 @@ The \ac{COG} distribution can be better explained by looking at a polar histogra
 The dominant headings reflect the routing geometry around each measurement station. %\\
 %Exemplaric visualisations of trajectories for each domain can be found in figures .
 %Further details and exemplary visualisations of trajectories for each domain can be found in Appendix \ref{fig:domain1} to \ref{fig:domain4}.
-Further qualitative comparisons of the generated trajectories for each domain are provided in Appendix~\ref{chap:appendixdataplots} (Figures~\ref{fig:domain1}, \ref{fig:domain2}, \ref{fig:domain3}, and \ref{fig:domain4}).
+Further qualitative comparisons of the generated samples for each domain are provided in Appendix~\ref{chap:appendixdataplots} (Figures~\ref{fig:domain1}, \ref{fig:domain2}, \ref{fig:domain3}, and \ref{fig:domain4}).
 
 
 \begin{figure}[h]

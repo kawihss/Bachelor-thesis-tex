@@ -60,7 +60,7 @@ However, the application of \acp{Bi-LSTM} in autonomous systems and \ac{MTT} req
     \end{itemize}
     Using these layers, an \ac{x-LSTM} can maintain the linear time complexity $\mathcal{O}(N)$ of conventional \acp{RNN} during inference, in contrast to the quadratic complexity of Transformers. \parencite{beck2024xlstmextendedlongshortterm, attentioniayn} %for respective Time omplexity 
     
-    For our specific use case of predicting short 10-step trajectories, the expanded memory capacity offers limited benefits while introducing computational overhead. Furthermore, the architecture requires additional hyperparameters, such as the choice between \ac{s-LSTM} and \ac{m-LSTM} layers, as well as matrix dimensions. %number of heads.. aber die will ich hier nicht einführen
+    For our specific use case of predicting short 10-step samples, the expanded memory capacity offers limited benefits while introducing computational overhead. Furthermore, the architecture requires additional hyperparameters, such as the choice between \ac{s-LSTM} and \ac{m-LSTM} layers, as well as matrix dimensions. %number of heads.. aber die will ich hier nicht einführen
     This expands the search space for \ac{HPO} substantially. %, makes the tuning process computationally more expensive and harder to balance against simpler models. %Finally, as a recently proposed architecture, utilizing \ac{x-LSTM} would limit the comparability of our results with existing \ac{LSTM}-based maritime tracking approaches. 
     Nevertheless, because of it's scaling capabilities, the \ac{x-LSTM} builds the basis of the TiRex foundation model. % (Section \ref{subsec:foundation}).
 
@@ -98,7 +98,7 @@ A prominent example of foundation models in time series forecasting is \textbf{C
 
 The \ac{x-LSTM} architecture \parencite{beck2024xlstmextendedlongshortterm} addresses the lack of sequential bias of the Transformer while maintaining extreme scalability. %O(N) in lstm anzahl layer vs O(n^2) für Transformer as mentioned before
 Consequently, \acp{x-LSTM} provide the theoretical basis for \ac{RNN}-based foundation models. 
-The \textbf{TiRex} foundation model, which leverages the \ac{x-LSTM}, was presented by \textcite{auer2025tirexzeroshotforecastinglongtrex} and showed promising results in benchmarks against Chronos. However, the authors have noted the model does not perform well with multivariate times eries data. As a consequence, applicability to \ac{AIS} Trajectories is limited, because the univariate model treats individual features as independent channels. Separating channels prevents the model from capturing cross-correlations. Since vessel dynamics are governed by physical constraints where \ac{SOG} and \ac{COG} directly impact the trajectory, this approach may result in kinematically inconsistent predictions. %wieder etwas umformuliert wegen zeilenumbruch "separating channels"..
+The \textbf{TiRex} foundation model, which leverages the \ac{x-LSTM}, was presented by \textcite{auer2025tirexzeroshotforecastinglongtrex} and showed promising results in benchmarks against Chronos. However, the authors have noted the model does not perform well with multivariate times eries data. As a consequence, applicability to \ac{AIS} trajectories is limited, because the univariate model treats individual features as independent channels. Separating channels prevents the model from capturing cross-correlations. Since vessel dynamics are governed by physical constraints where \ac{SOG} and \ac{COG} directly impact the trajectory, this approach may result in kinematically inconsistent predictions. %wieder etwas umformuliert wegen zeilenumbruch "separating channels"..
 
 We benchmarked our self-trained \ac{LSTM} model against Chronos-2 and TiRex to both investigate whether generalised, pretrained knowledge outweighs physically grounded, domain-specific recurrence, and to test the zero shot performance of the \ac{x-LSTM} based foundation model vs the Transformer based model.
     
@@ -219,7 +219,7 @@ In this section, we describe the kinematic models we used, and how they were imp
     $(\overline{\Delta x}, \overline{\Delta y})$ is computed identically to
     the \ac{CV} model. 
     We used the mean \acf{ROT} over the last
-    $n_\text{vel} + 1$ context steps to find the heading change per step, resulting in Equation~\ref{eq:heading_change}. \wsx{this should be . as it is the end of the sentence} \me{agreed}
+    $n_\text{vel} + 1$ context steps to find the heading change per step, resulting in Equation~\ref{eq:heading_change}. 
     
     \begin{equation}
         \Delta\psi = -\,\overline{\text{ROT}} \cdot \frac{\Delta t}{60},
@@ -227,7 +227,6 @@ In this section, we describe the kinematic models we used, and how they were imp
     \end{equation}
     
     %\me{ auf nachfrage quelle einfügen, : adapted nach der selben q wie ekf }
-    \wsx{should be , in the euqation before where}
     where $\overline{\text{ROT}}$ is given in degrees per minute. The sign is
     flipped because \ac{ROT} is clockwise-positive in the nautical standard,
     opposite to the mathematical convention. %Rather than treating the time step's initial displacement as constant over the full time step, the model integrates the continuously rotating velocity vector exactly. 
@@ -273,7 +272,7 @@ In this section, we describe the kinematic models we used, and how they were imp
     
     \subsection{Hybrid Constant Velocity/Constant Turn Rate and Velocity}
     \label{sec:method-hybrid}
-    For each track, the decision to apply \ac{CV} or \ac{CTRV} is based on the observed turning behaviour in the context window. The mean
+    For each sample, the decision to apply \ac{CV} or \ac{CTRV} is based on the observed turning behaviour in the context window. The mean
     absolute \ac{ROT} over the last $n_\text{rot}$ context steps is computed,
     and if it exceeds a threshold $\tau_\text{rot}$, the \ac{CTRV} model is
     activated; otherwise \ac{CV} is used, as summarised in Equation~\ref{eq:hybrid_condition}.

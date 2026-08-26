@@ -3,109 +3,12 @@
 \acresetall %reset abbrevations
 \label{chap:results}
 
-\ws{No need to have a section for each experiment. You can just write the research question and answer it (The text in the current `Results` sub-section can be the answer). The Questions do not need to be subsections. Currently, there is unecessary enumeration}
 
-\ws{The discussion can be a section where all the discussion is written instead of per-experiment}
-%\todo{ Chapter 6  needs restructuring. The content is not split in sections that has the titles of Exp 1 , 2 , 3. Not the best. It should be split by research questions then answering each followed by a discussion section.}
-
-\begin{comment}
-    \sug{aim guide: Results. This section lists the results of the experiments described in the ’Experiments’
-section and discusses them in detail. It also includes answers to the research questions
-presented earlier in the thesis.\\IRT guide III. RESULTS
-How does your method perform? Give quantitative information and illustrate with plots.
-Do not give extra information on your methods in the
-results section (such as method to choose parameters, or the
-experimental protocol).
-Give the raw facts only; do not interpret your results yet.
-That means no sentences like: “The improved performance
-demonstrates that the controller is effective...” or “A probable
-reason for this observation is...”.
-IV. DISCUSSION
-Interpret your results. Is the performance acceptable? Go
-back to initial questions, compare to other methods reported
-in literature. How do you explain unexpected results? Which
-shortcomings or limitations are there in your methods and
-results? Where is room for improvement? Could combination
-with methods from literature further improve the work? Mention plans, needs, and recommendations for future research.
-}
-\end{comment}
-
-
-%\todo{You can either try to fit the discussion in the answer itself if it does not make it too long OR You can try to following: section{Discussion} In this section, we discuss the results in more details. subsection or paragraphXXXXX (Does not have to refer directly to question 1. Just give it a meanignfultile)[11:43 Uhr]I cannot say for sure what is better because it highly depends on the amount of details and the flow}
-
-
-
-%\me{move foundation calibration into discussion? with table?}
-
-
-
-\begin{comment}
-------------------
-what I understood you want this to be like according to the feedback:
-
-intro: We conducted 3 Experiments in which we picked .. models. the experiments differ in (..details). this chapter aims to answer the 3 main research questions.
-
-citing RQ1
-.. was answered with exp 1.. 
-present metrics with descriptions, directly answer the rq1 (pure result, no interpretations)
-
-citing RQ2
-.. was answered with exp 2.. 
-present metrics with descriptions, directly answer the rq2 (pure result, no interpretations)
-
-
-..RQ3
-
-
-discuss RQ1-RQ3 results in a merged text (expected? causes, consequences, shortcomings..)
-
-final conclusion ( in the conclusion chapter)
-
-OR what whould align more with your paper:
-
-intro
-
-citing RQ1
-.. was answered with exp 1.. 
-present metrics with descriptions, directly answer the rq1 (pure result, no interpretations)
-discuss RQ1 results (expected? causes, consequences, shortcomings..)
-
-citing RQ2
-.. was answered with exp 2.. 
-present metrics with descriptions, directly answer the rq2 (pure result, no interpretations)
-discuss RQ2 results (expected? causes, consequences, shortcomings..)
-
-
-..RQ3
-
-final conclusion ( in the conclusion chapter)
-
-
-
-personally i would prefer not to have a merged discussion of all experiments, I think it will be hard to make transitions as they all investigate different topics. Additionally, i have many figures and you would need to skip back ~5 pages.
-in your paper you merged results and discussion (though you separated them by outlining results first). that aligns with the 2nd version i outlined here. I can do it similarly, but i would likely add paragraoh subsection titles since IRT put big emphasis on dividing those 2 in their writing guidelines
--------------
-\end{comment}
-
-%\todo{format figures to get better page breaks once the text is final}
-%intro
 In this chapter, we present the findings from the experimental evaluation, and address the core research questions systematically.
-The overall goal of these experiments was to provide a fair comparison \ws{of}
-of deep learning models, kinematic models, and stochastic filters, \ws{as well as} a
-s well as to investigate the impact of incorporating geographic domain information into model training and architecture.
-\begin{comment}
- Specifically, we aimed to answer the following research questions:
-
-\begin{itemize}
-    \item \textbf{RQ1:} Given a preprocessed dataset and a systematic hyperparameter optimisation procedure, how do deep learning models, both task-specific and pretrained, kinematic baselines, and stochastic filters compare in short-term trajectory prediction of inland vessels?
-    \item \textbf{RQ2:} Does domain-specific training improve short-term vessel trajectory prediction performance compared to mixed-domain training?
-    \item \textbf{RQ3:} Does adding explicit domain information as one-hot encoded input improve short-term vessel trajectory prediction performance?
-\end{itemize}
-\end{comment}
+The overall goal of these experiments was to provide a fair comparison of deep learning models, kinematic models, and stochastic filters, as well as to investigate the impact of incorporating geographic domain information into model training and architecture.
 To evaluate the three research questions outlined in Section \ref{sec:rqand}, we conducted a total of three experiments: a baseline comparison of all motion models on the full dataset (Exp I), an assessment of the effect of domain-specific training on predictive performance (Exp II), and an ablation study of explicit domain encoding for LSTMs (Exp III).
 The remainder of this chapter is structured around the  questions, for each of which we present the quantitative results first, along with the answers to our research questions. A Section with a more detailed discussion of results follows.
 
-\ws{please make the links explicit. It is needed for printed versions. You can use footnotes, for example to list the full link}
 The preprocessed dataset is provided at Hugging Face\footnote{\url{https://huggingface.co/datasets/kawihss/ais-inland-vessel-trajectories}}. 
 The dataset can be regenerated with the pipeline provided at RWTH GitLab\footnote{\url{https://git-ce.rwth-aachen.de/g-nav-mob-irt/projects/galileonautic2plus/multi-object-tracking/motion-models/-/tree/handedIn}} or the public GitHub mirror\footnote{\url{https://github.com/kawihss/Data-based-vessel-motion-modelling-Thesis/tree/handedIn}}. 
 The repository also provides the code to train and optimise all models. For details on the pipeline, refer to the readme files and Appendix~\ref{chap:appendixcodebase} for a general overview of the codebase architecture.
@@ -121,75 +24,12 @@ We set up Exp. \Romannum{1} to answer this question and to serve as an overall b
 The optimised hyperparameter configurations for all evaluated models are listed in Table~\ref{tab:hpo_results_exp0}, and the corresponding test set error metrics are detailed in Table~\ref{tab:results_exp0}.
 Specifically, the standard \ac{LSTM} achieves an \ac{ADE} of $54.78$\,m and a \acf{RMSE} of $111.36$\,m, reducing the error of the \ac{CV} baseline (\ac{ADE} $78.39$\,m, \ac{RMSE} $155.73$\,m) by $30.1\%$ and $28.5\%$, respectively.
 To assess the overall statistical significance of these results, we conducted a Friedman test combined with Nemenyi post-hoc comparison.
-The significant differences are illustrated as a \ac{CD} diagram in Figure~\ref{fig:cd_test}. \ws{we conducted Friedman .... then say the significant differnces are illustrated as a CD digaram in Figure xx} 
+The significant differences are illustrated as a \ac{CD} diagram in Figure~\ref{fig:cd_test}. 
 The diagram reveals a clear ranking structure: the two LSTM-based models occupy the top positions, with average ranks of 1.5 and 2 respectively, followed by the \ac{EKF} (4.7) and Chronos-2 (5.4), while the remaining models form a middle group with mostly non-significant pairwise differences (6.4 -- 7).
 The CTRV-based models rank last (8.1).
 
-\begin{comment} % split up version below
-\begin{table}[t]
-\centering
-\caption[Exp. I Optimised hyperparameter configurations]{Optimised hyperparameter configurations for all models. Discussed metrics are shaded in.}
-\label{tab:hpo_results_exp0}
-\begin{tabular}{llr}
-\toprule
-\textbf{Model} & \textbf{Hyperparameter} & \textbf{Value} \\
-\midrule
-CV
-  & \cellcolor{blue!15}{$n_\text{vel}$}           & \cellcolor{blue!15}{1} \\
-CTRV
-  & $n_\text{vel}$            & 2 \\
-CTRV Arc
-  & $n_\text{vel}$            & 3 \\
-Hybrid CV/CTRV
-  & $n_\text{vel}$ (CV)       & 1 \\
-  & $n_\text{vel}$ (CTRV)     & 2 \\
-  & $n_\text{rot}$            & 1 \\
-  & \cellcolor{blue!15}{$\tau_\text{rot}$ }       & \cellcolor{blue!15}{29.28 °/min} \\
-\midrule
-KF (CV)
-  & \cellcolor{cyan!15}$q_\text{pos}$ & \cellcolor{cyan!15}$1.578 \times 10^{-3}$ \\
-  & $q_\text{vel}$                    & $5.932$ \\
-  & \cellcolor{cyan!15}$r_\text{pos}$ & \cellcolor{cyan!15}$1.077 \times 10^{-2}$ \\
-  & $p_{0,\text{pos}}$                & $7.737 \times 10^{-2}$ \\
-  & $p_{0,\text{vel}}$                & $1.190 \times 10^{-1}$ \\
 
 
-  EKF (CTRV)
-  & \cellcolor{green!15}$q_\text{pos}$            & \cellcolor{green!15}$15.957$ \\
-  & $q_\text{vel}$            & $4.290 \times 10^{-2}$ \\
-  & \cellcolor{green!15}$q_\text{rot}$            & \cellcolor{green!15}$1.002 \times 10^{-7}$ \\
-  & $r_\text{pos}$            & $1.792 \times 10^{-2}$ \\
-  & $p_{0,\text{pos}}$        & $4.046 \times 10^{-1}$ \\
-  & $p_{0,\text{vel}}$        & $1.845 \times 10^{-3}$ \\
-  & $p_{0,\text{rot}}$        & $2.076 \times 10^{-6}$ \\
-  & $n_\text{ctx}$            & 2 \\
-\midrule
-Chronos-2
-  & \multicolumn{2}{l}{\textit{no HPO}} \\
-TiRex
-  & context length            & 1\\
-\midrule
-LSTM
-  & hidden size               & 256 \\
-  & num.\ layers              & 2 \\
-  & dropout                   & 0.290 \\
-  & learning rate             & $5.530 \times 10^{-4}$ \\
-  & batch size                & 128 \\
-  %& feature set               & no rot\\
-  & \cellcolor{orange!15}feature set               & \cellcolor{orange!15}no rot\\
-  \midrule
-LSTM + Domain
-  & hidden size               & 256 \\
-  & num.\ layers              & 2 \\
-  & dropout                   & 0.300 \\
-  & learning rate             & $4.000 \times 10^{-4}$ \\
-  & batch size                & 256 \\
-  & feature set               & all\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\end{comment}
 \begin{table}[t]
 %\centering
 \noindent
@@ -263,7 +103,7 @@ LSTM+Domain    & hidden size             & 256 \\
 \toprule
 \textbf{Model} & \textbf{ADE} & \textbf{FDE} & \textbf{RMSE} \\
 \midrule
-Constant Velocity   & 78.39 & 175.82 & 155.73 \\
+CV                  & 78.39 & 175.82 & 155.73 \\
 CTRV                & 82.92 & 195.18 & 164.51 \\
 CTRV Arc            & 85.21 & 196.78 & 168.29 \\
 Hybrid CV/CTRV      & 78.49 & 176.45 & 155.49 \\
@@ -287,7 +127,7 @@ LSTM + Domain       & 53.80 & 119.02 & 109.95 \\
     \label{fig:cd_test}
 \end{figure}
 
-Figure~\ref{fig:adepredhorizon} depicts the development of the \ac{ADE} for all models over the prediction horizon. While the error for the \ac{CV} model grows approximately linearly, the errors for CTRV and CTRV Arc diverge heavily at longer horizons. The \ac{LSTM}-based models maintain the lowest \ac{ADE} across all ten prediction steps.
+Figure~\ref{fig:adepredhorizon} depicts the development of the \ac{ADE} for all models over the prediction horizon. While the error for the \ac{CV} model grows approximately linearly, the errors for CTRV and CTRV Arc diverge heavily at longer horizons. The \ac{LSTM}-based models maintain the lowest \ac{ADE} across all ten prediction steps. The ranking order of all models stays consistent over the full horizon.
 
 \begin{figure}[h]
     \centering
@@ -374,8 +214,6 @@ TiRex produces extremely narrow prediction intervals (Mean Interval Width of 6.4
 Figure~\ref{fig:violince} visualises the error distribution shapes as violin plots, showing that TiRex and the \ac{CV} model share nearly identical error distributions, while the \ac{LSTM} distribution is distinctly shifted toward lower errors.
 
 Furthermore, an evaluation of the error distributions for the kinematic baselines (\ac{CV} and \ac{CTRV}) reveals a stark deviation from a normal distribution, with coefficients of determination ($R^2$) ranging from 0.6138 to 0.6428.
-
-\ws{In the results chapter, mention some quantitative results from the tables and the figures. It is not enough to refer to them. Things like XX is xx\% better than xx or ranks better ..} \me{done}
 
 \begin{table}[t]
 \centering
@@ -520,7 +358,7 @@ Furthermore, Figure~\ref{fig:monthlytrends-all} plots the average \ac{RMSE} per 
         ymin=0, ymax=160000,
         xmin=0.5, xmax=12.5,
         xtick=\empty,
-        ylabel={$n_\text{tracks}$},
+        ylabel={$n_\text{samples}$},
         ylabel style={at={(1.08,0.5)}, color=violet},
         ytick={0,40000,80000,120000},
         yticklabels={0,40k,80k,120k},
@@ -540,7 +378,7 @@ Furthermore, Figure~\ref{fig:monthlytrends-all} plots the average \ac{RMSE} per 
     \end{axis}
     \end{tikzpicture}
     %\caption{RMSE per month with track count shown as violet bars\todo{from here on, expand figure and table captions}}
-    \caption[Exp. I RMSE Monthly Trends]{Comparison of \acf{RMSE} by month, demonstrating consistent performance trends across all models. Violet bars indicate the monthly volume of tracks}
+    \caption[Exp. I RMSE Monthly Trends]{Comparison of \acf{RMSE} by month, demonstrating consistent performance trends across all models. Violet bars indicate the monthly volume of samples}
     \label{fig:monthlytrends-all}
 \end{figure}
 
@@ -552,18 +390,16 @@ Furthermore, Figure~\ref{fig:monthlytrends-all} plots the average \ac{RMSE} per 
 \FloatBarrier
 \textbf{RQ 2}: \textit{Does domain-specific training improve short-term vessel trajectory prediction performance compared to mixed-domain training?}
 
-\ws{`Furthermore' transition is not needed. Just mention that you sat Exp II to answer this}
 We set up Exp. \Romannum{2} to evaluate the extent of these performance differences and how they are influenced by both the specific waterway domain and the underlying model complexity. %To that end, we set up Exp. \Romannum{2}.
-\ws{You need to mention quantified results, not enough to refer to tables or figures} \me{done for all experiments}
 \paragraph{Results.}
 
 %performance between training modes
 %The benefit of per-domain training increases with model complexity. %not purely descriptive
-For the \ac{CV} amodel, no change in performance ($0.00$\,m difference) is observed between mixed and domain-specific training, while the \ac{CTRV} variants exhibit deviations of up to $12.55$\,m in \ac{RMSE}.
-For the \ac{EKF} and \ac{LSTM}, however, substantial performance drops occur under mixed training, particularly in the channel and lock domains (Table \ref{tab:results_exp1_exp2_merged_deltas}, shaded in orange).\ws{where? You never mentioned the table or the figure}.
+For the \ac{CV} model, no change in performance ($0.00$\,m difference) is observed between mixed and domain-specific training. Since the \ac{CV} search space consists of the single hyperparameter $n_\text{vel}$, and the optimiser converged to $n_\text{vel}=1$ in every domain as well as in the mixed setting, the resulting models are identical across all training regimes. The \ac{CTRV} variants exhibit deviations of up to $12.55$\,m in \ac{RMSE}. 
+For the \ac{EKF} and \ac{LSTM}, however, substantial performance drops occur under mixed training, particularly in the channel and lock domains (Table \ref{tab:results_exp1_exp2_merged_deltas}, shaded in orange).
  Specifically, in the lock domain, the \ac{ADE} of the \ac{LSTM} degrades by $13.36$\,m and the \ac{RMSE} by $13.11$\,m when evaluated with the mixed training model.
 This performance difference is not uniform across domains: in the harbour and river domains, only minor deviations are observed, generally remaining below a $5.6$\,m difference in \ac{RMSE}.
-Finally, it can be observed that the harbour domain is the only environment where domain-specific training fails to produce a statistically significant improvement for the \ac{LSTM}. Further details about the statistical significance across domains can be found in ~\ref{fig:cd-diagrams-a}
+Finally, it can be observed that the harbour domain is the only environment where domain-specific training fails to produce a statistically significant improvement for the \ac{LSTM}. Further details about the statistical significance across domains can be found in Figure \ref{fig:cd-diagrams-a} in Appendix \ref{chap:appendixdataplots}.
 
 
 %performance between domains
@@ -579,7 +415,8 @@ This applies not only to the learned models but also to the Kalman filters. The 
 The measurement noise $r_\text{pos}$ covers nearly five orders of magnitude across models and domains, ranging from approximately $1.0\times10^{-2}$ to $7.3\times10^{2}$.
 In particular, highly distinct parameter selections are yielded by the lock class for all models.
 For example, very distinct hyperparameters can be observed for the \ac{LSTM} (such as a reduced hidden size of $64$ and an increased batch size of $512$). The \ac{EKF} applied to this domain is assigned a larger measurement noise $r_\text{pos}$ coupled with a very small process noise $q_\text{pos}$ (both shaded in green). 
-Similarly, for TiRex and \ac{EKF}, a longer context length is selected specifically for the channel domain ($n_\text{ctx} = 9$ and $6$, respectively), while for kinematic baselines, the context length is reduced (shaded in cyan).%these are not discussed further, focus is on "yes there is a difference and it impacts performance" and not on "these are the differences and here is what it tells us about the data. in general, lots more can be discussed about specific parameters . eg how higher context windows act as a smoothness factor etc. but if we wanted to do that, we wouldnt have hpoed everything automatically
+Similarly, for TiRex and \ac{EKF}, a longer context length is selected specifically for the channel domain ($n_\text{ctx} = 9$ and $6$, respectively), while for kinematic baselines, the context length is reduced (shaded in cyan). %these are not discussed further, focus is on "yes there is a difference and it impacts performance" and not on "these are the differences and here is what it tells us about the data. in general, lots more can be discussed about specific parameters . eg how higher context windows act as a smoothness factor etc. but if we wanted to do that, we wouldnt have hpoed everything automatically
+For the lock domain, in contrast, the \ac{EKF}'s context length is reduced to $n_\text{ctx}=1$. With only a single observation available before prediction begins, the filter has little opportunity to correct its $\omega_0=0$ initialisation if the vessel is already turning. Combined with the low process noise $q_\text{pos}$ and high measurement noise $r_\text{pos}$ discussed above, the filter is effectively optimised to trust its motion assumption over new measurements, which likely contributes to the disproportionately large performance gap between the \ac{EKF} and the \ac{LSTM} specifically in this domain.
 
 \begin{table}[t]
 \centering
@@ -705,12 +542,11 @@ vessel trajectory prediction performance?}
 To answer this, we set up Exp. \Romannum{3}.
 \paragraph{Results.}
 
-In Table~\ref{tab:results_exp3}, the performance metrics of the standard \ac{LSTM} (first introduced in Table \ref{tab:results_exp0} and \ref{tab:results_exp1_exp2_merged_deltas}) are provided \ws{recalls?} \me{specified.  it is repeated for the reader's convenience to compare the models} 
-as a benchmark for comparison, alongside the metrics of two domain-aware variants: LSTM + Domain, which was independently tuned using a separate hyperparameter optimisation study, and LSTM + Domain*, a variant using the exact same hyperparameter configuration as the baseline architecture. 
-Both domain-aware models achieve lower overall error metrics than the standard \ac{LSTM}. For example, the LSTM + Domain* variant reduces the overall \ac{RMSE} from $111.36$\,m to $110.20$\,m, representing a decrease of $1.04\%$. In Figure~\ref{fig:violindomaine}, the corresponding performance distributions of both models are presented.
-
-To ensure that the observed performance gap is robust, the baseline \ac{LSTM} and the LSTM + Domain* model were trained ten times with different random seeds. Across all ten runs, strictly lower test errors in \ac{ADE}, \ac{FDE}, and \ac{RMSE} were recorded for the LSTM + Domain* model.
-Notable performance improvements are yielded by the domain-aware model, particularly in the channel and lock domains (shaded in cyan). For instance, the \ac{ADE} decreases from $32.09$\,m to $29.22$\,m in the channel domain, and from $45.41$\,m to $31.43$\,m in the lock domain.
+In Table~\ref{tab:results_exp3}, we recall the performance metrics of the standard \ac{LSTM} (first introduced in Table \ref{tab:results_exp0} and \ref{tab:results_exp1_exp2_merged_deltas}) as a benchmark for comparison, alongside the metrics of two domain-aware variants: LSTM + Domain, which was independently tuned using a separate hyperparameter optimisation study, and LSTM + Domain*, a variant using the exact same hyperparameter configuration as the baseline architecture. 
+Both domain-aware models achieve lower overall error metrics than the standard \ac{LSTM}. For example, the LSTM + Domain* variant reduces the overall \ac{RMSE} from $111.36$\,m to $110.20$\,m, representing a decrease of $1.04\%$.
+This overall figure is dominated by the harbour domain, which accounts for the majority of samples and shows almost no improvement ($121.45$,m to $121.38$,m \ac{RMSE}), mirroring the finding from Exp.~\Romannum{2}. The channel and lock domains, by contrast, show substantially larger relative gains (shaded in cyan). For instance, the \ac{ADE} decreases from $32.09$\,m to $29.22$\,m in the channel domain, and from $45.41$\,m to $31.43$\,m in the lock domain.
+To ensure that the observed performance gap is robust, the baseline \ac{LSTM} and the LSTM + Domain* model were trained ten times with different random seeds. Across all ten runs, strictly lower test errors in \acs{ADE}, \acs{FDE}, and \acs{RMSE} were recorded for the LSTM + Domain* model.
+In Figure~\ref{fig:violindomaine}, the corresponding performance distributions of both models are presented.
 Finally, the combined critical difference diagram confirming this statistical significance is depicted in Figure~\ref{fig:cd_exp3_real}, with the \ac{LSTM} + Domain* model ranking 1.71 on average, \ac{LSTM} + Domain achieving an average rank of 1.85 and the default \ac{LSTM} ranking last at 2.44.
 
 
@@ -756,14 +592,12 @@ without any optimisation.}
 
 \section*{Further Analysis}%titel anpassen
 
-\ws{make it as section*. It is not good to have only one numbered sub-section}
 
-\ws{The section does not establish or examines. Rephrase. Also, given that you do not have section numbers here, it is better to no to mention `previos section'. You can start with, in what follows, we discuss the mechanisims .. }
 %In the preceding sections, we have shown the quantitative outcomes for each research question. 
 In what follows, we discuss the mechanisms and implications behind these results, starting with a comparison of predictive capabilities across all evaluated model families, followed by an investigation of the impact of geographic domains and their encodings to model performance, and ending with a brief section on monthly trends.   
 
 \subsection*{Predictive Capabilities of Motion Models} %was comparing. could be comparison of, but needs to be action
-\ws{Predictive Capabilities of Motion Models. The titles are usually nominalised, not verbalised. } \me{fixed}
+
 
 %\subsection{Exp. 1 Discussion}
 
@@ -771,40 +605,41 @@ The results provide a clear answer to the first research question: learned seque
 
 \paragraph{Kinematic Models.}
 The performance of the kinematic models suggests that simple arc estimations are insufficient to outperform straight-line motion prediction. The \ac{CV} model learned to only use the velocity of the most recent timestep (highlighted in purple in Table~\ref{tab:hpo_results_exp0}).
-This is an assumption that is also applied in most \ac{CV} definitions, which was relaxed for these experiments. With increasing model complexity, the best context size increases. The Hybrid Model learns to switch to \ac{CV} at a relatively small $\tau_\text{rot}$ of $29.28^\circ/\text{min}$. This indicates that straight-line motion is more prevalent than motion with a single arc in our dataset. 
+This is an assumption that is also applied in most \ac{CV} definitions, which was relaxed for these experiments by parametrising context length. 
+An analysis of the error distributions for the \ac{CV} and \ac{CTRV} models reveals that the resulting residuals are heavy-tailed rather than normally distributed. This deviation is reflected by low coefficient of determination ($R^2$) values of approximately 0.6138 to 0.6428 when compared against a theoretical normal distribution. Further analysis of this error distribution can be found in Figure \ref{fig:qqplot} in Appendix~\ref{chap:appendixdataplots}.
+This observation leads us to a likely explanation for the optimisation result: vessel displacement over our samples could be dominated by brief, discrete regime changes rather than smooth, Gaussian drift. Averaging the displacement would therefore mix in an increasingly stale velocity estimate rather than reduce noise, so the most recent single step remains the least biased predictor of the immediate future.
+With increasing model complexity, the best context size increases. The Hybrid Model learns to switch to \ac{CV} at a relatively small $\tau_\text{rot}$ of $29.28^\circ/\text{min}$. This indicates that straight-line motion is more prevalent than motion with a single arc in our dataset. 
 Furthermore, Figure~\ref{fig:adepredhorizon} shows the error progression over time. While the \ac{ADE} of the \ac{CV} model does not grow perfectly linearly, it has a much more linear trend compared to the \ac{CTRV} models, which diverge heavily at longer horizons.
 One cause for this difference is that the deviation of a circular arc generated by an unsuitable turn rate in \ac{CTRV} grows superlinearly with the number of prediction steps. In contrast, a wrong velocity estimate in \ac{CV} produces a constant lateral offset that accumulates linearly.
 For an intuitive visual comparison of this dynamic, refer to the upper rows of Figures~\ref{fig:domain1} and \ref{fig:domain3} in Appendix~\ref{chap:appendixdataplots}.
-%\todo{resolve appendix reference; as a resort just leave this out if the intuition is clear that circle deviate more than straight lines}
-\ws{you can refer to them like this: In Appendix XX (Figures XX and XX). It needs to be explicit that these are in the appendix}
 
 \paragraph{Stochastic Filters.}
 
-The \ac{KF} does not outperform the \ac{CV} model. Since the \ac{CV} model learned to only look at the last step, the Markov assumption of the \ac{KF} does not introduce any additional drawbacks. In the \ac{KF}, position changes are a linear function of the velocity state, so positional errors remain small as long as the velocity estimate is reasonable.
-Consequently, the optimization selected a relatively small process noise $q_\text{pos}$ compared to the measurement noise $r_\text{pos}$ (highlighted in cyan in Table~\ref{tab:hpo_results_exp0}).
-The different order of magnitude for $r_\text{pos}$ in different domains, and the respective value differences between \ac{KF} and \ac{EKF} allow us to conclude, that a fixed measurement noise to values commonly found in literature would not have been sufficient.
-Despite the optimised tuning, the \acp{KF} fails to surpass the simple \ac{CV} model. This points to two primary conclusions regarding its limitations.
-First, the bottleneck of the prediction lies in the underlying constant-velocity assumption rather than the state estimation process itself. Second, the \ac{KF} is unsuitable for this task due to its strict reliance on Gaussian noise assumptions.
-An analysis of the error distributions for the \ac{CV} and \ac{CTRV} models confirms a severe violation, with the data exhibiting heavy tails and extreme outliers. This deviation is reflected by low coefficient of determination ($R^2$) values of approximately 0.6138 to 0.6428 when compared against a theoretical normal distribution. Further analysis of this error distribution can be found in Figure ~\ref{fig:qqplot} in Appendix~\ref{chap:appendixdataplots}.
+In the \ac{KF}, position changes are a linear function of the velocity state, so positional errors remain small as long as the velocity estimate is reasonable.
+Consequently, the optimisation selected a relatively small process noise $q_\text{pos}$ compared to the measurement noise $r_\text{pos}$ (highlighted in cyan in Table~\ref{tab:hpo_results_exp0}).
+The different orders of magnitude for $r_\text{pos}$ in different domains, and the respective value differences between \ac{KF} and \ac{EKF} allow us to conclude that fixing the measurement noise to values commonly found in literature would not have been sufficient.
+Despite the optimised tuning, the \ac{KF} fails to surpass the simple \ac{CV} model. This points to two primary conclusions regarding its limitations.
+First, the bottleneck of the prediction lies in the underlying constant-velocity assumption rather than the state estimation process itself. Second, the \ac{KF} is unsuitable for this task due to its strict reliance on Gaussian noise assumptions. In the previous section we have established that the error does not follow a Gaussian distribution.
+A further methodological caveat is that the diagonal $\mathbf{Q}$ assumes uncorrelated positional and velocity noise, despite their physical coupling. The extent to which this simplification also contributes to the observed gap remains open.
+Since the \ac{CV} model was optimised to only consider the last step, the Markov assumption of the \ac{KF} is not the cause for the inability of the \ac{KF} to outperform the \ac{CV} model. With the noise ratio established above and the ten correction steps available within the context window, the filter's prior is effectively forgotten by the time prediction begins, so its velocity estimate converges to the same estimate as the \ac{CV} model's last-step displacement, rather than to a genuinely smoothed estimate.
+
 
 In the \ac{EKF}, position depends nonlinearly on the turn rate $\omega_k$ through trigonometric terms. This means that even a small error in the estimated rotation propagates into a drastically larger positional error over time.
-The optimization process adapted to this instability by selecting a substantially larger process noise $q_\text{pos}$ and a near-zero $q_\text{rot}$, (highlighted in green in Table~\ref{tab:hpo_results_exp0}), which indicates that the filter learned position predictions are highly unreliable when rotation is involved.
-$\omega_0$ is initialised to $0$, and the minimal context length to $n_\text{ctx} = 2$.
+The optimisation process adapted to this instability by selecting a substantially larger process noise $q_\text{pos}$ and a near-zero $q_\text{rot}$ (highlighted in green in Table~\ref{tab:hpo_results_exp0}), which indicates that the filter learned position predictions are highly unreliable when rotation is involved.
+$\omega_0$ is initialised to $0$, and the minimum context length to $n_\text{ctx} = 2$.
 Together, these parameters effectively restrict the underlying \ac{CTRV} model to straight-line motion with negligible curvature to avoid compounding nonlinear errors. %\\
 Despite this, the \ac{EKF} outperforms the \ac{KF} significantly (Figure~\ref{fig:cd_test}).
 This performance gap is most pronounced in the \ac{RMSE} metric.
-Since \ac{RMSE} heavily penalizes large deviations, this difference demonstrates that the state estimation of the \ac{EKF}  still manages to suppress extreme outliers slightly better than the standard \ac{KF}.
+Since \ac{RMSE} heavily penalises large deviations, this difference demonstrates that the state estimation of the \ac{EKF} still manages to suppress extreme outliers slightly better than the standard \ac{KF}.
 However, the violin plots in Figure~\ref{fig:violince} confirm that while the \ac{EKF} error distribution is shifted towards slightly lower values compared to \ac{CV} and TiRex, it still has a similar spread and long upper tails.
-Therefore, while the \ac{EKF} provides a measurable baseline improvement, its fundamental handling of sudden manoeuvrers and outliers is not drastically improved, consistent with the still prevailing non-Gaussian error distribution. %(Figure \ref{fig:qqplot_ctrv}). \todo{resolve appendix reference}
-
-
+Therefore, while the \ac{EKF} provides a measurable baseline improvement, its fundamental handling of sudden manoeuvres and outliers is not drastically improved, consistent with the still prevailing non-Gaussian error distribution.
 
 
 \paragraph{Foundation Models.}
-TiRex runs best with a context length of 1, which aligns with the constant-velocity assumption and explains the statistical indifference between TiRex and \ac{CV} across all point-forecast metrics.
-\ws{do not use `to' refer tho them all. Also, add in Appendix XX}), indicating the foundation model predicts straight-line kinematics.
+TiRex runs best with a context length of 1. The model does not implement any attention mechanisms to selectively weight individual timestamps and has no mechanism to filter out the added noise from a longer context. It is thus prone to the same bias as the \ac{CV} model, leading to the present configuration.
+With only a single input point and no learned domain adaptation, TiRex has little basis to do more than propagate it forward, which is consistent with the statistical indifference between TiRex and \ac{CV} across all point-forecast metrics.
 Not only the performance, but also the generated trajectories are similar to those of the \ac{CV} models (Figures~\ref{fig:domain1}, \ref{fig:domain2}, \ref{fig:domain3}, and \ref{fig:domain4} in Appendix~\ref{chap:appendixdataplots}), indicating the foundation model predicts straight-line kinematics.
-A distributional comparison of per-track \ac{RMSE} (Figure~\ref{fig:violince}) reveals that \ac{CV} and TiRex have nearly identical violin shapes with similar medians, interquartile ranges, and tail behaviour. They confirm that TiRex effectively learns \ac{CV} kinematics without any domain-specific training.
+A distributional comparison of per-sample \ac{RMSE} (Figure~\ref{fig:violince}) reveals that \ac{CV} and TiRex have nearly identical violin shapes with similar medians, interquartile ranges, and tail behaviour. They confirm that TiRex effectively learns \ac{CV} kinematics without any domain-specific training.
 
 If we consider Table~\ref{tab:results_exp0_foundation_prob}, we notice that TiRex produces extremely narrow prediction intervals compared to Chronos-2. Narrow intervals can indicate either high accuracy or poor calibration. Inspecting the coverage reveals the latter: only $5.9\%$ of true future positions fall within the nominal $80\%$ prediction intervals of TiRex, far below the ideal coverage of $0.80$.
 Chronos-2, by contrast, achieves a near-ideal coverage of $0.769$.
@@ -816,10 +651,13 @@ It follows that if we want to use a foundation model and also have an accurate q
 \paragraph{LSTM.}
 
 The \acp{LSTM} show the strongest forecasting performance among all evaluated models by a large margin (Table~\ref{tab:results_exp0} and Figure~\ref{fig:adepredhorizon}).
-Compared to the classical models, they reduce the prediction error substantially.
+Compared to the kinematics based models, they reduce the prediction error substantially.
 This outperformance grows heavily as the prediction horizon extends.
-A visual inspection of the generated trajectories (Figures~\ref{fig:domain1}, \ref{fig:domain2}, \ref{fig:domain3}, and \ref{fig:domain4} in Appendix~\ref{chap:appendixdataplots}) explains this advantage: the \acp{LSTM} particularly excel at estimating the correct velocity during acceleration and deceleration phases.
-This capability makes the biggest difference in the lock domain, where most trajectories include abrupt speed changes to either start or stop vessel movement.
+This widening gap is expected: kinematic filters extrapolate purely from the last observed state without any memory of prior context, so their assumptions become increasingly inaccurate the further ahead they are extrapolated.
+The \acp{LSTM}, in contrast, have access to the full context window, which allows them to remain comparatively accurate even at longer horizons within the tested window.
+
+A visual inspection of the generated trajectories (Figures~\ref{fig:domain1}, \ref{fig:domain2}, \ref{fig:domain3}, and \ref{fig:domain4} in Appendix~\ref{chap:appendixdataplots}) explains another key advantage: the \acp{LSTM} particularly excel at estimating the correct velocity during acceleration and deceleration phases.
+This capability makes the biggest difference in the lock domain, where most samples include abrupt speed changes to either start or stop vessel movement.
 Overall, the network learns motion patterns that generalise far better than the handcrafted assumptions encoded in \ac{CV}, \ac{CTRV}, and the stochastic filters.
 The \ac{RMSE} violin plots in Figure~\ref{fig:violince} support this, showing that the error distribution of the \ac{LSTM} is shifted toward lower values than all other models.
 The network performs better on the vast majority of trajectories, while a smaller number of difficult cases still produce comparatively high errors.
@@ -829,14 +667,14 @@ To achieve this performance, the training process relied on the \ac{HPO} framewo
 %As designed, the algorithm discards several poor configurations early to save computational resources, while better trials survive longer and undergo further refinement.
 %A few weak trials still run for a comparatively long time solely because the initial 26 evaluations were intentionally excluded from pruning to establish a baseline search space.
 
-Beyond the pruning strategy, the hyperparameter importance analysis demonstrates that the input feature set is the most influential parameter for model success. Details about hyperparameter importances can be found in Figure \ref{fig:lstmhpimportances} in Appendix~\ref{chap:appendixdataplots}. %\todo{resolve appendix reference}
+Beyond the pruning strategy, the hyperparameter importance analysis demonstrates that the input feature set is the most influential parameter for model success. Details about hyperparameter importances can be found in Figure \ref{fig:lstmhpimportances} in Appendix~\ref{chap:appendixdataplots}. 
 In contrast, the analysis shows that the hidden size of the network has almost no impact on the final performance.
 This indicates that the bottleneck for this forecasting task lies primarily in the provided data representation rather than the overall capacity of the model.
 Interestingly, the best configuration does not use the full feature set but excludes \texttt{rot} (orange highlights in Table \ref{tab:hpo_results_exp0}).
 While one might expect that adding more input features should always improve performance, as we can confirm for all other values by looking at the gradient, this result indicates that \ac{ROT} does not contribute useful information in this setting.
 This is consistent with the \ac{EKF} results and suggests that the \texttt{\ac{ROT}} feature we derived is either noisy or only weakly informative for the motion patterns considered here.
 Future work should revisit our choice to derive this feature manually and consider using the \textit{heading} field instead.
-A deeper comparison between this plain \ac{LSTM} and a domain-aware variant follows in Exp~\Romannum{3} (\ref{sec:exp3}).
+A deeper comparison between this plain \ac{LSTM} and a domain-aware variant follows in Exp~\Romannum{3}. % (\ref{sec:exp3}). %link kapoutt?
 
 Figure~\ref{fig:cd_test} provides an overall summary comparison of the evaluated model families.
 From this perspective, learned motion models are clearly best suited to capture the non-trivial vessel dynamics in the evaluated AIS data.
@@ -879,7 +717,9 @@ outliers, which violates the Gaussian noise assumptions of the filter even more 
 than the mixed dataset. %\\
 The fact that the channel and lock domains benefit heavily from specialised models indicates that they represent the most distinct motion regimes within the overall dataset.
 Meanwhile, the strict separation of harbour and river data is less critical for model performance in this specific setup.
-When extending the model architecture to future waterways, this varying sensitivity suggests that new training domains should be defined by discovering naturally distinct motion regimes within the data. These findings confirm that domain-specific training is indeed critical for high-capacity models, thus answering the second research question.
+When extending the model architecture to future waterways, this varying sensitivity suggests that new training domains should be defined by discovering naturally distinct motion regimes within the data. 
+%These findings confirm that domain-specific training is indeed critical for high-capacity models, thus answering the second research question.
+These findings support the hypothesis that domain-specific training benefits high-capacity models, addressing the second research question, albeit under the limitations discussed in chapter \ref{paragraph:comparability}.
 
 
 
@@ -896,7 +736,7 @@ These results provide strong evidence that explicitly encoding domain informatio
 The domain-aware model has a lower median error and lower first and third quartiles, indicating consistently better typical performance. The interquartile ranges of both models are comparable, but the baseline \ac{LSTM} shows more extreme outliers. This suggests that the embeddings help in avoiding occasional large errors. Eliminating these outliers is exactly the primary objective when deploying trajectory forecasting models in safety-critical environments.
 While the best-case \acs{RMSE} of the baseline is slightly lower in this particular run, this effect was not consistent across the additional ten training runs and does not affect the overall dominance of the domain-aware model. 
 
-We have thus answered the third research Question and confirmed the impact of explicit domain encoding.
+We have thus answered the third research question and confirmed the impact of explicit domain encoding.
 It should be highlighted that this experiment used a relatively naive domain encoding strategy across only a small number of distinct classes. Even more substantial performance improvements can be expected in future work by exploring more sophisticated encoding techniques or incorporating a broader variety of waterway environments. % conclusion?
 
 \subsection*{Monthly Trends} 

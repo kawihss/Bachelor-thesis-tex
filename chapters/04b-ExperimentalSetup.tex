@@ -86,6 +86,7 @@ In the following, we detail the experimental setup used to evaluate the performa
 To systematically execute the experiments outlined above and ensure a fair comparison of prediction quality across all model families, a unified evaluation framework was required.
 This section details the shared pipeline we used to perform the comparison.
 All experiments utilised the full one-year dataset without downsampling. The data for all experiments were downloaded and preprocessed as described in Chapter~\ref{chap:dataset}.
+A fixed random seed was used across all models and experiments to support reproducibility (see Table~\ref{tab:hpo-config} in Appendix~\ref{appx:B}). Note, however, that this seed does not cover the  data augmentation applied during preprocessing, so all experiments must be run on the same, already-generated Parquet dataset rather than regenerating preprocessing independently.
  Each model received the  normalised feature set 
    % all normalised features it can process
     as a context window and outputs displacement increments $(\Delta x, \Delta y)$. The kinematic models additionally received x and y coordinates as an input, an input we omitted for the deep learning models as per Section \ref{subsec:featureengineering}. %to avoid learning specific trajectories instead of vessel dynamics. The kinematic models are incapable of "overfitting " to a specific location, so raw coords are fine
@@ -105,7 +106,7 @@ All experiments utilised the full one-year dataset without downsampling. The dat
             
 
     \subsection{Metrics}
-    All trajectory-based metrics were computed from the Euclidean distance between predicted and ground-truth positions. The evaluation was performed over all files in the considered evaluation split and included all predicted time steps, not only the final one, which is separately reflected by the \acf{FDE}. Consistent with common trajectory prediction practice, we additionally reported the \acf{ADE} over all predicted steps and tracks \parencite{donandt2022shortterm, articlebilstmsus}.
+    All trajectory-based metrics were computed from the Euclidean distance between predicted and ground-truth positions. The evaluation was performed over all files in the considered evaluation split and included all predicted time steps, not only the final one, which is separately reflected by the \acf{FDE}. Consistent with common trajectory prediction practice, we additionally reported the \acf{ADE} over all predicted time steps and samples \parencite{donandt2022shortterm, articlebilstmsus}.
     
     In \ac{HPO}, we optimised the \acf{RMSE} of the predicted $x$ and $y$ coordinates. \ac{RMSE} is a standard metric for regression-based prediction tasks and is also used in vessel trajectory prediction by \textcite{articlebilstmsus} and \textcite{donandt2022shortterm} (called $ATE^2$ in the latter). %for the latter
     It was chosen because, due to the squared error term, it penalises large deviations more strongly than absolute-error-based metrics. This is desirable in our setting, where occasional large prediction errors are more problematic than many small ones.
