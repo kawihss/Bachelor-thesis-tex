@@ -48,21 +48,17 @@ However, the application of \acp{Bi-LSTM} in autonomous systems and \ac{MTT} req
   % 7 zusammenfassung: xlstm besser skalierbar, größerer speicher. aber für unsere 10 timesteps overkill. außerdem größerer feature space, schwerer (Schnell) manuell zu tunen, was unsere vorteile wettmachen würde + mangelnde vergeichbarkeit weil neu, . also nur kurz erklären
 %xlstm liefert die grundlage für ein lstm basiertes foundation modell durch erweiterung mit ..., aber dieses exisistiert leider noch nicht. wenn ich den platz habe würde ich gerne
 \end{comment}
-    \paragraph{x-LSTM.} 
-    
-    Many variants and extensions of the \ac{LSTM} have been proposed.
-    Recently, \textcite{beck2024xlstmextendedlongshortterm} introduced the \ac{x-LSTM} architecture to address bottlenecks of standard \acp{LSTM}. The primary goals of this architecture are to improve hardware scalability and to provide a larger memory capacity. To achieve this, two new \ac{LSTM} Layers were introduced:
-    
-    \begin{itemize}
-        \item \textbf{\ac{s-LSTM}}: introduces exponential gating, which allows the model to revise and update its memory more dynamically.
-        \item \textbf{\ac{m-LSTM}}: replaces the traditional vector cell state and its element-wise updates with a matrix memory updated via matrix multiplication. This %structural shift eliminates the sequential dependency of the hidden state, enabling 
-        enables fully parallelised sequence processing during training.
-    \end{itemize}
-    Using these layers, an \ac{x-LSTM} can maintain the linear time complexity $\mathcal{O}(N)$ of conventional \acp{RNN} during inference, in contrast to the quadratic complexity of Transformers. \parencite{beck2024xlstmextendedlongshortterm, attentioniayn} %for respective Time omplexity 
-    
-    For our specific use case of predicting short 10-step samples, the expanded memory capacity offers limited benefits while introducing computational overhead. Furthermore, the architecture requires additional hyperparameters, such as the choice between \ac{s-LSTM} and \ac{m-LSTM} layers, as well as matrix dimensions. %number of heads.. aber die will ich hier nicht einführen
-    This expands the search space for \ac{HPO} substantially. %, makes the tuning process computationally more expensive and harder to balance against simpler models. %Finally, as a recently proposed architecture, utilizing \ac{x-LSTM} would limit the comparability of our results with existing \ac{LSTM}-based maritime tracking approaches. 
-    Nevertheless, because of it's scaling capabilities, the \ac{x-LSTM} builds the basis of the TiRex foundation model. % (Section \ref{subsec:foundation}).
+
+
+\paragraph{x-LSTM.} 
+Many variants and extensions of the \ac{LSTM} have been proposed.
+Recently, \textcite{beck2024xlstmextendedlongshortterm} introduced the \ac{x-LSTM} architecture to address bottlenecks of standard \acp{LSTM}. The primary goals of this architecture are to improve hardware scalability and to provide a larger memory capacity. To achieve this, two new \ac{LSTM} layers were introduced: First, the \ac{s-LSTM} introduces exponential gating, which allows the model to revise and update its memory more dynamically. Second, the \ac{m-LSTM} replaces the traditional vector cell state and its element-wise updates with a matrix memory updated via matrix multiplication. This %structural shift eliminates the sequential dependency of the hidden state, enabling 
+enables fully parallelised sequence processing during training.
+Using these layers, an \ac{x-LSTM} can maintain the linear time complexity $\mathcal{O}(N)$ of conventional \acp{RNN} during inference, in contrast to the quadratic complexity of Transformers \parencite{beck2024xlstmextendedlongshortterm, attentioniayn}. %for respective Time omplexity
+
+For our specific use case of predicting short 10-step samples, the expanded memory capacity offers limited benefits while introducing computational overhead. Furthermore, the architecture requires additional hyperparameters, such as the choice between \ac{s-LSTM} and \ac{m-LSTM} layers, as well as matrix dimensions. %number of heads.. aber die will ich hier nicht einführen
+This expands the search space for \ac{HPO} substantially. %, makes the tuning process computationally more expensive and harder to balance against simpler models. %Finally, as a recently proposed architecture, utilizing \ac{x-LSTM} would limit the comparability of our results with existing \ac{LSTM}-based maritime tracking approaches. 
+Nevertheless, because of its scaling capabilities, the \ac{x-LSTM} builds the basis of the TiRex foundation model. % (Section \ref{subsec:foundation}).
 
 
 \paragraph{Attention and Transformers.}
@@ -74,7 +70,7 @@ This compression creates an information bottleneck, causing the network to forge
 To resolve this forgetting problem, \textcite{bahdanau2016neuralmachinetranslationjointly} introduced the attention mechanism.
 Instead of relying on the final hidden state, attention allows the decoder to access all intermediate hidden states of the encoder.
 At each decoding step, the mechanism calculates an alignment score, which enables the model to assign higher weights to the timestamps most relevant to the current prediction.
-Building upon this, \textcite{attentioniayn} proposed the Transformer architecture, which completely discards recurrent layers (such as \ac{RNN} or \ac{LSTM}) in favor of Self-Attention. 
+Building upon this, \textcite{attentioniayn} proposed the Transformer architecture, which completely discards recurrent layers (such as \ac{RNN} or \ac{LSTM}) in favour of Self-Attention. 
 Self-Attention computes the relational importance of all data points within a sequence simultaneously. This enables the models to capture global dependencies.
 %noch bischen umformulieren. filler weg un abschwächen evtl
 However, applying Transformers to %short physical 
@@ -86,19 +82,19 @@ Nonetheless, their capacity to parallelise efficiently has popularised Transform
 
 \paragraph{Foundation Models.}
 \label{subsec:foundation}
-Because Transformers parallelise so effectively, they enabled the creation of foundation models. These are massive neural networks pretrained on vast, diverse datasets, across multiple domains such as weather, finance, and sensor data, to learn universal sequence patterns before being applied to a specific task. After being trained on very general data, they can be fine-tuned or adapted to specific tasks with relatively small amounts of task-specific data \parencite{Liang_2024foundation}.
+Because Transformers parallelise so effectively, they enabled the creation of foundation models. These are massive neural networks pretrained on vast, diverse datasets, across multiple domains such as weather, finance, and sensor data, to learn universal sequence patterns before being applied to a specific task. Once trained on very general data, they can be fine-tuned or adapted to specific tasks with relatively small amounts of task-specific data \parencite{Liang_2024foundation}.
 
-A prominent example of foundation models in time series forecasting is \textbf{Chronos} \parencite{ansari2024chronoslearninglanguagetime}, which tokenises time series values and processes them using a pure encoder architecture, or the more recent adaption \textbf{Chronos-2} \parencite{ansari2025chronos2}, which uses group attention to maintain weights across channels and enable multivariate or covariate informed forecasting. For our vessel trajectory prediction, foundation models offer two  application paradigms, of which we only employ the former due to a lack of pre-trained models:
+A prominent example of foundation models in time series forecasting is \textbf{Chronos} \parencite{ansari2024chronoslearninglanguagetime}, which tokenises time series values and processes them using a pure encoder architecture, or the more recent adaptation \textbf{Chronos-2} \parencite{ansari2025chronos2}, which uses group attention to maintain weights across channels and enable multivariate or covariate informed forecasting. For our vessel trajectory prediction, foundation models offer two  application paradigms, of which we only employ the former due to a lack of pre-trained models:
 \begin{itemize}
     \item \textbf{Zero-Shot Forecasting:} The pretrained model generates predictions for \ac{AIS} trajectories without ever having been trained on maritime data. Chronos in particular was developed to  have comparable and occasionally superior zero-shot performance on new datasets, relative to methods that were trained specifically on them \parencite{ansari2024chronoslearninglanguagetime}.
-    \item \textbf{Fine-Tuning (Warm Starting):} The model is can be trained on our specific domain data. By initialising the training process with pretrained weights (a \enquote{warm start}) rather than random initialisation, the model requires significantly less domain data and computational time to adapt to the specific kinematics of inland vessels. %\me{we dont do that. still include the possibility?}
+    \item \textbf{Fine-Tuning (Warm Starting):} The model can be trained on our specific domain data. By initialising the training process with pretrained weights (a \enquote{warm start}) rather than random initialisation, the model requires significantly less domain data and computational time to adapt to the specific kinematics of inland vessels. %\me{we dont do that. still include the possibility?}
 \end{itemize}% \me{only did zero shot, shorten?}
 
 %While Transformer based foundation models represent the current state-of-the-art in generalized forecasting, they come with computational overhead. %wieso habe ich das geschreiben, das ist ja nur inferenz
 
 The \ac{x-LSTM} architecture \parencite{beck2024xlstmextendedlongshortterm} addresses the lack of sequential bias of the Transformer while maintaining extreme scalability. %O(N) in lstm anzahl layer vs O(n^2) für Transformer as mentioned before
 Consequently, \acp{x-LSTM} provide the theoretical basis for \ac{RNN}-based foundation models. 
-The \textbf{TiRex} foundation model, which leverages the \ac{x-LSTM}, was presented by \textcite{auer2025tirexzeroshotforecastinglongtrex} and showed promising results in benchmarks against Chronos. However, the authors have noted the model does not perform well with multivariate times eries data. As a consequence, applicability to \ac{AIS} trajectories is limited, because the univariate model treats individual features as independent channels. Separating channels prevents the model from capturing cross-correlations. Since vessel dynamics are governed by physical constraints where \ac{SOG} and \ac{COG} directly impact the trajectory, this approach may result in kinematically inconsistent predictions. %wieder etwas umformuliert wegen zeilenumbruch "separating channels"..
+The \textbf{TiRex} foundation model, which leverages the \ac{x-LSTM}, was presented by \textcite{auer2025tirexzeroshotforecastinglongtrex} and showed promising results in benchmarks against Chronos. However, the authors have noted the model does not perform well with multivariate time series data. As a consequence, applicability to \ac{AIS} trajectories is limited, because the univariate model treats individual features as independent channels. Separating channels prevents the model from capturing cross-correlations. Since vessel dynamics are governed by physical constraints where \ac{SOG} and \ac{COG} directly impact the trajectory, this approach may result in kinematically inconsistent predictions. %wieder etwas umformuliert wegen zeilenumbruch "separating channels"..
 
 We benchmarked our self-trained \ac{LSTM} model against Chronos-2 and TiRex to both investigate whether generalised, pretrained knowledge outweighs physically grounded, domain-specific recurrence, and to test the zero shot performance of the \ac{x-LSTM} based foundation model vs the Transformer based model.
     
@@ -111,7 +107,7 @@ We benchmarked our self-trained \ac{LSTM} model against Chronos-2 and TiRex to b
 The development of machine learning applications traditionally relies on human intervention and domain expertise.
 \ac{AutoML} aims to reduce the manual effort and knowledge required by automating design choices.
 These choices include decisions regarding model architecture, evaluation, and optimisation \parencite{hutter2019automated}.
-The primary goal of \ac{AutoML} is to make machine learning accessible to non-experts, while also accelerating the development process for experienced ML-engineers by removing repetitive tasks \parencite{AutoMLHoos, hutter2019automated}.
+% The primary goal of \ac{AutoML} is to make machine learning accessible to non-experts, while also accelerating the development process for experienced ML-engineers by removing repetitive tasks \parencite{AutoMLHoos, hutter2019automated}.
 The automated configuration of a machine learning model is fundamentally defined by three core components.
 First, a search space must be established to set the boundaries of all permissible model configurations.
 Second, a search strategy is required to systematically navigate this multidimensional space and identify promising candidates.
@@ -149,7 +145,7 @@ Thus, we could not address the \ac{CASH} problem in this work.
 
 
 \paragraph{NAS Problem.} \me{can i delete this paragraph? only mentioned here to give a full picture of automl)}
-\acf{NAS} expands the search space even further by fully automating the design of the neural network architecture itself. Instead of selecting predefined algorithms, \ac{NAS} optimises the arrangement of operations, layer connectivity, and network depth \parencite{AutoMLHoos}. Due to the immense size of the resulting search space, \ac{NAS} requires unfeasable
+\acf{NAS} expands the search space even further by fully automating the design of the neural network architecture itself. Instead of selecting predefined algorithms, \ac{NAS} optimises the arrangement of operations, layer connectivity, and network depth \parencite{AutoMLHoos}. Due to the immense size of the resulting search space, \ac{NAS} requires infeasible
 computational resources and falls out of scope for this thesis. In practice, \ac{NAS} is typically only applied once the fundamental type of layer (e.g., \ac{LSTM} or Transformer) has already been established.
 
 
@@ -179,7 +175,7 @@ In this section, we describe the kinematic models we used, and how they were imp
     \label{sec:method-cv}
 
     Despite not being the state-of-the-art, the \acf{CV} model is still applied in vessel motion tracking  \parencite{8693856CV}. %. A vessel's position is predicted using the average velocity (\ac{SOG}) of the last $n$ known timestamps under the assumption, that the vessel does not change \ac{SOG} nor \ac{COG} within the prediction horizon. Thus, without feedback the model always generates a straight line.
-    The  model assumes, that a vessel maintains a constant displacement
+    The  model assumes that a vessel maintains a constant displacement
     per time step throughout the prediction horizon. Given the context sequence
     of projected positions $(x_1, y_1), \ldots, (x_{T_c}, y_{T_c})$, the model
     computes displacements and averages the last
@@ -298,37 +294,27 @@ In this section, we describe the kinematic models we used, and how they were imp
 Unlike purely kinematic models, which propagate a single deterministic state estimate, stochastic filters explicitly represent uncertainty by tracking both a state estimate and a measure of confidence in that estimate. Within this work, we investigated two stochastic filters:
 
     
-    \subsection{Kalman Filter with Constant Velocity}
-    \label{sec:method-cv-kf}
+ 
+\subsection{Kalman Filter with Constant Velocity}
+\label{sec:method-cv-kf}
 
-%%background
-        The Kalman Filter %, first introduced by \textcite{Kalman1960},
-        combines model information and measurements to derive optimal filtering %\me{be more precise, optimal in what? -> details below}
-        and to estimate the state of a dynamic system. 
-        %To be precise, it .. \me{insert MMSE and BLUE here?}.
-        Additionally, it contains information about the certainty of the estimation. %\cite{ValleryDoerschel2025RTSkript} describe it as 
-        It is %a highly efficient algorithm 
-        frequently used in trajectory tracking and autonomous navigation \parencite{kfapplications}. The core operation of the Kalman Filter, % as described in their lecture notes,
-        can be summarised as a recurring two-step algorithm of prediction and correction \parencite{Kalman1960}: 
-    \begin{itemize}
-        \item \textbf{Prediction}: The filter executes a pure forward simulation based on the system model and the previously estimated state. 
-        % to generate the \emph{a priory} state estimate for the upcoming time step. %This step provides the best possible prediction of the state for the upcoming time step.
-        %\item \textbf{Correction}: When a measurement becomes available, the algorithm determines the deviation between the actual measured signal and the predicted output. The filter then corrects the prediction based on this deviation. This correction step functions as a least-square problem. It uses weighting matrices to determine whether the filter should trust the model prediction or the sensor measurement more.
-        \item \textbf{Correction}: When a measurement becomes available, the measurement model is used to project the predicted state into a predicted measurement. 
-        The algorithm then determines the deviation between the actual measured signal and this predicted measurement.
-        This residual, known as the innovation, is then used to correct the predicted state.
-        This correction step functions as a least-squares problem, where a weighting matrix known as the Kalman Gain determines whether the filter should trust the model prediction or the sensor measurement more.
-    \end{itemize}
-    %The fundamental Kalman Filter assumes a linear system and linear measurement equations, and it is the optimal estimator for linear systems with gaussian noise.
-    The Kalman Filter yields optimal state estimates under the assumption of linear system dynamics and Gaussian noise.
-    %methodik
-    %\me{wenn kein platz, diagonalmatrizen nicht explizit nennen, sondern inline}
-    %As described in Section~\ref{subsec:kalmanfilterbackground}, the standard Kalman Filter
-    %operates through continuous predict-update cycles. 
-    For comparative purposes,
-    we isolated the prediction phase in our implementation: during the context window, the filter runs normally
-    with regular measurement corrections to stabilise its state estimate. Once the context
-    is consumed, the filter performs predictions without corrections.
+The \acf{KF} %, first introduced by \textcite{Kalman1960},
+combines model information and measurements to derive optimal filtering %\me{be more precise, optimal in what? -> details below}
+and to estimate the state of a dynamic system. 
+Additionally, it contains information about the certainty of the estimation. 
+It is %a highly efficient algorithm 
+frequently used in trajectory tracking and autonomous navigation \parencite{kfapplications}. The core operation of the \ac{KF}, % as described in their lecture notes,
+can be summarised as a recurring two-step algorithm of prediction and correction \parencite{Kalman1960}. 
+During prediction, the filter executes a pure forward simulation based on the system model and the previously estimated state. 
+% to generate the \emph{a priory} state estimate for the upcoming time step. %This step provides the best possible prediction of the state for the upcoming time step.
+%\item \textbf{Correction}: When a measurement becomes available, the algorithm determines the deviation between the actual measured signal and the predicted output. The filter then corrects the prediction based on this deviation. This correction step functions as a least-square problem. It uses weighting matrices to determine whether the filter should trust the model prediction or the sensor measurement more.
+During correction, when a measurement becomes available, the measurement model is used to project the predicted state into a predicted measurement. 
+The algorithm then determines the deviation between the actual measured signal and this predicted measurement.
+This residual, known as the innovation, is then used to correct the predicted state.
+This correction step functions as a least-squares problem, where a weighting matrix known as the Kalman Gain determines whether the filter should trust the model prediction or the sensor measurement more.
+The \ac{KF} yields optimal state estimates under the assumption of linear system dynamics and Gaussian noise.
+For comparative purposes, we isolated the prediction phase in our implementation: during the context window, the filter runs normally with regular measurement corrections to stabilise its state estimate. Once the context is consumed, the filter performs predictions without corrections.
+
     
     \paragraph{State and Motion Model.}
     In this implementation we used the \ac{CV} model as an underlying model. The filter uses a four-dimensional state vector
@@ -345,8 +331,6 @@ Unlike purely kinematic models, which propagate a single deterministic state est
     extracts only the positional
     components of the state, expressed as Equation~\ref{eq:observation_matrix}. 
     \end{comment}
-    \wsx{it is wrong to have : here. should be end of sentence}
-    \wsx{it is wrong to give them multiple numbers if they are joined by ,}
 The constant velocity assumption is encoded in the state transition matrix $\mathbf{A}$, derived from the kinematic equations $x_{k+1} = x_k + \dot{x}_k \cdot \Delta t$ and $\dot{x}_{k+1} = \dot{x}_k$ (and analogously for $y$). The observation matrix $\mathbf{C}$ extracts only the positional components of the state. Both matrices are formulated together in Equation~\ref{eq:state_and_observation_matrices}.
     
     \begin{comment}
@@ -381,6 +365,7 @@ The constant velocity assumption is encoded in the state transition matrix $\mat
     
 
     \paragraph{Noise and Uncertainty Matrices.}
+    \begin{comment} % prettier version but no space
 The three diagonal covariance matrices were treated
 as hyperparameters. % and automatically optimised on the validation set alongside all
 %other model parameters (see Section \ref{sec:hpo}). 
@@ -394,22 +379,18 @@ Using $\operatorname{diag}(\cdot)$ to denote a diagonal matrix, they can be defi
     \end{aligned}
     \label{eq:cov_matrices}
 \end{equation}
+\end{comment}
+The diagonal covariance matrices were treated as hyperparameters. Using $\operatorname{diag}(\cdot)$ to denote a diagonal matrix, they are defined as $\mathbf{Q} = \operatorname{diag}(q_\text{pos}, q_\text{pos}, q_\text{vel}, q_\text{vel})$, $\mathbf{R} = \operatorname{diag}(r_\text{pos}, r_\text{pos})$, and $\mathbf{P}^+_0 = \operatorname{diag}(p_{0,\text{pos}}, p_{0,\text{pos}}, p_{0,\text{vel}}, p_{0,\text{vel}})$.
         
     $\mathbf{Q}$ captures deviations from the ideal assumptions made by the \ac{CV} model.
     The diagonal structure implies that positional and velocity noise are not correlated.
-    It should be noted that, since velocities are not directly measured but derived from
-    positional differences, 
-    a physical coupling between position and velocity errors exists that this formulation
-    does not fully capture. $\mathbf{R}$ reflects the positional uncertainty of \ac{AIS}
+    Its diagonal structure assumes uncorrelated positional and velocity noise, neglecting the physical coupling that exists because velocities are derived from positional differences.
+    $\mathbf{R}$ reflects the positional uncertainty of \ac{AIS}
     reports, and $\mathbf{P}^+_0$ encodes the uncertainty of the filter prior to any
     observations. Together, $\mathbf{Q}$ and $\mathbf{R}$ control how strongly the filter
     weighs recent measurements against the motion model during the context phase,
     and thus determine the quality of the velocity estimate that seeds the
     prediction rollout.
-    
-    %For vessels undergoing active maneuvers, the constant velocity assumption in
-    %$\mathbf{A}$ breaks down. Section~\ref{sec:method-ctrv-ekf} addresses this by
-    %extending the filter to the CTRV motion model.
 
 
     \subsection{Extended Kalman Filter with Constant Turn Rate and Velocity}
@@ -434,7 +415,12 @@ Using $\operatorname{diag}(\cdot)$ to denote a diagonal matrix, they can be defi
     \paragraph{State and Motion Model.}
     For the \ac{EKF}, we define the state vector as $\hat{\mathbf{x}}_k = (x_k, y_k, \dot{x}_k, \dot{y}_k, \omega_k)^\top$. 
 Denoting $\Delta\psi = \omega_k \Delta t$, the transition function $f$ is formulated using the same arc integration as in the \ac{CTRV} model %\parencite[Eq.~62, p.~1346]{li2003survey}, 
-with $\Delta\psi$ now depending on the current state rather than a fixed value, as defined by Equation~\ref{eq:ctrv-ekf-f}, with the linear \acs{CV} model substituted whenever $|\omega_k| < \varepsilon$.
+with $\Delta\psi$ now depending on the current state rather than a fixed value, %, as defined by Equation~\ref{eq:ctrv-ekf-f}, 
+with the linear \acs{CV} model substituted whenever $|\omega_k| < \varepsilon$.
+    Because $\omega_k$ appears inside trigonometric functions, $f$ is nonlinear
+    in the state, and an \ac{EKF} becomes necessary rather than the standard
+    \ac{KF}. %\\    
+    The observation matrix $\mathbf{C}$ extracts only the position. Both the transition function $f$ and the observation matrix $\mathbf{C}$ are formulated together in Equation \ref{eq:ctrv-ekf-f_and_c}.
 
 \begin{equation}
     f(\hat{\mathbf{x}}_k) =
@@ -444,20 +430,14 @@ with $\Delta\psi$ now depending on the current state rather than a fixed value, 
         \dot{x}_k \cos\Delta\psi - \dot{y}_k \sin\Delta\psi \\
         \dot{x}_k \sin\Delta\psi + \dot{y}_k \cos\Delta\psi \\
         \omega_k
-    \end{pmatrix}.
-    \label{eq:ctrv-ekf-f}
+    \end{pmatrix},
+    \qquad
+    \mathbf{C} = \begin{pmatrix} 1 & 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 & 0 \end{pmatrix}.
+    \label{eq:ctrv-ekf-f_and_c}
 \end{equation}
-
-    \wsx{remove the number if it is not referred to in text}
    
-    Because $\omega_k$ appears inside trigonometric functions, $f$ is nonlinear
-    in the state, and an \ac{EKF} becomes necessary rather than the standard
-    \ac{KF}. %\\    
-    The observation matrix $\mathbf{C}$ extracts only the position, as depicted in ~\ref{eq:obsmatrix2}.
-    \begin{equation}
-        \mathbf{C} = \begin{pmatrix} 1 & 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 & 0 \end{pmatrix}
-        \label{eq:obsmatrix2}
-    \end{equation}
+
+
     Although \ac{ROT} is available as an \ac{AIS} field in principle, it is
     missing for a large proportion of messages in the dataset. It was therefore
     recomputed during preprocessing based on \ac{COG}
@@ -488,9 +468,7 @@ with $\Delta\psi$ now depending on the current state rather than a fixed value, 
     \label{eq:ctrv-ekf-jacobian-full}
     \end{equation}
 
-    \wsx{do you refer to this anywhere in text?}
-    
-
+  
 
     
     $\dot{x}_{k+1}$ and $\dot{y}_{k+1}$ denote the already rotated
@@ -499,25 +477,10 @@ with $\Delta\psi$ now depending on the current state rather than a fixed value, 
     $\mathbf{P}^-_{k+1} = \mathbf{A}_k \mathbf{P}^+_k \mathbf{A}_k^\top + \mathbf{Q}$,
     while the state is predicted directly with the nonlinear function $f$.
     
+
 \paragraph{Noise, Uncertainty, and Context Window.}
-The covariance matrices extend those of the \ac{KF} with the \ac{CV} by one dimension, resulting in Equation~\ref{eq:covariance_matrices_extended}:
-\begin{equation}
-    \begin{aligned}
-        \mathbf{Q}     &= \operatorname{diag}(q_\text{pos},\, q_\text{pos},\, q_\text{vel},\, q_\text{vel},\, q_\text{rot}), \\
-        \mathbf{R}     &= \operatorname{diag}(r_\text{pos},\, r_\text{pos}), \\
-        \mathbf{P}^+_0 &= \operatorname{diag}(p_{0,\text{pos}},\, p_{0,\text{pos}},\, p_{0,\text{vel}},\, p_{0,\text{vel}},\, p_{0,\text{rot}}).
-    \end{aligned}
-    \label{eq:covariance_matrices_extended}
-\end{equation}  
-    The turn rate is initialised to $\omega_0 = 0$. The context phase is restricted to the most
-    recent $n_\text{ctx}$ observations, making the state estimate more responsive
-    to recent manoeuvres. All eight parameters $q_\text{pos}$, $q_\text{vel}$,
-    $q_\text{rot}$, $r_\text{pos}$, $p_{0,\text{pos}}$, $p_{0,\text{vel}}$,
-    $p_{0,\text{rot}}$, and $n_\text{ctx}$ are treated as hyperparameters.
-    %and automatically optimised on the validation set
-    %(Section~\ref{sec:hpo}).
-
-
+The covariance matrices extend those of the \ac{KF} with the \ac{CV} by one dimension, resulting in $\mathbf{Q} = \operatorname{diag}(q_\text{pos}, q_\text{pos}, q_\text{vel}, q_\text{vel}, q_\text{rot})$, $\mathbf{R} = \operatorname{diag}(r_\text{pos}, r_\text{pos})$, and $\mathbf{P}^+_0 = \operatorname{diag}(p_{0,\text{pos}}, p_{0,\text{pos}}, p_{0,\text{vel}}, p_{0,\text{vel}}, p_{0,\text{rot}})$. 
+The turn rate is initialised to $\omega_0 = 0$. The context phase is restricted to the most recent $n_\text{ctx}$ observations, making the state estimate more responsive to recent manoeuvres. All eight parameters $q_\text{pos}$, $q_\text{vel}$, $q_\text{rot}$, $r_\text{pos}$, $p_{0,\text{pos}}$, $p_{0,\text{vel}}$, $p_{0,\text{rot}}$, and $n_\text{ctx}$ are treated as hyperparameters.
 
 
     

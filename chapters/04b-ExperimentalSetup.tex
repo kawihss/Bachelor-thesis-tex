@@ -50,7 +50,7 @@ In the following, we detail the experimental setup used to evaluate the performa
             
         % old title \paragraph{Experiment 0 Mixed Training and Evaluation:} %\me{der title beschreibt was gemacht wird, besser einen titel finden der beschreibt was untersucht wird, also welche frage.}
         \item{\textbf{Exp \Romannum{1}: Baseline Comparison of Motion Models:}} % mixed is implied for Baseline
-        Models were trained and evaluated on the full dataset. This Experiment served as the overall comparison across models and model families and aims to answer RQ1.
+        Models were trained and evaluated on the full dataset. This experiment served as the overall comparison across models and model families and aims to answer RQ1.
 
 
 
@@ -125,7 +125,7 @@ A fixed random seed was used across all models and experiments to support reprod
     \label{subsec:automlhpo}
     Stochastic filters and deep learning architectures depend on hyperparameter configurations that cannot be easily derived from training data and are impractical to tune manually at scale.
     Manual tuning risks a biased evaluation, where a model might underperform simply due to a suboptimal configuration rather than an inherent lack of predictive capability.
-    To guarantee a fair comparison, each model was optimised independently using \ac{AutoML} in the form of \acf{HPO}. The scope was deliberately restricted to \acs{HPO} rather than the full \ac{CASH} formulation, since domain-specific meta-learning data for a warm start was unavailable. The set of candidate model classes (kinematic models, \acp{KF}, \acp{LSTM}, and foundation models) was chosen manually, while their respective hyperparameters were explored by automatically.
+    To guarantee a fair comparison, each model was optimised independently using \ac{AutoML} in the form of \acf{HPO}. The scope was deliberately restricted to \acs{HPO} rather than the full \ac{CASH} formulation, since domain-specific meta-learning data for a warm start was unavailable. The set of candidate model classes (kinematic models, \acp{KF}, \ac{LSTM} networks, and foundation models) was chosen manually, while their respective hyperparameters were explored automatically.
     
        % \paragraph{Optimisation Methodology.}
 
@@ -147,7 +147,7 @@ A fixed random seed was used across all models and experiments to support reprod
         surviving trial, an independent early-stopping criterion halted training if
         the validation \ac{RMSE} did not improve by more than
         \texttt{min\_delta} within a fixed patience window.
-        To illsutrate these two mechanisms, Figure \ref{fig:succhalfing}. depicts the intermediate validation errors during the \ac{HPO} process of \ac{LSTM} training. It demonstrates how underperforming trials are terminated early at these specific epoch checkpoints and how epochs with little improvement over time are additionally pruned  \me{new, i moved this here from the results. it is more of an illustration than a result}.        
+        To illustrate these two mechanisms, Figure \ref{fig:succhalfing} depicts the intermediate validation errors during the \ac{HPO} process of \ac{LSTM} training. It demonstrates how underperforming trials are terminated early at these specific epoch checkpoints and how epochs with little improvement over time are additionally pruned  \me{new, i moved this here from the results. it is more of an illustration than a result}.        
         \begin{figure}[h]
             \centering
             \includegraphics[width=0.9\linewidth,trim=1cm 3.5cm 5.5cm 3.5cm,clip]{figures/minimal_lstm_intermediate_values.html.pdf}
@@ -206,19 +206,11 @@ A fixed random seed was used across all models and experiments to support reprod
     \\[1ex]
     \small \textit{Note:} $\mathcal{A} = \{\{\sin(\mathrm{cog})_{\mathrm{norm}}, \cos(\mathrm{cog})_{\mathrm{norm}}\}, \mathrm{sog}_{\mathrm{norm}}, \mathrm{rot}_{\mathrm{norm}}, \mathrm{d}t_{\mathrm{norm}}\}$
     
-    \caption[LSTM Hyperparameter Search Space]{Hyperparameter search space used for the \ac{LSTM} model optimization. Continuous parameters are sampled from uniform or log-uniform distributions, categorical parameters are selected from predefined sets. For the \texttt{feature\_set}, the search space consists of all feature combinations formed by the base input $\{\mathrm{d}x_{\mathrm{norm}}, \mathrm{d}y_{\mathrm{norm}}\}$ united with any subset $S$ drawn from the power set $\mathcal{P}(\mathcal{A})$. The $\sin$ and $\cos$ components of \acf{COG} ($\sin(\mathrm{cog})_{\mathrm{norm}}$ and $\cos(\mathrm{cog})_{\mathrm{norm}}$) are treated as an indivisible pair within $\mathcal{A}$.}
+    \caption[LSTM Hyperparameter Search Space]{Hyperparameter search space used for the \ac{LSTM} model optimisation. Continuous parameters are sampled from uniform or log-uniform distributions, categorical parameters are selected from predefined sets. For the \texttt{feature\_set}, the search space consists of all feature combinations formed by the base input $\{\mathrm{d}x_{\mathrm{norm}}, \mathrm{d}y_{\mathrm{norm}}\}$ united with any subset $S$ drawn from the power set $\mathcal{P}(\mathcal{A})$. The $\sin$ and $\cos$ components of \acf{COG} ($\sin(\mathrm{cog})_{\mathrm{norm}}$ and $\cos(\mathrm{cog})_{\mathrm{norm}}$) are treated as an indivisible pair within $\mathcal{A}$.}
     \label{tab:lstm-hpo}
 \end{table}
                           
 
-\begin{comment} vlt so?  https://gemini.google.com/app/d39ceb4ec651a3ad
-    \texttt{feature\_set}   & Categorical & $\{\{\texttt{dx\_norm},\, \texttt{dy\_norm}\} \cup S \mid S \in \mathcal{P}(\mathcal{A})\}$ \\
-    \bottomrule
-    \\[1ex]
-    \small \textit{Note:} $\mathcal{A} = \{\{\texttt{cog\_sin\_norm}, \texttt{cog\_cos\_norm}\}, \texttt{sog\_norm}, \texttt{rot\_norm}, \texttt{dt\_norm}\}$
-    \caption[LSTM Hyperparameter Search Space]{Hyperparameter search space used for the \ac{LSTM} model optimization. Continuous parameters are sampled from uniform or log-uniform distributions, categorical parameters are selected from predefined sets. For the \texttt{feature\_set}, the search space consists of all combinations formed by the base input $\{\texttt{dx\_norm}, \texttt{dy\_norm}\}$ combined with any subset $S$ drawn from the power set $\mathcal{P}(\mathcal{A})$, where the sine and cosine of \acf{COG} are treated as an indivisible pair.}
-    \label{tab:lstm-hpo}
-\end{comment}
 
 
 \section{Implementation Details}
@@ -234,7 +226,7 @@ A fixed random seed was used across all models and experiments to support reprod
         Our implementation is characterised by:
         \begin{enumerate}
             \item Univariate channels: To predict $dx, dy$, we fed the model with the normalised $dx\_norm$ and $dy\_norm$ channels, which the model treats independently.
-            \item Zero-Shot Evaluation: We used the model as is. Because no attention mechanisms is implemented, we optimised only the input length. Due to the univariate character, feature selection was not a factor in our optimisation.
+            \item Zero-Shot Evaluation: We used the model as is. Because no attention mechanism is implemented, we optimised only the input length. Due to the univariate character, feature selection was not a factor in our optimisation.
             %\item Probabilistic Modelling: TiRex generates quantile forecasts for the prediction horizon. %In this implementation, we use the quantiles 0.1 and 0.9.  to evaluate uncertainty via interval width, coverage,  and Winkler score. % \me{nur auf nachfrage näher drauf eingehen, denke das kennt man} \
             %\me{move evaluation} \todo!
         \end{enumerate}
@@ -244,13 +236,13 @@ A fixed random seed was used across all models and experiments to support reprod
         \paragraph{Chronos-2.}
          
         % https://proceedings.mlr.press/v162/ozturk22a/ozturk22a.pdf ) for weights no HPO
-        In addition to the univariate TiRex, we implemented Chronos-2 \parencite{ansari2025chronos2} as a zero shot transformer for time series forecasting. Unlike the \ac{LSTM} based model, it lacks the inductive bias for time series. Instead, it supports co-variate informed forecasting.  %\\%unrelated
+        In addition to the univariate TiRex, we implemented Chronos-2 \parencite{ansari2025chronos2} as a zero-shot transformer for time series forecasting. Unlike the \ac{LSTM} based model, it lacks the inductive bias for time series. Instead, it supports co-variate informed forecasting.  %\\%unrelated
         The model was designed to estimate a probability distribution over future trajectories rather than computing a deterministic path. Our implementation is characterised by:
     
         \begin{enumerate}
             \item Multivariate Covariates: To predict $dx, dy$, we fed the model with all available normalised features: $sog\_norm$, $cog\_sin\_norm$, $cog\_cos\_norm$, $dt\_norm$, $rot\_norm$  as covariates, in addition to the $dx\_norm$, $dy\_norm$ channels.
             \item Zero-Shot Evaluation: We used the Model as is, without doing any \ac{HPO} or finetuning. To avoid overhead, we deliberately did not add the feature selection to our \ac{HPO}, since we can assume, that the cross-channel attention of Chronos-2 already gives low weights to irrelevant features. %\me{siehe comments}%\ref{fig:platzhalter_test_channel_importance_chronos2_zero_shot.png} assumption bestätigen in auswertung \cite{someone to undermine this is good methodology}. 
-            For a similar reason, the context length was set to the maximum 10 steps available after preprocessing, as the self attention implemented in the transformer can recognise irrelevant timestamps. %\ref{figplatzhalter_ gleichemitzeit}
+            For a similar reason, the context length was set to the maximum 10 steps available after preprocessing, as the self-attention implemented in the transformer can recognise irrelevant timestamps. %\ref{figplatzhalter_ gleichemitzeit}
             %\item Probabilistic Modelling: Chronos-2 generates quantile forecasts for the prediction horizon. In this implementation, we use the quantiles 0.1, 0.5, and 0.9. The median $q_{0.5}$ is used as the point forecast. The remaining quantiles are used to evaluate uncertainty via interval width, coverage, % CRPS approximation, and Winkler score. % \me{nur auf nachfrage näher drauf eingehen, denke das kennt man}
         \end{enumerate}
     
@@ -316,8 +308,8 @@ A fixed random seed was used across all models and experiments to support reprod
 
         \paragraph{Domain Encoding.}
         In the \textit{\ac{LSTM} + domain} variant, the domain is represented as a 4-dimensional one-hot encoded vector, with one dimension per class. Instead of appending the domain vector as an input feature at every timestep, it is added to the initial hidden and cell states of both LSTM layers.
-        Specifically, the last 4 nodes of the initial hidden state $h_0$ and cell state $c_0$ are set to the one-hot vector. The remaining nodes are initialised to zero, as is default on the baseline model. This keeps the total hidden size identical between models and ensures a fair comparison.  %\\
-        Encoding the domain only in the initial states is acceptable here, since we focus on short term predictions and only need to retain the contextual information over 10 timesteps. %\\
+        Specifically, the last 4 nodes of the initial hidden state $h_0$ and cell state $c_0$ are set to the one-hot vector. The remaining nodes are initialised to zero, as is the default on the baseline model. This keeps the total hidden size identical between models and ensures a fair comparison.  %\\
+        Encoding the domain only in the initial states is acceptable here, since we focus on short term predictions and only need to retain the contextual information for 10 timesteps. %\\
         We considered adding additional groupings for domains with similar expected behaviours or constraints, but decided against this in order to avoid introducing potentially incorrect assumptions about the domain structure.
        
         A learned embedding layer was considered as an alternative. However, for only four domain classes, one-hot encoding is preferable as it is parameter-free, exact, and directly interpretable.

@@ -69,7 +69,7 @@ Maritime transport on inland waterways forms a %critical
 backbone of European logistics and a key application domain for autonomous and cooperative surface vessels, 
 where reliable short-term motion prediction of surrounding traffic is essential for % multi-target tracking and 
 safe navigation. 
-While \ac{AIS} data is widely used to train these prediction models, existing data-based approaches often treat \ac{AIS} trajectories as generic time series without utilising geographic domain knowledge, and they lack comprehensive comparisons against kinematic and filter based baselines. 
+While \ac{AIS} data is widely used to train these prediction models, existing data-based approaches often treat \ac{AIS} trajectories as generic time series without utilising geographic domain knowledge, and they lack comprehensive comparisons against kinematic and filter-based baselines. 
 These gaps prevent practitioners from reliably choosing between motion model families.  
 Furthermore, any potential accuracy gains from encoding simple waterway‑type information in data‑driven motion models remain unexplored.
 In this thesis, we address these limitations through a comprehensive study of trajectory prediction for inland vessels based on \ac{AIS} data. 
@@ -83,12 +83,12 @@ Second, we implement an
 \acs{AutoML}-based \wsx{here use AutoML only (short form) because of -based} hyperparameter optimisation setup 
 to systematically tune models across different model families. Third, we conduct a comprehensive evaluation that compares kinematic models, stochastic filters, and deep sequence models under a unified framework. 
 The experiments demonstrate that learned sequence models clearly outperform kinematic and filter-based models. 
-Specifically \ac{LSTM}-based models achieve the lowest errors. 
-They demonstrated an approximate 28\% improvement compared with the \ac{CV} baseline, achieving a lower \ac{RMSE} loss by 44.37 m. % (from an original 155.73 m with the \ac{CV} model on the test dataset)%  of 111.36 m on the test dataset. %,  (155.73 m). 
+Specifically, \ac{LSTM}-based models achieve the lowest errors. 
+They demonstrated an approximate 28\% improvement compared with the \ac{CV} baseline, achieving a lower \ac{RMSE} by 44.37 m. % (from an original 155.73 m with the \ac{CV} model on the test dataset)%  of 111.36 m on the test dataset. %,  (155.73 m). 
 Additionally, we found that foundation models reach similar accuracy to kinematic models % kinematic-level
 without any task-specific training%
 %(e.g., TiRex achieving 155.71 m \ac{RMSE}, nearly identical to that of the \ac{CV} model \wsx{No 's with inanimate} 155.73 m)
-, making them attractive as low-effort baselines, though their probabilistic calibration qualities vary. 
+, making them attractive as low-effort baselines, though their probabilistic calibration quality varies. 
 Moreover, training the \ac{LSTM} with domain-specific splits and incorporating simple one-hot encodings of waterway domains yielded the best overall predictive performance. 
 These results suggest that, for applications prioritising predictive accuracy, future inland multi-target tracking systems should adopt domain-aware deep sequence models as motion models.
 

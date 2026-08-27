@@ -38,7 +38,7 @@ However, transitioning from physically grounded kinematic models to deep learnin
 introduces a methodological challenge: the dependence of model performance on a high-dimensional design space.
 %As shown 
 Achieving high performance in machine learning requires navigating complex design choices, including model architecture and hyperparameter configurations \parencite{AutoMLHoos}. 
-To ensure a fair comparison between different model types and architectures, all models must be evaluated at their full potential. To address this, we explore  \ac{AutoML} to systematically manage \ac{HPO}, and ensure that any observed performance differences reflect the models' inherent ability rather than arbitrary parameter choices.
+To ensure a fair comparison between different model types and architectures, all models must be evaluated at their full potential. To address this, we explore \ac{AutoML} to systematically manage \ac{HPO}, and ensure that any observed performance differences reflect the models' inherent ability rather than arbitrary parameter choices.
 
 
 %Trajectory prediction for inland vessels based on \ac{AIS} data provides the motion-model component of the prediction step within \ac{MTT} for autonomous traffic systems on inland waterways. 
@@ -46,7 +46,7 @@ The necessity for such a rigorous evaluation framework stems directly from the c
 Classical kinematic models such as \acf{CV} and \acf{CTRV}, often implemented in stochastic filtering frameworks, offer simple and efficient baselines.
 However, their simplified dynamics make it difficult to represent the nonlinear manoeuvres that often occur in populated inland waterways. %Recent work has shown that deep learning models trained on \ac{AIS} trajectories can capture more complex motion patterns, but these approaches are typically studied in isolation and only partially address the specific requirements of inland vessel motion modelling.
 %\cite{donandt2022shortterm}
-Recent work has shown that deep learning models trained on \ac{AIS} trajectories can capture complex motion patterns more accurately, than simple kinematic baselines \parencite{donandt2022shortterm, Zhang22}. % Figure 5 and p.1799 
+Recent work has shown that deep learning models trained on \ac{AIS} trajectories can capture complex motion patterns more accurately than simple kinematic baselines \parencite{donandt2022shortterm, Zhang22}. % Figure 5 and p.1799 
 %However, these approaches are usually evaluated within their own experimental setups. \me{weak}
 Despite these advances, 
 only a few studies focus specifically on inland waterways, so coverage of inland vessel motion modelling remains limited. Several studies explicitly mention \acf{HPO} as open work and do not evaluate each architecture at its full potential. %There are only few comparisons \me{i found none and it was never applied for tirex specifically for example} in which all of these model types are trained on the same preprocessed dataset and tuned using a common optimisation methodology, which makes it difficult to draw controlled conclusions about their relative performance on inland \ac{AIS} data. In addition, most model evaluations rely on small datasets using a selected subset of vessels, which limits insights into how different motion models behave when applied at scale.

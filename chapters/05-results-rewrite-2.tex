@@ -7,7 +7,7 @@
 In this chapter, we present the findings from the experimental evaluation, and address the core research questions systematically.
 The overall goal of these experiments was to provide a fair comparison of deep learning models, kinematic models, and stochastic filters, as well as to investigate the impact of incorporating geographic domain information into model training and architecture.
 To evaluate the three research questions outlined in Section \ref{sec:rqand}, we conducted a total of three experiments: a baseline comparison of all motion models on the full dataset (Exp I), an assessment of the effect of domain-specific training on predictive performance (Exp II), and an ablation study of explicit domain encoding for LSTMs (Exp III).
-The remainder of this chapter is structured around the  questions, for each of which we present the quantitative results first, along with the answers to our research questions. A Section with a more detailed discussion of results follows.
+The remainder of this chapter is structured around the  questions, for each of which we present the quantitative results first, along with the answers to our research questions. A more detailed discussion of the results follows.
 
 The preprocessed dataset is provided at Hugging Face\footnote{\url{https://huggingface.co/datasets/kawihss/ais-inland-vessel-trajectories}}. 
 The dataset can be regenerated with the pipeline provided at RWTH GitLab\footnote{\url{https://git-ce.rwth-aachen.de/g-nav-mob-irt/projects/galileonautic2plus/multi-object-tracking/motion-models/-/tree/handedIn}} or the public GitHub mirror\footnote{\url{https://github.com/kawihss/Data-based-vessel-motion-modelling-Thesis/tree/handedIn}}. 
@@ -233,15 +233,15 @@ TiRex                 &   6.41 & 0.059 & 112.20 \\
     \centering
     \includegraphics[width=0.98\linewidth]{test_violin_cv_ekf_tirex_lstm_per_year.png}
     %\caption{Violin Plots for CV, EKF, TiRex and LSTM}
-    \caption[Exp. I RMSE Violin Plots]{Violin plots visualizing the distribution of \acf{RMSE} for the \acf{CV}, \acf{EKF}, TiRex, and \acf{LSTM} models on the test set. The \ac{LSTM} model demonstrates a distinct shift toward lower error values compared to the other models , whereas the \acf{CV} and TiRex models exhibit nearly identical error distributions.}
+    \caption[Exp. I RMSE Violin Plots]{Violin plots visualising the distribution of \acf{RMSE} for the \acf{CV}, \acf{EKF}, TiRex, and \acf{LSTM} models on the test set. The \ac{LSTM} model demonstrates a distinct shift toward lower error values compared to the other models, whereas the \acf{CV} and TiRex models exhibit nearly identical error distributions.}
     \label{fig:violince}
 \end{figure}
 
-Finally, the hyperparameter optimisation process for the \ac{LSTM} is visualised in Figure %~\ref{fig:succhalfing} and
+Finally, the hyperparameter optimisation process for the \ac{LSTM} is visualised in % Figure ~\ref{fig:succhalfing} and
 Figure~\ref{fig:paralelcord}. 
 % Figure~\ref{fig:succhalfing} illustrates a successive halving run, demonstrating how underperforming configurations were pruned early.
 %Figure~\ref{fig:paralelcord} 
-It presents a parallel coordinate plot of the parameter search with a clear band around the optimal configuration. The plot indicates that the in optimisation, a feature set that explicitly excluded the \ac{ROT} was selected.
+It presents a parallel coordinate plot of the parameter search with a clear band around the optimal configuration. The plot indicates that the optimisation selected a feature set that explicitly excluded the \ac{ROT}.
 Furthermore, Figure~\ref{fig:monthlytrends-all} plots the average \ac{RMSE} per month over the full dataset, with consistent performance trends across all models.
 
 %\begin{figure}[h]
@@ -418,6 +418,7 @@ For example, very distinct hyperparameters can be observed for the \ac{LSTM} (su
 Similarly, for TiRex and \ac{EKF}, a longer context length is selected specifically for the channel domain ($n_\text{ctx} = 9$ and $6$, respectively), while for kinematic baselines, the context length is reduced (shaded in cyan). %these are not discussed further, focus is on "yes there is a difference and it impacts performance" and not on "these are the differences and here is what it tells us about the data. in general, lots more can be discussed about specific parameters . eg how higher context windows act as a smoothness factor etc. but if we wanted to do that, we wouldnt have hpoed everything automatically
 For the lock domain, in contrast, the \ac{EKF}'s context length is reduced to $n_\text{ctx}=1$. With only a single observation available before prediction begins, the filter has little opportunity to correct its $\omega_0=0$ initialisation if the vessel is already turning. Combined with the low process noise $q_\text{pos}$ and high measurement noise $r_\text{pos}$ discussed above, the filter is effectively optimised to trust its motion assumption over new measurements, which likely contributes to the disproportionately large performance gap between the \ac{EKF} and the \ac{LSTM} specifically in this domain.
 
+\begin{comment}
 \begin{table}[t]
 \centering
 \caption[Exp. II Optimised Hyperparameter Configurations]{Optimised hyperparameter configurations for per-domain training and mixed training. Discussed parameters are shaded in.}
@@ -465,9 +466,10 @@ LSTM           & hidden size           & 256   & 256   & 256   & 128   & \cellco
 
 \begin{table}[t]
 \centering
-\caption[Exp. II Error Metrics]{Test set error metrics for mixed training and separated training, evaluated per domain. Per-domain results are represented as a delta to the mixed training results. Discussed results are shaded in.} %Discussed error minimums and performance improvements for the \acs{LSTM} are highlighted in cyan and orange, respectively.} %i did not highlight when the statement was abota full model or domain.. note that somehow?
+\caption[Exp. II Error Metrics]{Test set error metrics for mixed training and separated training, evaluated per domain. Per-domain results are represented as a delta to the mixed training results. Discussed results are shaded in.} 
 \label{tab:results_exp1_exp2_merged_deltas}
 \setlength{\tabcolsep}{3pt} 
+
 \begin{tabular}{llrrrrrrrr}
 \toprule
 \textbf{Model} & \textbf{Metric} & 
@@ -527,10 +529,124 @@ LSTM
 \end{tabular}
 \end{table}
 
+\end{comment}
 
+%yes this is a bit tight, but font only slightly smaller and merging them onto 1 page saves us 1 page in total, so here i am making that compromise.
+\begin{table}[htbp] % h: here, t: top, b: bottom, p: page - gibt LaTeX mehr Freiheit
+\centering
+\vspace{-1em}%alles bischen hoch
+\caption[Exp. II Optimised Hyperparameter Configurations]{Optimised hyperparameter configurations for per-domain training and mixed training. Discussed parameters are shaded in.}
+\label{tab:hpo_results_merged}
+\vspace{-0.3em} % Zieht die untere Tabelle näher heran (verringert Whitespace)
+% \footnotesize % Noch etwas kleiner als \small, oft der Retter für große Tabellen
+\fontsize{9pt}{9.5pt}\selectfont
+\renewcommand{\arraystretch}{0.85} % Reduziert den Zeilenabstand (Default ist 1.0)
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrrrr}
+\toprule
+\textbf{Model} & \textbf{Hyperparameter} & \textbf{Mixed} & \textbf{Harbour} & \textbf{River} & \textbf{Channel} & \textbf{Lock} \\
+\midrule
+CV             & $n_\text{vel}$        & 1      & 1     & 1     & 1     & 1     \\
+CTRV           & $n_\text{vel}$        & 2      & 2     & 2     & \cellcolor{cyan!15}1     & 1     \\
+CTRV Arc       & $n_\text{vel}$        & 3      & 3     & 3     & \cellcolor{cyan!15}2     & 1     \\
+Hybrid CV/CTRV & $n_\text{vel}$ (CV)   & 1      & 1     & 1     & 1     & 1     \\
+               & $n_\text{vel}$ (CTRV) & 2      & 2     & 2     & \cellcolor{cyan!15}1     & \cellcolor{orange!15}9     \\
+               & $n_\text{rot}$        & 1      & 1     & 1     & 1     & \cellcolor{orange!15}9     \\
+               & $\tau_\text{rot}$     & 29.28  & 29.28 & 29.28 & 1.00  & \cellcolor{orange!15}72.76 \\
+\midrule
+KF (CV)        & $q_\text{pos}$        & $1.578 \times 10^{-3}$ & $1.578 \times 10^{-3}$ & $2.434 \times 10^{-3}$ & $2.483 \times 10^{-3}$ & $1.578 \times 10^{-3}$ \\
+               & $q_\text{vel}$        & $5.932$                & $5.932$                & $5.115$                & $9.930$                & $5.932$                \\
+               & $r_\text{pos}$        & $1.077 \times 10^{-2}$ & $1.077 \times 10^{-2}$ & $3.035 \times 10^{1}$  & $1.005 \times 10^{-2}$ & $1.077 \times 10^{-2}$ \\
+               & $p_{0,\text{pos}}$    & $7.737 \times 10^{-2}$ & $7.737 \times 10^{-2}$ & $2.941$                & $1.637 \times 10^{-2}$ & $7.737 \times 10^{-2}$ \\
+               & $p_{0,\text{vel}}$    & $1.190 \times 10^{-1}$ & $1.190 \times 10^{-1}$ & $1.556 \times 10^{-3}$ & $3.510 \times 10^{-1}$ & $1.190 \times 10^{-1}$ \\
+EKF (CTRV)     & $q_\text{pos}$        & $15.957$               & $2.067 \times 10^{-2}$ & $2.645 \times 10^{1}$  & $1.140 \times 10^{-1}$ & \cellcolor{green!15}$5.667 \times 10^{-2}$ \\
+               & $q_\text{vel}$        & $4.290 \times 10^{-2}$ & $3.573 \times 10^{-1}$ & $1.646 \times 10^{-3}$ & $2.197 \times 10^{-1}$ & $3.625 \times 10^{-1}$ \\
+               & $q_\text{rot}$        & $1.002 \times 10^{-7}$ & $2.206 \times 10^{-5}$ & $1.378$                & $1.295 \times 10^{-6}$ & $6.197 \times 10^{-7}$ \\
+               & $r_\text{pos}$        & $1.792 \times 10^{-2}$ & $4.662 \times 10^{-2}$ & $9.167 \times 10^{-1}$ & $2.378 \times 10^{1}$  & \cellcolor{green!15}$7.339 \times 10^{2}$  \\
+               & $p_{0,\text{pos}}$    & $4.046 \times 10^{-1}$ & $4.862 \times 10^{2}$  & $4.471 \times 10^{-1}$ & $4.161 \times 10^{2}$  & $2.951 \times 10^{3}$  \\
+               & $p_{0,\text{vel}}$    & $1.845 \times 10^{-3}$ & $1.713 \times 10^{-2}$ & $3.479 \times 10^{-4}$ & $6.428 \times 10^{1}$  & $1.348 \times 10^{-4}$ \\
+               & $p_{0,\text{rot}}$    & $2.076 \times 10^{-6}$ & $3.404 \times 10^{-1}$ & $1.896 \times 10^{-6}$ & $3.569 \times 10^{-6}$ & $7.577 \times 10^{-5}$ \\
+               & $n_\text{ctx}$        & 2                      & 1                      & 1                      & \cellcolor{cyan!15}6   & 1                      \\
+\midrule
+TiRex          & context length        & 1      & 1      & 1      & \cellcolor{cyan!15}9      & 1     \\
+\midrule
+LSTM           & hidden size           & 256   & 256   & 256   & 128   & \cellcolor{orange!15}64   \\
+               & dropout               & 0.290 & 0.232 & 0.377 & 0.165 & 0.378 \\
+               & learning rate         & $5.530 \times 10^{-4}$ & $4.852 \times 10^{-4}$ & $1.935 \times 10^{-4}$ & $9.003 \times 10^{-4}$ & $3.049 \times 10^{-3}$ \\
+               & batch size            & 128   & 128   & 256   & 128   & \cellcolor{orange!15}512   \\
+               & feature set           & no rot   & all   & all   & all   & \cellcolor{orange!15}no sog, no dt \\
+\bottomrule
+\end{tabular}
+\vspace{-0.2em} % Zieht die untere Tabelle näher heran (verringert Whitespace)
+\end{table}
 
+\begin{table}[htbp]
+\centering
+\caption[Exp. II Error Metrics]{Test set error metrics for mixed training and separated training, evaluated per domain. Per-domain results are represented as a delta to the mixed training results. Discussed results are shaded in.} 
+\label{tab:results_exp1_exp2_merged_deltas}
+\vspace{-0.3em}
+%\small % Hier ebenfalls Schriftgröße anpassen
+\fontsize{9pt}{9.5pt}\selectfont
+\renewcommand{\arraystretch}{0.85} % Reduziert den Zeilenabstand
+\setlength{\tabcolsep}{3pt} 
+\begin{tabular}{llrrrrrrrr}
+\toprule
+\textbf{Model} & \textbf{Metric} & 
+\multicolumn{4}{c}{\textbf{Mixed Training}} & 
+\multicolumn{4}{c}{\textbf{$\Delta$ (Mixed Training -- Per-domain)}} \\
+\cmidrule(lr){3-6} \cmidrule(l){7-10} % (lr) macht den Strich etwas hübscher (Abstand zw. Spalten)
+& & 
+\textbf{Harbour} & \textbf{River} & \textbf{Channel} & \textbf{Lock} &
+\textbf{Harbour} & \textbf{River} & \textbf{Channel} & \textbf{Lock} \\
+\midrule
+Constant Velocity   
+& ADE  & 81.76 & 69.84 & 73.45 & 73.47 & 0 & 0 & 0 & 0 \\
+& FDE  & 182.44 & 157.16 & 171.98 & 167.58 & 0 & 0 & 0 & 0 \\
+& RMSE & 166.25 & 134.29 & 110.43 & 100.73 & 0 & 0 & 0 & 0 \\
+\midrule
+CTRV                
+& ADE  & 89.94 & 68.47 & 62.48 & 86.55 & 0 & 0 & +0.98 & +6.23 \\
+& FDE  & 212.11 & 160.64 & 145.04 & 197.34 & 0 & 0 & -1.36 & +9.93 \\
+& RMSE & 178.60 & 135.47 & 96.58 & 116.72 & 0 & 0 & +0.07 & +6.10 \\
+\midrule
+CTRV Arc            
+& ADE  & 92.44 & 69.83 & 65.58 & 94.17 & 0 & 0 & +3.33 & +12.46 \\
+& FDE  & 213.77 & 160.82 & 150.38 & 210.11 & 0 & 0 & +3.27 & +20.13 \\
+& RMSE & 182.62 & 138.41 & 100.85 & 125.02 & 0 & 0 & +3.16 & +12.55 \\
+\midrule
+Hybrid CV/CTRV      
+& ADE  & 81.89 & 69.86 & 73.56 & 74.80 & 0 & 0 & +12.09 & +1.33 \\
+& FDE  & 183.25 & 157.30 & 172.28 & 170.91 & 0 & 0 & +26.05 & +3.33 \\
+& RMSE & 166.02 & 133.90 & 110.61 & 103.15 & 0 & 0 & +14.03 & +2.42 \\
+\midrule
+KF (CV)             
+& ADE  & 81.76 & 69.84 & 73.45 & 73.47 & 0 & +0.13 & 0 & 0 \\
+& FDE  & 182.44 & 157.16 & 171.98 & 167.58 & 0 & +0.18 & 0 & 0 \\
+& RMSE & 166.25 & 134.29 & 110.43 & 100.73 & 0 & +0.02 & 0 & 0 \\
+\midrule
+EKF (CTRV)          
+& ADE  & 82.79 & 70.84 & 68.35 & 76.53 & -1.43 & +0.50 & +6.43 & +3.06 \\
+& FDE  & 182.93 & 155.95 & 158.69 & 173.23 & -1.42 & -1.56 & +13.67 & +5.65 \\
+& RMSE & 162.19 & 130.09 & 103.00 & 103.89 & -1.47 & -3.46 & +7.05 & +3.16 \\
+\midrule
+Chronos-2           
+& ADE  & 84.88 & 72.47 & 61.62 & 64.92 & 0 & 0 & 0 & 0 \\
+& FDE  & 189.21 & 162.80 & 145.44 & 154.50 & 0 & 0 & 0 & 0 \\
+& RMSE & 163.56 & 133.37 & 97.09 & 94.87 & 0 & 0 & 0 & 0 \\
+\midrule
+TiRex               
+& ADE  & 81.76 & 69.78 & 73.50 & 73.47 & 0 & 0 & +4.39 & 0 \\
+& FDE  & 182.44 & 157.14 & 172.00 & 167.58 & 0 & 0 & +7.21 & 0 \\
+& RMSE & 166.24 & 134.22 & 110.46 & 100.73 & 0 & 0 & +3.11 & 0 \\
+\midrule
+LSTM                
 
-
+& ADE  & 61.07 & 43.29 & \cellcolor{cyan!15}{32.09} & 45.41 & +0.39 & +3.01 & \cellcolor{orange!15}+4.81 & \cellcolor{orange!15}+13.36 \\
+& FDE  & 135.73 & 94.14 & \cellcolor{cyan!15}{70.23} & 93.17 & +1.12 & +7.26 & \cellcolor{orange!15}+11.09 & \cellcolor{orange!15}+26.54 \\
+& RMSE & 121.45 & 91.59 & \cellcolor{cyan!15}{55.85} & 68.59 & +0.50 & +5.51 & \cellcolor{orange!15}+7.36 & \cellcolor{orange!15}+13.11 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 %\section[Exp. \Romannum{3}: LSTM Domain Encoding]{Exp. \Romannum{3}: Ablation of Explicit Domain Encoding for LSTMs}
 \label{sec:exp3}
@@ -544,7 +660,7 @@ To answer this, we set up Exp. \Romannum{3}.
 
 In Table~\ref{tab:results_exp3}, we recall the performance metrics of the standard \ac{LSTM} (first introduced in Table \ref{tab:results_exp0} and \ref{tab:results_exp1_exp2_merged_deltas}) as a benchmark for comparison, alongside the metrics of two domain-aware variants: LSTM + Domain, which was independently tuned using a separate hyperparameter optimisation study, and LSTM + Domain*, a variant using the exact same hyperparameter configuration as the baseline architecture. 
 Both domain-aware models achieve lower overall error metrics than the standard \ac{LSTM}. For example, the LSTM + Domain* variant reduces the overall \ac{RMSE} from $111.36$\,m to $110.20$\,m, representing a decrease of $1.04\%$.
-This overall figure is dominated by the harbour domain, which accounts for the majority of samples and shows almost no improvement ($121.45$,m to $121.38$,m \ac{RMSE}), mirroring the finding from Exp.~\Romannum{2}. The channel and lock domains, by contrast, show substantially larger relative gains (shaded in cyan). For instance, the \ac{ADE} decreases from $32.09$\,m to $29.22$\,m in the channel domain, and from $45.41$\,m to $31.43$\,m in the lock domain.
+This overall figure is dominated by the harbour domain, which accounts for the majority of samples and shows almost no improvement ($121.45$ m to $121.38$ m \ac{RMSE}), mirroring the finding from Exp.~\Romannum{2}. The channel and lock domains, by contrast, show substantially larger relative gains (shaded in cyan). For instance, the \ac{ADE} decreases from $32.09$\,m to $29.22$\,m in the channel domain, and from $45.41$\,m to $31.43$\,m in the lock domain.
 To ensure that the observed performance gap is robust, the baseline \ac{LSTM} and the LSTM + Domain* model were trained ten times with different random seeds. Across all ten runs, strictly lower test errors in \acs{ADE}, \acs{FDE}, and \acs{RMSE} were recorded for the LSTM + Domain* model.
 In Figure~\ref{fig:violindomaine}, the corresponding performance distributions of both models are presented.
 Finally, the combined critical difference diagram confirming this statistical significance is depicted in Figure~\ref{fig:cd_exp3_real}, with the \ac{LSTM} + Domain* model ranking 1.71 on average, \ac{LSTM} + Domain achieving an average rank of 1.85 and the default \ac{LSTM} ranking last at 2.44.
@@ -576,13 +692,13 @@ LSTM + Domain* & ADE  & 53.80 & 60.70 & 41.12 & \cellcolor{cyan!15}29.22 & \cell
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\linewidth]{figures/thesis_violin_lstm_vs_nohpo_lstm_domain_per_year.png}
+    \includegraphics[width=0.7\linewidth]{figures/thesis_violin_lstm_vs_nohpo_lstm_domain_per_year.png}
     \caption[Exp. III RMSE Violin Plot]{\ac{RMSE} violin plot comparing the standard \acf{LSTM} and the \ac{LSTM} + Domain* models on the full test set.}        \label{fig:violindomaine}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.69\linewidth]{figures/cd_diagram_lstm_comparison.png}
+    \includegraphics[width=0.7\linewidth]{figures/cd_diagram_lstm_comparison.png}
     \caption[Exp. III Friedman \& Nemenyi CD-Plot]{Critical Difference diagram comparing the \acf{LSTM} variants with and without Domain specific training.
 \ac{LSTM} +Domain* refers to the \ac{LSTM} + Domain model that was run using the hyperparameters of the \ac{LSTM}
 without any optimisation.}
@@ -623,14 +739,12 @@ First, the bottleneck of the prediction lies in the underlying constant-velocity
 A further methodological caveat is that the diagonal $\mathbf{Q}$ assumes uncorrelated positional and velocity noise, despite their physical coupling. The extent to which this simplification also contributes to the observed gap remains open.
 Since the \ac{CV} model was optimised to only consider the last step, the Markov assumption of the \ac{KF} is not the cause for the inability of the \ac{KF} to outperform the \ac{CV} model. With the noise ratio established above and the ten correction steps available within the context window, the filter's prior is effectively forgotten by the time prediction begins, so its velocity estimate converges to the same estimate as the \ac{CV} model's last-step displacement, rather than to a genuinely smoothed estimate.
 
-
 In the \ac{EKF}, position depends nonlinearly on the turn rate $\omega_k$ through trigonometric terms. This means that even a small error in the estimated rotation propagates into a drastically larger positional error over time.
 The optimisation process adapted to this instability by selecting a substantially larger process noise $q_\text{pos}$ and a near-zero $q_\text{rot}$ (highlighted in green in Table~\ref{tab:hpo_results_exp0}), which indicates that the filter learned position predictions are highly unreliable when rotation is involved.
 $\omega_0$ is initialised to $0$, and the minimum context length to $n_\text{ctx} = 2$.
-Together, these parameters effectively restrict the underlying \ac{CTRV} model to straight-line motion with negligible curvature to avoid compounding nonlinear errors. %\\
-Despite this, the \ac{EKF} outperforms the \ac{KF} significantly (Figure~\ref{fig:cd_test}).
-This performance gap is most pronounced in the \ac{RMSE} metric.
-Since \ac{RMSE} heavily penalises large deviations, this difference demonstrates that the state estimation of the \ac{EKF} still manages to suppress extreme outliers slightly better than the standard \ac{KF}.
+Together, these parameters effectively restrict the underlying \ac{CTRV} model to straight-line motion with negligible curvature to avoid compounding nonlinear errors. Despite this, the \ac{EKF} outperforms the \ac{KF} significantly (Figure~\ref{fig:cd_test}). 
+However, this performance gap must be interpreted with caution. Although both filters belong to the same family, their predefined search spaces differed: the context window length ($n_\text{ctx}$) was treated as an optimisable hyperparameter for the \ac{EKF} (converging to $2$), whereas it was kept fixed at the full ten steps for the standard \ac{KF}. Given that the baseline \ac{CV} model also performed best using only the single most recent step, forcing the \ac{KF} to smooth over the entire 10-step context window likely disadvantaged it. Consequently, the observed gap might partially stem from this discrepancy in the search space design rather than purely from the ability of the \ac{EKF} to handle nonlinear kinematics. Future evaluations must align the search spaces to allow for a fair comparison.
+Nevertheless, looking at the error distributions, the \ac{EKF} still manages to suppress extreme outliers slightly better than the standard \ac{KF}, which is reflected in the more pronounced gap in the \ac{RMSE} metric. Since \ac{RMSE} heavily penalises large deviations, this difference demonstrates that the state estimation of the \ac{EKF} still manages to suppress extreme outliers slightly better than the standard \ac{KF}.
 However, the violin plots in Figure~\ref{fig:violince} confirm that while the \ac{EKF} error distribution is shifted towards slightly lower values compared to \ac{CV} and TiRex, it still has a similar spread and long upper tails.
 Therefore, while the \ac{EKF} provides a measurable baseline improvement, its fundamental handling of sudden manoeuvres and outliers is not drastically improved, consistent with the still prevailing non-Gaussian error distribution.
 
@@ -726,7 +840,7 @@ These findings support the hypothesis that domain-specific training benefits hig
 
 \subsection*{Advantages of Explicit Domain Encoding} 
 
-Interestingly, the LSTM + Domain* model that reuses the hyperparameters of the baseline LSTM outperforms the LSTM + Domain model that was tuned in a separate Optuna study with statistical significance (Figure \ref{fig:cd_exp3_real}) %\ref{fig:cd_exp3}).
+Interestingly, the LSTM + Domain* model that reuses the hyperparameters of the baseline LSTM outperforms the LSTM + Domain model that was tuned in a separate Optuna study with statistical significance (Figure \ref{fig:cd_exp3_real}). %\ref{fig:cd_exp3}).
 During the hyperparameter search for the standard LSTM + Domain model, the optimisation algorithm failed to find a better configuration than the initial 16 trials before early stopping terminated the study.
 This indicates that the search likely stopped prematurely and that the domain-aware architecture could benefit from a more exhaustive tuning procedure.
 Future work should revisit this experiment with increased patience or a larger hyperparameter optimisation budget to fully exploit the potential of the explicit domain encoding.

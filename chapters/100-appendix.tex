@@ -88,7 +88,7 @@
     \includegraphics[height=0.32\textheight, page=1]{figures/animationpreprocessingwithsampling.pdf}\\[4pt]
     \includegraphics[height=0.32\textheight, page=2]{figures/animationpreprocessingwithsampling.pdf}\\[4pt]
     \includegraphics[height=0.32\textheight, page=3]{figures/animationpreprocessingwithsampling.pdf}
-    \caption[Preprocessing visualisation (1/2)]{Preprocessing visualisation. First, implausible messages are removed. The remaining trajectories are then resampled to a fixed 30 s grid. After resampling, a sliding window is applied to to extract the final samples. (1/2)}
+    \caption[Preprocessing visualisation (1/2)]{Preprocessing visualisation. First, implausible messages are removed. The remaining trajectories are then resampled to a fixed 30 s grid. After resampling, a sliding window is applied to extract the final samples. (1/2)}
     \label{fig:preprocessing-a}
 \end{figure}
 
@@ -113,7 +113,7 @@
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\linewidth,trim=0 8 0 70,clip]{figures/elbow_strat.png}
-    \caption[Strata Elbow-Plot]{Elbow-Plot: Inertia vs. Number of Clusters $k \in [2, 15]$ used to estimate the optimal number of strata. For each file in the sampled dataset, vessel profiles were aggregated by computing mean \acf{SOG}, maximum absolute \acf{ROT}, and the context label. Features were standardized prior to clustering. KMeans ($n\_init=10$) was fitted independently per file; grey lines represent per-file inertia curves, the red line indicates the mean across all files. The elbow between $k=4$ and $k=5$ justifies the choice of five strata to capture the kinematic diversity of the dataset.}
+    \caption[Strata Elbow-Plot]{Elbow-Plot: Inertia vs. Number of Clusters $k \in [2, 15]$ used to estimate the optimal number of strata. For each file in the sampled dataset, vessel profiles were aggregated by computing mean \acf{SOG}, maximum absolute \acf{ROT}, and the context label. Features were standardised prior to clustering. KMeans ($n\_init=10$) was fitted independently per file; grey lines represent per-file inertia curves, the red line indicates the mean across all files. The elbow between $k=4$ and $k=5$ justifies the choice of five strata to capture the kinematic diversity of the dataset.}
     
     \label{fig:elbow_strat}
 \end{figure}
@@ -147,7 +147,8 @@
     \end{subfigure}
     
     \caption[CV and CTRV QQ-Plot]{    
-    Quantile-Quantile (QQ) plots of the positional prediction errors ($dx$ and $dy$) for \acf{CV} and \acf{CTRV} models. The errors of these pure kinematic models represent the real process noise of the \acp{KF}'s underlying motion models; which they internally model as a Gaussian distribution. The solid red lines represent the theoretical normal distribution; the significant deviation of the sample quantiles at the extremes indicates heavy tails and extreme outliers. This is supported by low coefficient of determination ($R^2$) values ranging from 0.6138 to 0.6428, demonstrating a clear violation of the Gaussian noise assumption.}
+    Quantile-Quantile (QQ) plots of the positional prediction errors ($dx$ and $dy$) for \acf{CV} and \acf{CTRV} models. The errors of these pure kinematic models represent the real process noise of the \acp{KF}' underlying motion models, %plural
+    which they internally model as a Gaussian distribution. The solid red lines represent the theoretical normal distribution; the significant deviation of the sample quantiles at the extremes indicates heavy tails and extreme outliers. This is supported by low coefficient of determination ($R^2$) values ranging from 0.6138 to 0.6428, demonstrating a clear violation of the Gaussian noise assumption.}
     \label{fig:qqplot}
 \end{figure}
 
@@ -393,7 +394,7 @@ adjust caption if put in appendix again
 \begin{table}[t]%%%%%%%%%%%% OPTIMiseR
     \centering
     %\caption{HPO Optimiser Configurations}
-    \caption[Configuration Parameters for Optuna HPO]{Configuration parameters for the Optuna hyperparameter optimization. The table details the specific search algorithms, trial counts, seeding strategies, and early stopping criteria applied to each model type, ranging from kinematic models to the LSTM.}
+    \caption[Configuration Parameters for Optuna HPO]{Configuration parameters for the Optuna hyperparameter optimisation. The table details the specific search algorithms, trial counts, seeding strategies, and early stopping criteria applied to each model type, ranging from kinematic models to the LSTM.}
     \label{tab:hpo-config}
     \scalebox{1}{%  %% 5% smaller (0.95 = 95% of original size)
 
@@ -667,7 +668,7 @@ The \ac{CASH} problem is formulated to jointly identify the optimal algorithm $A
 
 This appendix derives the full Jacobian $\mathbf{A}_k = \partial f /
 \partial \mathbf{x}|_{\hat{\mathbf{x}}^+_k}$ of the CTRV transition
-function introduced in Eq.~\eqref{eq:ctrv-ekf-f}. 
+function introduced in Eq.~\eqref{eq:ctrv-ekf-f_and_c}. 
 The state vector is $\hat{\mathbf{x}}_k = (x_k,\, y_k,\, \dot{x}_k,\, \dot{y}_k,\, \omega_k)^\top$ and $\Delta\psi = \omega_k\,\Delta t$.
 
 \subsection*{Case $|\omega_k| \geq \varepsilon$}

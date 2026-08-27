@@ -22,7 +22,7 @@ Data-driven methods trained on \ac{AIS} data have become a promising alternative
 
 In this section, we review the state of the art in vessel trajectory prediction 
  to establish the theoretical foundation for our comparative evaluation and to identify the key gaps we address in this thesis. First, we survey existing motion models in Section \ref{sec:kinematicanddeeplearningmodels}, ranging from kinematic models and stochastic filters to task-specific deep learning architectures and recently published foundation models. Next, we describe  standard \acs{AIS} data preprocessing pipelines in Section \ref{sec:datapreprocessingandcontextawareness}. %and highlights the limited integration of geographic context in current literature.
-Finally, we discuss the necessity of systematic hyperparameter optimisation to enable a fair comparisons between models in Section \ref{sec:hpoforvesselprediction}.
+Finally, we discuss the necessity of systematic hyperparameter optimisation to enable a fair comparison between models in Section \ref{sec:hpoforvesselprediction}.
 
 \section{Kinematic and Deep Learning Models} 
 \label{sec:kinematicanddeeplearningmodels}
@@ -120,7 +120,7 @@ Raw \ac{AIS} data contains errors including physically implausible positions, in
 To address this, \textcite{Zhao_Shi_Yang_2018} proposed a foundational framework for \ac{AIS} preprocessing.
 Their framework includes multiple steps.
 First, physical integrity checks are applied, where invalid data points violating fixed bounds are discarded and trajectories with fewer than 100 points are removed.  
-Second, checks designed to enforce spatial integrity identify and remove physically implausible transitions are applied.
+Second, checks designed to enforce spatial integrity by removing physically implausible transitions are applied.
 Specifically, a trajectory is first partitioned wherever two consecutive points are more than 10 minutes apart.
 Sub-tracks resulting from this split that contain fewer than 100 points are discarded.
 Each surviving sub-track is then scanned for kinematic outliers and partitioned again if the difference between the recorded speed and the speed calculated from consecutive positions exceeds 15 knots. 
@@ -160,7 +160,7 @@ The methodology proposed in this work explicitly seeks to avoid this limitation.
 
 
 In summary, existing \ac{AIS} preprocessing methods predominantly treat trajectories as purely kinematic sequences.
-Standard pipelines typically consist of geographic bounding boxes, physical integrity checks, time-gap splitting, and resampling. While our methodology builds upon these standard practices, we made adaptions to some these steps for our work. For instance, we analytically derived the \ac{ROT} from the \ac{COG} and applied sliding windows and geometric augmentation.
+Standard pipelines typically consist of geographic bounding boxes, physical integrity checks, time-gap splitting, and resampling. While our methodology builds upon these standard practices, we made adaptions to some of these steps for our work. For instance, we analytically derived the \ac{ROT} from the \ac{COG} and applied sliding windows and geometric augmentation.
 Furthermore, even when existing pipelines consider spatial geometry to extract common routes, the semantic context of the environment is generally overlooked. This lack of context is particularly limiting for inland navigation, where diverse waterway domains have distinct kinematic characteristics. For instance, the manoeuvring dynamics of a vessel approaching a lock differ fundamentally from its behaviour on an open river. Because standard pipelines process all trajectories identically regardless of their geographic context, the resulting models fail to leverage this underlying domain knowledge. While sufficiently large deep learning models might implicitly learn these spatial dynamics given large enough datasets, we hypothesise that explicitly encoding this domain knowledge is more sample-efficient and interpretable.
 
 To address this gap, the main novelty of our preprocessing framework is the introduction of semantic domain labelling based on \ac{OSM} data. Rather than relying purely on vessel kinematics, we assign categorical waterway labels (e.g., harbour, river, channel, lock) to each trajectory. As detailed in Chapter \ref{chap:dataset}, we encode this domain knowledge through class-specific geographic buffers, priority mapping rules, and domain-aware dataset splitting and augmentation. This aligns directly with our first contribution: developing an automated pipeline that consolidates standard cleaning steps, extends them with semantic domain labels, and ultimately produces a curated, large-scale, and domain-aware dataset.
@@ -175,13 +175,13 @@ In existing maritime trajectory prediction studies, deep learning architectures 
 Extensive \ac{HPO} is usually left as an open challenge. 
 For example, \textcite{donandt2022shortterm} manually fix their hidden layer size to 512, dropout to 0.1, and the number of encoder/decoder layers to 3, and explicitly acknowledge in their conclusion that further hyperparameter optimisation needs to be conducted. Similarly, \textcite{articlebilstmsus} fix their \ac{Bi-LSTM} hyperparameters without any systematic search procedure. %, and note in their own related work that \ac{HPO} in this domain remains a challenge.
 Both studies are representative instances of a manual tuning practice.
-They result in sub-optimal configurations and make robust cross-study and make fair comparisons between models difficult. 
+They result in sub-optimal configurations and make robust cross-study and fair comparisons between models difficult. 
 
 
 
 To overcome these limitations and ensure reproducible evaluations, \ac{AutoML} provides tools to automate \ac{HPO} in a data driven way \parencite{Feurer2015, AutoMLHoos}.
 While \ac{AutoML} has been successfully applied to some general time series forecasting tasks \parencite{deng2023efficient}%hier in 2.3
-, its use in maritime motion prediction is very limited. \textcite{zhou2024optunabilstm} combine a \acs{Bi-LSTM} model with the Optuna framework to tune a small set of hyperparameters, and demonstrate, that automated \ac{HPO} can improve accuracy over manually tuned baselines.
+, its use in maritime motion prediction is very limited. \textcite{zhou2024optunabilstm} combine a \acs{Bi-LSTM} model with the Optuna framework to tune a small set of hyperparameters, and demonstrate that automated \ac{HPO} can improve accuracy over manually tuned baselines.
 However, they only apply this to a single architecture with a relatively small trial budget, and do not extend automated tuning to alternative model families. To the best of our knowledge, no prior work applies %AutoML-based
 systematic \ac{HPO} across multiple model families within a shared \ac{AIS} preprocessing and evaluation pipeline.
 %\me{[contributions-overview?]} 
