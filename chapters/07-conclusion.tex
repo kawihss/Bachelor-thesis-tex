@@ -43,7 +43,7 @@ While the overall dataset average improved only modestly, the domain-aware archi
 Encoding domain information directly into a single \ac{LSTM} via one-hot features closely matches the accuracy of separately trained per-domain models, offering a practical alternative that avoids maintaining multiple domain-specific models in deployment.
 
 
-Taken together, these findings suggest that future multi-target tracking systems for inland navigation should prioritise deep sequence models for trajectory prediction.
+Taken together, these findings suggest that future multi-target tracking systems for inland navigation that focus on prediction accuracy should prioritise deep sequence models for trajectory prediction.
 Furthermore, embedding basic environmental context into the model architecture is an effective strategy to improve prediction accuracy in specific waterway domains.
 
 
@@ -59,7 +59,7 @@ In this section, we discuss limitations of this work, together with ideas on how
 \subsection*{Dataset}
 
 \paragraph{Data Availability and AIS Biases.}
-The results in this thesis are based on AIS logs from three German measurement stations and a single calendar year. While the datasets cover a large number of trajectories, they still reflect the traffic patterns of a limited set of waterways and regulatory conditions. For the observation period of the year 2025, %the data availability varies across the three measurement sites: Kiel (357 days), Wedel (351 days), and Bremerhaven (326 days). 
+The results in this thesis are based on \ac{AIS} logs from three German measurement stations and a single calendar year. While the datasets cover a large number of trajectories, they still reflect the traffic patterns of a limited set of waterways and regulatory conditions. For the observation period of the year 2025, %the data availability varies across the three measurement sites: Kiel (357 days), Wedel (351 days), and Bremerhaven (326 days). 
 data availability varies slightly across the three measurement sites (e.g., Bremerhaven lacks data for June 2025).
 In AIS networks, data loss can occur for diverse reasons, such as hardware maintenance.
 However, since our deep learning models operate on short trajectory windows rather than continuous long-term sequences, these gaps do not impact the training quality, as the available days still yield a sufficiently large and representative number of independent samples.
@@ -124,7 +124,7 @@ For the stratification prior to the dataset split, the primary domain, was encod
 \label{paragraph:comparability}
 For both the domain-specific vs.\ mixed-domain comparison and the domain-encoding ablation (\ac{LSTM} vs.\ \ac{LSTM}~+~Domain), each model variant was independently optimised via \ac{HPO} within the same search space, rather than evaluated under one fixed hyperparameter configuration. This choice reflects how these models would be used in practice, where hyperparameters are always tuned for the given data and architecture, but it also means that measured performance differences cannot be attributed solely to the intended manipulation (domain-specific vs.\ mixed data, or presence vs.\ absence of the domain embeddings), since they are confounded with differences in the resulting hyperparameter configurations. As \ac{HPO} offers no guarantee of converging to a global optimum, these comparisons should be read as benchmarks of practically achievable performance rather than controlled, isolated measurements of a single effect.
 
-A further issue specific to the domain-specific vs.\ mixed-domain comparison is that the two training splits contain different numbers of samples, as domain-specific models are trained on strictly smaller subsets of the data. This difference in sample count is itself a change alongside the intended change in data composition, so part of any observed effect may stem from the amount of available training data rather than domain specificity alone.
+A further issue specific to the domain-specific vs.\ mixed-domain comparison is that the training splits contain different numbers of samples, as domain-specific models are trained on strictly smaller subsets of the data. This difference in sample count is itself a change alongside the intended change in data composition, so part of any observed effect may stem from the amount of available training data rather than domain specificity alone.
 
 A separate consideration is the number of training epochs. The maximum number of training epochs was fixed across all models as a boundary condition, which, if reached, could have introduced an unrelated difference between models trained on splits of different sizes. In practice, early stopping halted all variants well before this limit was reached, ruling out training time as a factor.
 
@@ -136,7 +136,7 @@ We initialised the Optuna search for the \ac{LSTM} with a manually selected subs
 
 \paragraph{Statistical Analysis.}
 The statistical analysis in Chapter \ref{par:statistical} is based on file-level aggregated metrics, with one file representing one domain on one day on one measurement station. This is used as a fallback to per-sample evaluation, since only the aggregated errors were available at evaluation time. As a result, all files contribute equally as blocks, even though they may contain different numbers of samples. %If the Friedman test is significant , we apply the Nemenyi post-hoc test for pairwise comparisons and visualise the results using a critical difference diagram. 
-Because a file's rank does not reflect how many samples it contains, models with near-identical aggregated error metrics can still receive noticeably different average ranks and appear separated in the critical difference diagram, as has happened with the \ac{CV} and \ac{KF} in Table \ref{tab:results_exp0} and Figure \ref{fig:cd_test}. Such artifacts are expected under this block definition and are not evidence of a computational error.
+Because the rank of a file does not reflect how many samples it contains, models with near-identical aggregated error metrics can still receive noticeably different average ranks and appear separated in the critical difference diagram, as has happened with the \ac{CV} and \ac{KF} in Table \ref{tab:results_exp0} and Figure \ref{fig:cd_test}. Such artifacts are expected under this block definition and are not evidence of a computational error.
 Future iterations of this work should save the per-sample evaluation for more accurate metrics.
 
 \paragraph{Metrics.} 
@@ -144,7 +144,7 @@ Our evaluation focused exclusively on predictive accuracy and calibration; we di
 
 A further limitation concerns the choice of \ac{RMSE} as the \ac{HPO} objective. We chose \ac{RMSE} because it penalises large deviations more strongly than absolute-error-based metrics. This same property likely amplifies the effect of the heavy-tailed, non-Gaussian residual distribution established in Chapter~\ref{chap:results}, since outliers receive disproportionately high weight in the loss. This plausibly strengthens the bias towards short context lengths. Additionally, \ac{RMSE} aggregates error across both the longitudinal and lateral directions into a single scalar. Future work should also report or optimise for along-track and cross-track deviation separately, which would make it easier to distinguish outliers caused by incorrect speed estimation from those caused by incorrect heading or turn-rate estimation.
 
-\paragraph{Domain Labels and Context Representation.}
+\paragraph{Domain Labels.}
 In this work, we rely on a four-class domain labelling scheme (harbour, river, channel, lock) obtained from \ac{OSM}. %For trajectories with multiple domains, a majority vote is applied.
 It should be noted that most \ac{OSM} data are labelled by hand by volunteer contributors. We could not verify the correctness of the annotations for this study beyond plausibility checks with satellite images, and we cannot guarantee that no noise was introduced due to mislabelled waterways. This limitation is inherent to a label-based approach.
 A natural next step would be to refine the domain representation, for example by introducing additional domain types, or by clustering waterway segments based on kinematic key characteristics to obtain a more fine-grained context. It would also be interesting to investigate whether representing the domain as a sequence over time, instead of a single static vector per sample, further improves performance for longer context windows.
@@ -156,10 +156,7 @@ Because of the pruning and early stopping mechanisms we used, hyperparameter sea
 
 \subsection*{Models}
 
-%\paragraph{TiRex-2.}
-%Following the completion of the model training and evaluation presented in this work, TiRex-2 was published \parencite{podest2026tirex2generalizingtirexmultivariate}. This updated architecture addresses the core weaknesses of the original TiRex compared to the Chronos-2 model by generalizing to a multivariate forecaster and introducing covariate-informed modelling, all while maintaining the inductive bias of an \ac{LSTM} for time series data. Consequently, incorporating TiRex-2 into the benchmarking framework represents a highly promising direction for future research.
-
-\paragraph{LSTM Architecture.}
+\paragraph{Model Architectures.}
 The \ac{LSTM} implemented in this thesis uses a stacked encoder with a linear decoder that predicts the full horizon in a single step.
 This choice matches the short 5-minute prediction horizon, but it also restricts the flexibility of the architecture.
 Autoregressive decoders, where each predicted step is fed back into the model as additional context, are the standard for \acp{LSTM}.
@@ -171,11 +168,11 @@ Other gains could be found by introducing attention mechanisms that give higher 
 In addition to time-wise attention, covariate-informed forecasting with attention across feature channels is particularly relevant.
 The comparison between Chronos-2 and TiRex suggests that cross-channel attention can provide an advantage over univariate or channel-independent sequence models. 
 At the moment, TiRex is limited to univariate inputs, and the \ac{LSTM} uses only a simple concatenation of features without explicit channel weighting.
-%Ongoing work on extending x-LSTM-based models such as TiRex to handle multivariate, covariate-informed inputs would offer a direct opportunity to revisit this comparison once such models become available.
-After the completion of the model training and evaluation within this work, TiRex-2 was published \parencite{podest2026tirex2generalizingtirexmultivariate}. It tackles the core weaknesses of TiRex relative to the Chronos-2 model by generalising to a multivariate forecaster and covariate informed modelling, while maintaining the inductive bias of an \ac{LSTM} for time series data. Incorporating TiRex-2 into the benchmark provides an exciting opportunity to revisit this comparison.
+After the completion of the model training and evaluation within this work, TiRex-2 was published \parencite{podest2026tirex2generalizingtirexmultivariate}. It tackles the core weaknesses of TiRex relative to the Chronos-2 model by generalising to a multivariate forecaster and covariate informed modelling, while maintaining the inductive bias of an \ac{LSTM} for time series data. Incorporating TiRex-2 into the benchmark provides an opportunity to revisit this comparison.
+
 Beyond recurrent architectures, Transformer models for time series have shown promising results in other forecasting domains, mainly due to their ability to model long-range dependencies.
 Training such models from scratch on the AIS data was out of scope for this thesis because of the associated runtime and tuning cost, but remains an interesting direction for future work. 
-%\me{To Tim: Ich finde den sprung zu VQ transformer immer noch nicht sinnvoll und empfehle ihn hier daher nicht. Transformer haben eine längere Trainingszeit als LSTM. Der VQ Transformer wirkt dem entgegen für lange kontexte. Diese liegen hier aber nicht vor. wenn du sehr lange kontexte betrachten möchtest sieht es wieder anders aus}
+
 
 
 
@@ -237,11 +234,13 @@ Their guidance helped keep the scope focused and made the collaboration between 
 %\subparagraph{Thesis Text.}
 %Generative AI was not used to generate academic content, conduct research, or find facts. Its 
 Generative AI usage for the thesis text was limited to rephrasing and formatting assistance. %, specifically generating LaTeX code for tables and figures and helping with Latex  packages. %No point in being more precise
-Additionally, due to an injury that restricted my ability to type, I used Gemini to draft initial slides for the kickoff presentation based strictly on my thesis text drafts at the time. These slides were of course edited and finalised manually. 
+Additionally, due to an injury that restricted my ability to type, I used Google Gemini to draft initial slides for the kickoff presentation based strictly on my thesis text drafts at the time. These slides were edited and finalised manually. 
 %proofread and suggest changes, but those changes were not übernommen
 
 %\subparagraph{Code.}
  For the codebase, generative AI (Perplexity with Claude Sonnet Thinking) was used as a reference tool. It was used to provide overviews of suitable Python libraries for specific tasks. Once a library was selected, AI assisted with specific syntax formatting (for example, utilising the osmnx library for spatial labels or handling DataFrame geometries).
 %Due to my injury, I also used GitHub copilot in combination with Windows voice assistant, to generate boilerplate code for the Evaluation framework and Models.
 Due to my injury, I also used GitHub Copilot in combination with Windows voice assistant to assist with coding tasks, including structure and implementation of the evaluation framework and models. All code that was generated in this way was reviewed and validated by me, and I take full responsibility for its correctness.
-In addition, AI was used to write some of the scripts responsible for generating the plots and figures that were displayed in this document and used for debugging in full. They are not necessary to run the pipeline and should not be considered for grading. I have provided a version of the repository without these scripts in the branch \texttt{handedIn} at RWTH GitLab\footnote{\url{https://git-ce.rwth-aachen.de/g-nav-mob-irt/projects/galileonautic2plus/multi-object-tracking/motion-models/-/tree/handedIn}}.
+In addition, AI was used to write auxiliary scripts responsible for generating plots and debugging. These scripts are not necessary to run the main pipeline and should not be considered for grading.
+%In addition, AI was used to write some of the scripts responsible for generating the plots and figures that were displayed in this document and used for debugging in full. They are not necessary to run the pipeline and should not be considered for grading.
+I have provided a version of the repository without these scripts in the branch \texttt{handedIn} at RWTH GitLab\footnote{\url{https://git-ce.rwth-aachen.de/g-nav-mob-irt/projects/galileonautic2plus/multi-object-tracking/motion-models/-/tree/handedIn}}.

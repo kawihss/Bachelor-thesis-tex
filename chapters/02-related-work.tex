@@ -83,7 +83,8 @@ Additionally, inland-specific studies are rare, and there is little consensus on
 %between 250k and 280k trajectory sequences.
 Subsequent work by \textcite{legel2025} extended the attention mechanism presented by \textcite{sekhon2020} to an interaction-aware multi-vessel \ac{LSTM} explicitly adapted for the inland domain; their work is, however, limited to a 16km stretch of the Rhine. %auf nachfrage gibt es hier noch paper dazwischen der donandt gruppe. da geht es aber um die entwicklung dieser attention mechanismen, die sind nicht fous der arbeit. mein pukt den ich hier mache ist, dass alle nur begrenzt ausgewertet wurden.
 
-In summary, existing deep learning approaches either rely on limited spatial coverage, small datasets, or multi-vessel inputs, and they rarely include systematic \ac{HPO}. %This thesis instead focuses on single-vessel short-term prediction on a large, inland \ac{AIS} dataset with explicit waterway domains, and jointly evaluates kinematic models, stochastic filters, and deep sequence models under a unified optimisation and preprocessing pipeline for inland data.
+In summary, existing deep learning approaches either rely on limited spatial coverage, small data\-sets, or the inputs of multiple vessels. They rarely include sys\-tem\-at\-ic \ac{HPO}. %hbox overfull shenanigans
+%This thesis instead focuses on single-vessel short-term prediction on a large, inland \ac{AIS} dataset with explicit waterway domains, and jointly evaluates kinematic models, stochastic filters, and deep sequence models under a unified optimisation and preprocessing pipeline for inland data.
 
 
 
@@ -106,17 +107,15 @@ Because these models are easy to set up and require no domain knowledge or under
 
 %\paragraph{Contributions.}
 To address the limitations of existing studies to small sample sizes and narrow geographic constraints, this thesis provides a broader and more diverse evaluation basis. To achieve this, our work used a dataset of over four million sequences across multiple measurement stations for inland waterways with explicitly defined waterway domains. 
-
 While incorporating multi-vessel interactions is highly relevant for autonomous surface vessels, it complicates the direct comparison between learned and kinematic models, as the latter cannot natively incorporate dependencies between vessels and would require a different input space. 
 Within the modelling scope of this work, we therefore assume that predictions rely exclusively on the historical \ac{AIS} data of a single vessel, meaning each target is predicted independently without relying on concurrent observations of neighbouring traffic. %this is more of a limitation, but eihter way it should be mentioned. It is the scope i was given by Tim
-
 Finally, we incorporate the aforementioned foundation models into our evaluation framework to assess how their zero-shot capabilities compare against the other models under a unified optimisation and preprocessing pipeline.
 
 
 \section[Data Preprocessing]{Data Preprocessing and Context-Awareness}
 \label{sec:datapreprocessingandcontextawareness}
 %In the context of maritime data, high-quality AIS track information is essential to extract valuable outputs and to avoid misleading results 
-Raw \ac{AIS} data contains errors including physically implausible positions, inconsistent timestamps, and unreliable velocity readings \parencite{Zhao_Shi_Yang_2018}. Without systematic preprocessing, such artefacts propagate into learned motion representations and may corrupt model training.
+Raw \ac{AIS} data contains errors such as physically implausible positions, inconsistent timestamps, and unreliable velocity readings \parencite{Zhao_Shi_Yang_2018}. Without systematic preprocessing, such artefacts propagate into learned motion representations and may corrupt model training.
 To address this, \textcite{Zhao_Shi_Yang_2018} proposed a foundational framework for \ac{AIS} preprocessing.
 Their framework includes multiple steps.
 First, physical integrity checks are applied, where invalid data points violating fixed bounds are discarded and trajectories with fewer than 100 points are removed.  
@@ -151,7 +150,7 @@ The authors define specific Polygonal Geographical Areas over the region of inte
 The resulting routes are then sliced into input and target sequences of a fixed length using a sliding window approach, and are annotated with a categorical destination label to condition their neural networks.
 While this intention aware approach successfully reduces displacement error by teaching the network to memorise specific predefined routes, it pursues a fundamentally different objective to generalised \ac{MTT}.
 By constraining the dataset to a few selected origin and destination pairs and explicitly feeding the destination into the model, the architecture becomes reliant on route memorisation rather than learning scalable and generalised vessel motion dynamics.
-The methodology proposed in this work explicitly seeks to avoid this limitation.
+The methodology proposed in our work explicitly seeks to avoid this limitation.
 %This limits their usage in inland environments, where a vessel \ws{can have different behaviour patterns, i.e., vessels} approaching a lock behaves fundamentally %differently from one navigating an open river, 
 
 %In this work, we address this gap by introducing semantic labelling for inland vessels data.
@@ -186,7 +185,7 @@ However, they only apply this to a single architecture with a relatively small t
 systematic \ac{HPO} across multiple model families within a shared \ac{AIS} preprocessing and evaluation pipeline.
 %\me{[contributions-overview?]} 
 %We address this by applying \ac{AutoML} as a tool for \ac{HPO}.
-To address this, we apply systematic \ac{HPO} methods, following the broader \ac{AutoML} paradigm of automating model configuration. This ensures a fair and reproducible benchmark across all evaluated model families.
+To address this, we apply systematic \ac{HPO} methods, following the broader \ac{AutoML} paradigm of automating model configuration, aiming to ensure a fair and reproducible benchmark across all evaluated model families.
 
 
 \begin{comment}

@@ -156,7 +156,7 @@
 \begin{figure}
     \centering
     \includegraphics[width=0.95\linewidth]{figures/lstmhp.png}
-    \caption[Hyperparameter Importances for the LSTM]{Quantitative hyperparameter importances for the \acf{LSTM}, calculated by Optuna using the \acf{fANOVA} framework. fANOVA isolates the marginal contribution of each parameter to the overall variance of the objective function, and thus provides quantitative metrics. The \texttt{feature\_set} dominates the model's convergence success by a significantly large margin. This high score must be interpreted with caution, as it is amplified by the evaluation bias detailed in Section \ref{lim:prior}. Conversely, \texttt{hidden\_size} registers an extremely low importance score; this matches with the observations from the parallel coordinate plot (Figure \ref{fig:paralelcord}), which demonstrated that exploring a wide range of hidden sizes had little to no impact on the final performance. Notably, \texttt{num\_layers} yields an importance of zero strictly because it was held constant and not defined as an active variable in this tuning space.}
+    \caption[Hyperparameter Importances for the LSTM]{Quantitative hyperparameter importances for the \acf{LSTM}, calculated by Optuna using the \acf{fANOVA} framework. fANOVA isolates the marginal contribution of each parameter to the overall variance of the objective function, and thus provides quantitative metrics. The \texttt{feature\_set} dominates convergence success of the model by a significantly large margin. This high score must be interpreted with caution, as it is amplified by the evaluation bias detailed in Section \ref{lim:prior}. Conversely, \texttt{hidden\_size} registers an extremely low importance score; this matches with the observations from the parallel coordinate plot (Figure \ref{fig:paralelcord}), which demonstrated that exploring a wide range of hidden sizes had little to no impact on the final performance. Notably, \texttt{num\_layers} yields an importance of zero strictly because it was held constant and not defined as an active variable in this tuning space.}
     \label{fig:lstmhpimportances}
 \end{figure}
 
@@ -571,7 +571,7 @@ Consequently, this design is highly suitable for the present use case.
 
 \newpage % bled into the middle of BO TPE text
 
-\section{Bayesian Optimisation and Tree-Parzen-Estimator}
+\section{Bayesian Optimisation and the Tree-Parzen-Estimator}
 \label{appx:BOandTPE}
 
 

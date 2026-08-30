@@ -96,7 +96,7 @@ The \ac{x-LSTM} architecture \parencite{beck2024xlstmextendedlongshortterm} addr
 Consequently, \acp{x-LSTM} provide the theoretical basis for \ac{RNN}-based foundation models. 
 The \textbf{TiRex} foundation model, which leverages the \ac{x-LSTM}, was presented by \textcite{auer2025tirexzeroshotforecastinglongtrex} and showed promising results in benchmarks against Chronos. However, the authors have noted the model does not perform well with multivariate time series data. As a consequence, applicability to \ac{AIS} trajectories is limited, because the univariate model treats individual features as independent channels. Separating channels prevents the model from capturing cross-correlations. Since vessel dynamics are governed by physical constraints where \ac{SOG} and \ac{COG} directly impact the trajectory, this approach may result in kinematically inconsistent predictions. %wieder etwas umformuliert wegen zeilenumbruch "separating channels"..
 
-We benchmarked our self-trained \ac{LSTM} model against Chronos-2 and TiRex to both investigate whether generalised, pretrained knowledge outweighs physically grounded, domain-specific recurrence, and to test the zero shot performance of the \ac{x-LSTM} based foundation model vs the Transformer based model.
+We benchmarked our self-trained \ac{LSTM} model against Chronos-2 and TiRex to both investigate whether generalised, pretrained knowledge outweighs physically grounded, domain-specific recurrence, and to test the zero-shot performance of the \ac{x-LSTM} based foundation model vs the Transformer based model.
     
 
 \section{Automated Machine Learning}
@@ -383,7 +383,7 @@ Using $\operatorname{diag}(\cdot)$ to denote a diagonal matrix, they can be defi
 The diagonal covariance matrices were treated as hyperparameters. Using $\operatorname{diag}(\cdot)$ to denote a diagonal matrix, they are defined as $\mathbf{Q} = \operatorname{diag}(q_\text{pos}, q_\text{pos}, q_\text{vel}, q_\text{vel})$, $\mathbf{R} = \operatorname{diag}(r_\text{pos}, r_\text{pos})$, and $\mathbf{P}^+_0 = \operatorname{diag}(p_{0,\text{pos}}, p_{0,\text{pos}}, p_{0,\text{vel}}, p_{0,\text{vel}})$.
         
     $\mathbf{Q}$ captures deviations from the ideal assumptions made by the \ac{CV} model.
-    The diagonal structure implies that positional and velocity noise are not correlated.
+    %The diagonal structure implies that positional and velocity noise are not correlated.
     Its diagonal structure assumes uncorrelated positional and velocity noise, neglecting the physical coupling that exists because velocities are derived from positional differences.
     $\mathbf{R}$ reflects the positional uncertainty of \ac{AIS}
     reports, and $\mathbf{P}^+_0$ encodes the uncertainty of the filter prior to any

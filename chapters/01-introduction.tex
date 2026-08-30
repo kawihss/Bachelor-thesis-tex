@@ -38,7 +38,7 @@ However, transitioning from physically grounded kinematic models to deep learnin
 introduces a methodological challenge: the dependence of model performance on a high-dimensional design space.
 %As shown 
 Achieving high performance in machine learning requires navigating complex design choices, including model architecture and hyperparameter configurations \parencite{AutoMLHoos}. 
-To ensure a fair comparison between different model types and architectures, all models must be evaluated at their full potential. To address this, we explore \ac{AutoML} to systematically manage \ac{HPO}, and ensure that any observed performance differences reflect the models' inherent ability rather than arbitrary parameter choices.
+To ensure a fair comparison between different model types and architectures, all models must be evaluated at their full potential. To address this, we explore \ac{AutoML} to systematically manage \ac{HPO}, and ensure that any observed performance differences reflect the inherent ability of the models rather than arbitrary parameter choices.
 
 
 %Trajectory prediction for inland vessels based on \ac{AIS} data provides the motion-model component of the prediction step within \ac{MTT} for autonomous traffic systems on inland waterways. 
@@ -53,7 +53,6 @@ only a few studies focus specifically on inland waterways, so coverage of inland
 
 
 While individual works do compare specific deep learning architectures to selected kinematic baselines, to the best of our knowledge, there are no studies that jointly evaluate kinematic models, stochastic filters and both task-specific and pretrained deep sequence models on inland \ac{AIS} data within a single, shared preprocessing and optimisation framework.
-
 %While individual works do compare specific deep learning architectures to selected kinematic baselines, we are not aware of any 
 %study that jointly evaluates kinematic models, stochastic filters and both task-specific and pretrained deep sequence models on inland \ac{AIS} data within a single, shared preprocessing and optimisation framework.
 In particular, foundation models have, to our knowledge, not yet been applied to inland vessel trajectory prediction.
@@ -91,10 +90,10 @@ The remainder of this thesis is structured as follows:
 In Chapter \ref{chap:relatedwork}, we review related work on kinematic motion models, stochastic filters, deep sequence models, \ac{AIS} data preprocessing pipelines, and automated hyperparameter optimisation.
 In Chapter \ref{chap:dataset}, we outline the preprocessing pipeline we developed to extract, clean, segment, and annotate the trajectories with geographic domain labels, followed by analysis of the resulting dataset characteristics.
 In Chapter \ref{chap:methology}, we present the methodology,
-explaining the theoretical backgrounds of \ac{Seq2Seq} and \ac{AutoML}, alongside the mathematical formalisations of the kinematic motion models and stochastic filters we implemented.
+explaining the theoretical backgrounds of \ac{Seq2Seq} models and \ac{AutoML}, alongside the mathematical formalisations of the kinematic motion models and stochastic filters we implemented.
 In Chapter \ref{chap:experimentalsetup}, we define the research questions and experiments and explain the evaluation framework,  which includes data splits, evaluation metrics, and the exact model configurations, as well as optimisation and model training procedures.
 In Chapter \ref{chap:results}, we present and discuss the experimental results, addressing each research question through a comparative evaluation of the models and configurations, along with an analysis of how geographic domain information impacts predictive performance.
-In Chapter \ref{chap:conclusion}, we conclude the thesis by highlighting the performance differences between models, followed by a discussion of some limitations of the study along with potential paths for future research.
+In Chapter \ref{chap:conclusion}, we conclude the thesis by highlighting the performance differences between models, followed by a discussion of the limitations of the study along with potential paths for future research.
 %\ws{No need to write about the appendix. It is optional, If you want, you can delete it.}
 The appendices provide Supplementary Figures (Appendix \ref{chap:appendixdataplots}), Supplementary Tables (Appendix \ref{appx:B}), Methodological Details (Appendix \ref{chap:appendixderivations}) and an overview of the implemented codebase (Appendix \ref{chap:appendixcodebase}) 
 

@@ -11,7 +11,9 @@
 %\todo{check for any left over stacked headings, replace with referenced intros}
 %\todo{always use [t] for tables to interrupt the text less}
 
-In this chapter, we detail the data foundation of this thesis. First, in Section \ref{sec:data_sources}, we introduce the publicly available \ac{AIS} dataset used for our experiments. In Section \ref{sec:data_preprocessing}, we outline the five-step preprocessing pipeline developed to extract, clean, segment, and normalise the raw trajectories. Finally, we summarise the key characteristics of the final dataset in Section \ref{sec:dataset_characteristics}.
+In this chapter, % we detail the data foundation of this thesis.
+we detail the data preparation process, outlining the transition from raw \ac{AIS} logs to a curated, domain-aware dataset.
+First, in Section \ref{sec:data_sources}, we introduce the publicly available \ac{AIS} dataset used for our experiments. In Section \ref{sec:data_preprocessing}, we outline the five-step preprocessing pipeline developed to extract, clean, segment, and normalise the raw trajectories. Finally, we summarise the key characteristics of the final dataset in Section \ref{sec:dataset_characteristics}.
 
 \section{Data Sources}
 \label{sec:data_sources}
@@ -183,7 +185,7 @@ Lock     &  50 &   50 & 0 \\
 Channel  &   0 &   50 & 50 \\
 \bottomrule
 \end{tabular}
-\caption[Geometric Buffers]{Geometric buffer radii (in metres) per domain and harbour used to assign context to \acf{OSM} coordinates. All points within those ranges of an \acs{OSM} assignment were marked with the respective domain, according to the priority mapping}
+\caption[Geometric Buffers]{Geometric buffer radii (in metres) per domain and harbour used to assign context to \acf{OSM} coordinates. All points within those ranges of an \acs{OSM} assignment were marked with the respective domain, according to the priority mapping.}
 \label{tab:buffer_radii}
 \end{table}   
 
@@ -230,7 +232,7 @@ Channel  &   0 &   50 & 50 \\
         
     % Hauptunterschrift
     %\caption[OpenStreetMap Labels assigned to AIS Data]{Labels provided by \textcite{OpenStreetMap} assigned to AIS data 
-    \caption[Domain-assigned AIS Data]{Visualisation of the geographic domain assignments for AIS trajectories in two measurement sites. The colour of each data point represents its corresponding waterway type: gray for harbour, green for channel, blue for river, red for lock, and purple for remaining exceptions. Axes indicate longitude (x) and latitude (y).
+    \caption[Domain-assigned AIS Data]{Visualisation of the geographic domain assignments for AIS trajectories in two measurement sites. The colour of each data point represents its corresponding waterway type: gray for harbour, green for channel, blue for river, red for lock, and purple for remaining exceptions. Axes denote longitude (x) and latitude (y).
     %\todo{visualize\_osm\_on\_ais.py. need to run on vera in IRT; Vera is offline -- done}
     } 
     \label{fig:OSM_assigned}

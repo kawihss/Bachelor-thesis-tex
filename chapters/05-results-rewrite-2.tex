@@ -7,11 +7,7 @@
 In this chapter, we present the findings from the experimental evaluation, and address the core research questions systematically.
 The overall goal of these experiments was to provide a fair comparison of deep learning models, kinematic models, and stochastic filters, as well as to investigate the impact of incorporating geographic domain information into model training and architecture.
 To evaluate the three research questions outlined in Section \ref{sec:rqand}, we conducted a total of three experiments: a baseline comparison of all motion models on the full dataset (Exp I), an assessment of the effect of domain-specific training on predictive performance (Exp II), and an ablation study of explicit domain encoding for LSTMs (Exp III).
-The remainder of this chapter is structured around the  questions, for each of which we present the quantitative results first, along with the answers to our research questions. A more detailed discussion of the results follows.
-
-The preprocessed dataset is provided at Hugging Face\footnote{\url{https://huggingface.co/datasets/kawihss/ais-inland-vessel-trajectories}}. 
-The dataset can be regenerated with the pipeline provided at RWTH GitLab\footnote{\url{https://git-ce.rwth-aachen.de/g-nav-mob-irt/projects/galileonautic2plus/multi-object-tracking/motion-models/-/tree/handedIn}} or the public GitHub mirror\footnote{\url{https://github.com/kawihss/Data-based-vessel-motion-modelling-Thesis/tree/handedIn}}. 
-The repository also provides the code to train and optimise all models. For details on the pipeline, refer to the readme files and Appendix~\ref{chap:appendixcodebase} for a general overview of the codebase architecture.
+The remainder of this chapter is structured around the  questions, for each of which we present the quantitative results first. A more detailed discussion of the results follows, along with the answers to our research questions.
 
 %\section[Exp. \Romannum{1}: Motion Model Comparison]{Exp. \Romannum{1}: Baseline Comparison of Motion Models} 
 
@@ -217,7 +213,7 @@ Furthermore, an evaluation of the error distributions for the kinematic baseline
 
 \begin{table}[t]
 \centering
-\caption{Exp. I Probabilistic metrics for foundation models}
+\caption{Exp. I Probabilistic Metrics for Foundation Models}
 \label{tab:results_exp0_foundation_prob}
 \begin{tabular}{lrrr}
 \toprule
@@ -378,7 +374,7 @@ Furthermore, Figure~\ref{fig:monthlytrends-all} plots the average \ac{RMSE} per 
     \end{axis}
     \end{tikzpicture}
     %\caption{RMSE per month with track count shown as violet bars\todo{from here on, expand figure and table captions}}
-    \caption[Exp. I RMSE Monthly Trends]{Comparison of \acf{RMSE} by month, demonstrating consistent performance trends across all models. Violet bars indicate the monthly volume of samples}
+    \caption[Exp. I RMSE Monthly Trends]{Comparison of \acf{RMSE} by month, demonstrating consistent performance trends across all models. Violet bars indicate the monthly volume of samples.}
     \label{fig:monthlytrends-all}
 \end{figure}
 
@@ -743,7 +739,7 @@ In the \ac{EKF}, position depends nonlinearly on the turn rate $\omega_k$ throug
 The optimisation process adapted to this instability by selecting a substantially larger process noise $q_\text{pos}$ and a near-zero $q_\text{rot}$ (highlighted in green in Table~\ref{tab:hpo_results_exp0}), which indicates that the filter learned position predictions are highly unreliable when rotation is involved.
 $\omega_0$ is initialised to $0$, and the minimum context length to $n_\text{ctx} = 2$.
 Together, these parameters effectively restrict the underlying \ac{CTRV} model to straight-line motion with negligible curvature to avoid compounding nonlinear errors. Despite this, the \ac{EKF} outperforms the \ac{KF} significantly (Figure~\ref{fig:cd_test}). 
-However, this performance gap must be interpreted with caution. Although both filters belong to the same family, their predefined search spaces differed: the context window length ($n_\text{ctx}$) was treated as an optimisable hyperparameter for the \ac{EKF} (converging to $2$), whereas it was kept fixed at the full ten steps for the standard \ac{KF}. Given that the baseline \ac{CV} model also performed best using only the single most recent step, forcing the \ac{KF} to smooth over the entire 10-step context window likely disadvantaged it. Consequently, the observed gap might partially stem from this discrepancy in the search space design rather than purely from the ability of the \ac{EKF} to handle nonlinear kinematics. Future evaluations must align the search spaces to allow for a fair comparison.
+However, this performance gap must be interpreted with caution. Although both filters belong to the same family, their predefined search spaces differed: the context window length ($n_\text{ctx}$) was treated as an optimisable hyperparameter for the \ac{EKF} (converging to $2$), whereas it was kept fixed at the full ten steps for the standard \ac{KF}. Given that the baseline \ac{CV} model also performed best using only the single most recent step, forcing the \ac{KF} to smooth over the entire 10-step context window likely disadvantaged it. Consequently, the observed gap might partially stem from this discrepancy in the search space design rather than purely from the ability of the \ac{EKF} to handle nonlinear kinematics. Future evaluations should align the search spaces to allow for a consistent comparison.
 Nevertheless, looking at the error distributions, the \ac{EKF} still manages to suppress extreme outliers slightly better than the standard \ac{KF}, which is reflected in the more pronounced gap in the \ac{RMSE} metric. Since \ac{RMSE} heavily penalises large deviations, this difference demonstrates that the state estimation of the \ac{EKF} still manages to suppress extreme outliers slightly better than the standard \ac{KF}.
 However, the violin plots in Figure~\ref{fig:violince} confirm that while the \ac{EKF} error distribution is shifted towards slightly lower values compared to \ac{CV} and TiRex, it still has a similar spread and long upper tails.
 Therefore, while the \ac{EKF} provides a measurable baseline improvement, its fundamental handling of sudden manoeuvres and outliers is not drastically improved, consistent with the still prevailing non-Gaussian error distribution.
@@ -781,9 +777,10 @@ To achieve this performance, the training process relied on the \ac{HPO} framewo
 %As designed, the algorithm discards several poor configurations early to save computational resources, while better trials survive longer and undergo further refinement.
 %A few weak trials still run for a comparatively long time solely because the initial 26 evaluations were intentionally excluded from pruning to establish a baseline search space.
 
-Beyond the pruning strategy, the hyperparameter importance analysis demonstrates that the input feature set is the most influential parameter for model success. Details about hyperparameter importances can be found in Figure \ref{fig:lstmhpimportances} in Appendix~\ref{chap:appendixdataplots}. 
+Beyond the pruning strategy, the hyperparameter importance analysis demonstrates that the input feature set is the most influential parameter for model success.  
 In contrast, the analysis shows that the hidden size of the network has almost no impact on the final performance.
 This indicates that the bottleneck for this forecasting task lies primarily in the provided data representation rather than the overall capacity of the model.
+Details about hyperparameter importances can be found in Figure \ref{fig:lstmhpimportances} in Appendix~\ref{chap:appendixdataplots}.
 Interestingly, the best configuration does not use the full feature set but excludes \texttt{rot} (orange highlights in Table \ref{tab:hpo_results_exp0}).
 While one might expect that adding more input features should always improve performance, as we can confirm for all other values by looking at the gradient, this result indicates that \ac{ROT} does not contribute useful information in this setting.
 This is consistent with the \ac{EKF} results and suggests that the \texttt{\ac{ROT}} feature we derived is either noisy or only weakly informative for the motion patterns considered here.
@@ -831,7 +828,7 @@ outliers, which violates the Gaussian noise assumptions of the filter even more 
 than the mixed dataset. %\\
 The fact that the channel and lock domains benefit heavily from specialised models indicates that they represent the most distinct motion regimes within the overall dataset.
 Meanwhile, the strict separation of harbour and river data is less critical for model performance in this specific setup.
-When extending the model architecture to future waterways, this varying sensitivity suggests that new training domains should be defined by discovering naturally distinct motion regimes within the data. 
+When extending the model architecture to more waterways, this varying sensitivity suggests that new training domains should be defined by discovering naturally distinct motion regimes within the data. 
 %These findings confirm that domain-specific training is indeed critical for high-capacity models, thus answering the second research question.
 These findings support the hypothesis that domain-specific training benefits high-capacity models, addressing the second research question, albeit under the limitations discussed in chapter \ref{paragraph:comparability}.
 

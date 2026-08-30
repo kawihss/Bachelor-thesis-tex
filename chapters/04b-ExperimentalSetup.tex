@@ -88,11 +88,9 @@ This section details the shared pipeline we used to perform the comparison.
 All experiments utilised the full one-year dataset without downsampling. The data for all experiments were downloaded and preprocessed as described in Chapter~\ref{chap:dataset}.
 A fixed random seed was used across all models and experiments to support reproducibility (see Table~\ref{tab:hpo-config} in Appendix~\ref{appx:B}). Note, however, that this seed does not cover the  data augmentation applied during preprocessing, so all experiments must be run on the same, already-generated Parquet dataset rather than regenerating preprocessing independently.
  Each model received the  normalised feature set 
-   % all normalised features it can process
-    as a context window and outputs displacement increments $(\Delta x, \Delta y)$. The kinematic models additionally received x and y coordinates as an input, an input we omitted for the deep learning models as per Section \ref{subsec:featureengineering}. %to avoid learning specific trajectories instead of vessel dynamics. The kinematic models are incapable of "overfitting " to a specific location, so raw coords are fine
+    as a context window and output displacement increments $(\Delta x, \Delta y)$. The kinematic models additionally received x and y coordinates as an input, an input we omitted for the deep learning models as per Section \ref{subsec:featureengineering}. %to avoid learning specific trajectories instead of vessel dynamics. The kinematic models are incapable of "overfitting " to a specific location, so raw coords are fine
     The predicted displacements were cumulatively summed and offset by the last known position to reconstruct absolute trajectories before any metric was applied. 
-    %For testing purposes, both the tuning and evaluation stages support configurable subsampling of data files. %not necessary to know
-    \ac{HPO} was performed exclusively on the validation set. The final model and parameters were then evaluated on the test split without retraining.
+     \ac{HPO} was performed exclusively on the validation set. The final model and parameters were then evaluated on the test split without retraining.
     
 
       \subsection{Train-Val-Test Split}
@@ -108,7 +106,7 @@ A fixed random seed was used across all models and experiments to support reprod
     \subsection{Metrics}
     All trajectory-based metrics were computed from the Euclidean distance between predicted and ground-truth positions. The evaluation was performed over all files in the considered evaluation split and included all predicted time steps, not only the final one, which is separately reflected by the \acf{FDE}. Consistent with common trajectory prediction practice, we additionally reported the \acf{ADE} over all predicted time steps and samples \parencite{donandt2022shortterm, articlebilstmsus}.
     
-    In \ac{HPO}, we optimised the \acf{RMSE} of the predicted $x$ and $y$ coordinates. \ac{RMSE} is a standard metric for regression-based prediction tasks and is also used in vessel trajectory prediction by \textcite{articlebilstmsus} and \textcite{donandt2022shortterm} (called $ATE^2$ in the latter). %for the latter
+    In \ac{HPO}, we optimised the \acf{RMSE} of the predicted $x$ and $y$ coordinates. \ac{RMSE} is a standard metric for regression-based prediction tasks and is also used in vessel trajectory prediction by \textcite{articlebilstmsus} and \textcite{donandt2022shortterm} (called $ATE$ in the latter). %$ATE^2$ ist MSE
     It was chosen because, due to the squared error term, it penalises large deviations more strongly than absolute-error-based metrics. This is desirable in our setting, where occasional large prediction errors are more problematic than many small ones.
     In addition to the aggregated metrics, per-file metrics were computed and stored. % in CSV files. 
     They can serve for further analysis and, in our case, were used for post-hoc statistical tests and to investigate seasonal trends.
@@ -151,7 +149,7 @@ A fixed random seed was used across all models and experiments to support reprod
         \begin{figure}[h]
             \centering
             \includegraphics[width=0.9\linewidth,trim=1cm 3.5cm 5.5cm 3.5cm,clip]{figures/minimal_lstm_intermediate_values.html.pdf}
-            \caption[Exp. I LSTM Intermediate Value plot]{Intermediate Value plot of \acf{LSTM} \acf{HPO} in Optuna with early stopping enabled. Successive Halving was applied to all trials, except the initial 16. The Drop-offs at stept 8, 16 and 32 indicate points, where the current batch was evaluated and the bottom-performing configurations were terminated}
+            \caption[Exp. I LSTM Intermediate Value plot]{Intermediate Value plot of \acf{LSTM} \acf{HPO} in Optuna with early stopping enabled. Successive Halving was applied to all trials, except the initial 16. The Drop-offs at stept 8, 16 and 32 indicate points, where the current batch was evaluated and the bottom-performing configurations were terminated.}
             \label{fig:succhalfing}
         \end{figure}
         The best-found configuration was retrained from scratch on the full
@@ -162,7 +160,7 @@ A fixed random seed was used across all models and experiments to support reprod
         study are biased towards values that are important early on in the convergence, rather than final validation loss, since most trials do not run to full completion.
          
          Optuna keeps track of intermediate results, enabling us to analyse the learning dynamics after an optimisation run.
-          A complete specification of the hyperparameter optimisation methodology and configurations for all experiments is detailed in Table \ref{tab:hpo-config} in Appendix \ref{appx:B}.
+          A complete specification of the hyperparameter optimisation methodology and the configurations for all experiments is detailed in Table \ref{tab:hpo-config} in Appendix \ref{appx:B}.
           Furthermore, the corresponding hyperparameter search spaces for each model are defined within the respective methodology sections (\ref{sec:method-cv} to \ref{sec:method-ctrv-ekf}) and are additionally summarised in Table \ref{tab:model_hyperparameters} in Appendix \ref{appx:B}. %and \ref{sec:method-lstm}
 
 
@@ -171,7 +169,7 @@ A fixed random seed was used across all models and experiments to support reprod
         \paragraph{Search Spaces and Strategies.}
         The optimisation strategy varies according to the complexity of the model:
         \begin{itemize}
-            \item \textbf{Kinematic Models:} These models contain small, 1-Dimensional search spaces. We employed a full grid search over all valid configurations to ensure the global optimum for these parameters was found.  \ac{TPE} with n trials $\gg$ valid configurations can also find the global optimum, but comes with a computational overhead we wanted to avoid. For fairness, we only used the validation split for this optimisation, ignoring the test split.
+            \item \textbf{Kinematic Models:} These models contain small, 1-Dimensional search spaces. We employed a full grid search over all valid configurations to ensure the global optimum for these parameters was found.  \ac{TPE} with n trials $\gg$ valid configurations can also find the global optimum, but comes with a computational overhead we wanted to avoid. For fairness, we only used the validation split for this optimisation, ignoring the training split. % not the test split
             \item \textbf{Filters:} We mapped the Covariance and Uncertainty matrices to a multi-dimensional continuous search space using log-uniform distributions, as the optimal values typically span several orders of magnitude. The search was then guided using \ac{TPE}.
             \item \textbf{Foundation Models:} Chronos is designed as a pure Zero-Shot model and requires no \ac{HPO}. For TiREX, we optimised the size of the input window using the same 1-D space as the kinematic models. The optimisation is required, because the TiREX does not implement any attention mechanisms that can weight specific timestamps.
             \item \textbf{Learned Sequence Models:} These models involve higher-dimensional parameter spaces. We used \acs{TPE} to navigate the search space.
@@ -316,6 +314,11 @@ A fixed random seed was used across all models and experiments to support reprod
         In contrast, learned embeddings introduce additional trainable parameters and reduce interpretability, since the resulting coordinates no longer correspond directly to individual domain classes.
         This trade-off is usually more attractive for higher-cardinality categorical variables; if the number of domains were to grow substantially in future work, an embedding-based representation could become worth it.
 
+        \section{Reproducibility and Code Availability }
+        
+        The preprocessed dataset is provided at Hugging Face\footnote{\url{https://huggingface.co/datasets/kawihss/ais-inland-vessel-trajectories}}. 
+        The dataset can be regenerated with the pipeline provided at RWTH GitLab\footnote{\url{https://git-ce.rwth-aachen.de/g-nav-mob-irt/projects/galileonautic2plus/multi-object-tracking/motion-models/-/tree/handedIn}} or the public GitHub mirror\footnote{\url{https://github.com/kawihss/Data-based-vessel-motion-modelling-Thesis/tree/handedIn}}. 
+        The repository also provides the code to train and optimise all models. For details on the pipeline, refer to the readme files and Appendix~\ref{chap:appendixcodebase} for a general overview of the codebase architecture.
         
         %\paragraph{Hyperparameter Optimisation.} \me{probably also move this into the setu of experiments}
 
